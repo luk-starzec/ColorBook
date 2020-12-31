@@ -7,14 +7,17 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\scripts\colorPreview.min.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\styles.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\scripts\colorPreview.min.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="wwwroot\scripts\colorPreview.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,10 +29,6 @@
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\" />
   </ItemGroup>
 
 </Project>

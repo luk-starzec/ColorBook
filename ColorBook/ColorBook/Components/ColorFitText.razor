@@ -1,0 +1,14 @@
+﻿
+<div class="color-fit-text__wrapper" style="background-color: @BackgroundColor">
+    <div class="color-fit-text__text" style="color: @TextColor">
+        Abc
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string BackgroundColor { get; set; }
+    [Parameter]
+    public string TextColor { get; set; }
+
+}

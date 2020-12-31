@@ -6,5 +6,9 @@
   {
     "outputFile": "wwwroot/scripts/clipboardCopy.js",
     "inputFile": "Scripts/clipboardCopy.js"
+  },
+  {
+    "outputFile": "wwwroot/scripts/colorPreview.js",
+    "inputFile": "Scripts/colorPreview.js"
   }
 ]

@@ -1,0 +1,15 @@
+﻿@inject IJSRuntime JS;
+
+<button @onclick="@CopyText" class="button-copy__button">
+    <img class="button-copy__icon" src="/assets/copy-icon.svg" />
+</button>
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+
+    async Task CopyText()
+    {
+        var result = await JS.InvokeAsync<bool>("clipboardCopy.copyText", Text);
+    }
+}

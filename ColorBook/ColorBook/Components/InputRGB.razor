@@ -1,0 +1,24 @@
+﻿
+<div class="input-rgb__wrapper">
+
+    <label class="input-rgb__label">RGB:</label>
+
+    <input type="number" @bind-value="@R" min="0" max="255" class="input-rgb__input" />
+    <input type="number" @bind-value="@G" min="0" max="255" class="input-rgb__input input-rgb__input--no-side-border" />
+    <input type="number" @bind-value="@B" min="0" max="255" class="input-rgb__input" />
+
+    <ButtonCopy Text="@rgb" />
+
+</div>
+
+
+@code {
+    [Parameter]
+    public int R { get; set; }
+    [Parameter]
+    public int G { get; set; }
+    [Parameter]
+    public int B { get; set; }
+
+    string rgb => $"rgb({R},{G},{B})";
+}

@@ -1,7 +1,98 @@
-﻿* {
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+* {
     box-sizing: border-box;
-    margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
-body {
+.button-copy__button {
+    width: 3em;
+    height: 1.5em;
+    padding: 0;
+    border: none;
+    border-radius: 0 1em 1em 0;
+    cursor: pointer;
+    outline: none;
+    background-color: #E5E5E5;
+
+    &:hover {
+        background-color: #D3D3D3;
+    }
+
+    &:active {
+        background-color: #F5F5F5;
+
+        .button-copy__icon {
+            transform: scale(.8);
+        }
+    }
+}
+
+.button-copy__icon {
+    vertical-align: middle;
+    transition: transform .1s;
+}
+
+@mixin color-input-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@mixin color-input-label {
+    margin-right: .5em;
+    justify-self: flex-end;
+}
+
+@mixin color-input-input {
+    width: 3em;
+    height: 1.5em;
+    border: solid 1px #E5E5E5;
+    text-align: center;
+
+    &--no-side-border {
+        border-left: none;
+        border-right: none;
+    }
+}
+
+.input-hex__wrapper {
+    @include color-input-wrapper;
+}
+
+.input-hex__label {
+    @include color-input-label;
+}
+
+.input-hex__input {
+    @include color-input-input;
+    width: 6em;
+
+    &--bold {
+        font-weight: bold;
+    }
+}
+
+.input-hsl__wrapper {
+    @include color-input-wrapper;
+}
+
+.input-hsl__label {
+    @include color-input-label;
+}
+
+.input-hsl__input {
+    @include color-input-input;
+}
+
+.input-rgb__wrapper {
+    @include color-input-wrapper;
+}
+
+.input-rgb__label {
+    @include color-input-label;
+}
+
+.input-rgb__input {
+    @include color-input-input;
 }

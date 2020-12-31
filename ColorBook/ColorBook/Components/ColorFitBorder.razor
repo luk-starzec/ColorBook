@@ -1,0 +1,11 @@
+﻿
+<div class="color-fit-border__wrapper" style="background-color: @BackgroundColor">
+    <div class="color-fit-border__border" style="border-color: @BorderColor"></div>
+</div>
+
+@code {
+    [Parameter]
+    public string BackgroundColor { get; set; }
+    [Parameter]
+    public string BorderColor { get; set; }
+}

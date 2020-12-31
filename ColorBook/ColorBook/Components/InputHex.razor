@@ -1,0 +1,20 @@
+﻿
+<div class="input-hex__wrapper">
+
+    <label class="input-hex__label">Hex:</label>
+
+    <input @bind-value="@Value" class="@cssInput" />
+
+    <ButtonCopy Text="@Value" />
+
+</div>
+
+
+@code {
+    [Parameter]
+    public string Value { get; set; }
+    [Parameter]
+    public bool IsBold { get; set; }
+
+    string cssInput => IsBold ? "input-hex__input input-hex__input--bold" : "input-hex__input";
+}

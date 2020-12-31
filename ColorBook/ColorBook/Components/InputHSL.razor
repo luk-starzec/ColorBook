@@ -1,0 +1,24 @@
+﻿
+<div class="input-hsl__wrapper">
+
+    <label class="input-hsl__label">HSL:</label>
+
+    <input type="number" @bind-value="@H" min="0" max="255" class="input-hsl__input" />
+    <input type="number" @bind-value="@S" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" />
+    <input type="number" @bind-value="@L" min="0" max="100" class="input-hsl__input" />
+
+    <ButtonCopy Text="@hsl" />
+
+</div>
+
+
+@code {
+    [Parameter]
+    public int H { get; set; }
+    [Parameter]
+    public int S { get; set; }
+    [Parameter]
+    public int L { get; set; }
+
+    string hsl => $"hsl({H},{S}%,{L}%)";
+}
