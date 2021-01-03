@@ -4,18 +4,20 @@
   font-family: 'Poppins', sans-serif; }
 
 .button-copy__button {
-  width: 3em;
-  height: 1.5em;
   padding: 0;
   border: none;
-  border-radius: 0 1em 1em 0;
-  cursor: pointer;
   outline: none;
+  background: none;
+  cursor: pointer;
+  width: 3em;
+  height: 1.5em;
+  border-radius: 0 999px 999px 0;
   background-color: #E5E5E5; }
   .button-copy__button:hover {
     background-color: #D3D3D3; }
   .button-copy__button:active {
-    background-color: #F5F5F5; }
+    /* background-color: #F5F5F5;
+        border: solid 1px #E5E5E5;*/ }
     .button-copy__button:active .button-copy__icon {
       transform: scale(0.8); }
 
@@ -31,6 +33,8 @@
 .input-hex__label {
   margin-right: .5em;
   justify-self: flex-end; }
+  .input-hex__label--hidden {
+    display: none; }
 
 .input-hex__input {
   width: 3em;
@@ -79,3 +83,80 @@
   .input-rgb__input--no-side-border {
     border-left: none;
     border-right: none; }
+
+.color-info__wrapper {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr; }
+
+.color-info__color-view {
+  width: 6em;
+  height: 2em;
+  margin: 0 1em; }
+
+.color-info__button-add {
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  margin-left: 1.5em;
+  background-color: #666666; }
+  .color-info__button-add:hover {
+    background-color: #333333; }
+  .color-info__button-add img {
+    transition: transform .1s; }
+  .color-info__button-add:active img {
+    transform: scale(0.8); }
+
+.color-info__button-more {
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  width: 1em;
+  margin-right: 1.5em;
+  justify-self: end; }
+
+.color-fit-text__wrapper {
+  width: 3em;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.color-fit-border__wrapper {
+  width: 3em;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.color-fit-border__border {
+  width: 1.5em;
+  height: 1.5em;
+  border-width: 1px;
+  border-style: solid; }
+
+.color-bar__wrapper {
+  display: grid;
+  grid-template-columns: repeat(10, auto);
+  grid-template-rows: repeat(2, auto);
+  grid-column-gap: .5em; }
+
+.color-bar__color {
+  width: 2em;
+  height: 2em;
+  grid-row-end: 1;
+  cursor: pointer;
+  border: none; }
+  .color-bar__color--selected {
+    border: 1px solid #333333; }
+
+.color-bar__label {
+  grid-row-start: 1; }
+  .color-bar__label--selected {
+    font-weight: bold; }

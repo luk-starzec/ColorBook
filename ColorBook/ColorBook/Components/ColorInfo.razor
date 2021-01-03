@@ -1,16 +1,21 @@
-﻿
+﻿img
 <div class="color-info__wrapper">
 
-    <img class="color-info__add"/>
+    <button class="color-info__button-add">
+        <img src="/assets/add-icon.svg" />
+    </button>
 
-    <div class="color-info__small-color"></div>
+    <div class="color-info__color-view" style="background-color: @ColorHex;"></div>
 
-    <InputHex Value="#000000"/>
+    <InputHex @bind-Value="ColorHex" IsLabelHidden="true" />
 
-    <img class="color-info__more"/>
+    <button class="color-info__button-more">
+        <img src="/assets/dropdown-icon.svg" />
+    </button>
 
 </div>
 
 @code {
-
+    [Parameter]
+    public string ColorHex { get; set; }
 }

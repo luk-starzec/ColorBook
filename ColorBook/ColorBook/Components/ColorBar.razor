@@ -1,0 +1,33 @@
+﻿
+<div class="color-bar__wrapper">
+
+    @for (int i = 0; i <= 100; i += 10)
+    {
+        int index = i;
+        <div class="@GetColorCss(index)" style="background-color: @GetColorValue(index)" @onclick="()=>OnClick(index)"></div>
+        <div class="@GetLabelCss(index)">@i% </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string ColorHex { get; set; }
+
+    int selectedColorIndex = -1;
+    int selectedLabelIndex = -1;
+
+    void OnClick(int index)
+    {
+        selectedColorIndex = index;
+        selectedLabelIndex = index;
+    }
+
+    string GetColorValue(int index)
+    {
+        return "#ffff00";
+    }
+
+    string GetColorCss(int index) => $"color-bar__color{(index == selectedColorIndex ? " color-bar__color--selected" : "")}";
+    string GetLabelCss(int index) => $"color-bar__label{(index == selectedColorIndex ? " color-bar__label--selected" : "")}";
+
+}

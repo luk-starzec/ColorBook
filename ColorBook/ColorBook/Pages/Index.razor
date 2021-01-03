@@ -7,6 +7,20 @@
 <InputHSL H="@colorR" S="@colorG" L="@colorB" />
 
 
+<ColorInfo ColorHex="@colorHex" />
+
+<ColorFitText TextColor="@colorHex" BackgroundColor="#000000" />
+<ColorFitText TextColor="@colorHex" BackgroundColor="#ffffff" />
+<ColorFitText TextColor="#000000" BackgroundColor="@colorHex" />
+<ColorFitText TextColor="#ffffff" BackgroundColor="@colorHex" />
+
+<ColorFitBorder BorderColor="@colorHex" BackgroundColor="#000000" />
+<ColorFitBorder BorderColor="@colorHex" BackgroundColor="#ffffff" />
+
+<LightnesBar/>
+
+<ColorInfoFull ColorHex="@colorHex"/>
+
 @code {
     string colorHex = "#ff00ff";
     int colorR;

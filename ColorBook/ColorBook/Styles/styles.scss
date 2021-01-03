@@ -5,14 +5,19 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.button-copy__button {
-    width: 3em;
-    height: 1.5em;
+@mixin std-button {
     padding: 0;
     border: none;
-    border-radius: 0 1em 1em 0;
-    cursor: pointer;
     outline: none;
+    background: none;
+    cursor: pointer;
+}
+
+.button-copy__button {
+    @include std-button;
+    width: 3em;
+    height: 1.5em;
+    border-radius: 0 999px 999px 0;
     background-color: #E5E5E5;
 
     &:hover {
@@ -20,8 +25,8 @@
     }
 
     &:active {
-        background-color: #F5F5F5;
-
+        /* background-color: #F5F5F5;
+        border: solid 1px #E5E5E5;*/
         .button-copy__icon {
             transform: scale(.8);
         }
@@ -62,6 +67,10 @@
 
 .input-hex__label {
     @include color-input-label;
+
+    &--hidden {
+        display: none;
+    }
 }
 
 .input-hex__input {
@@ -95,4 +104,96 @@
 
 .input-rgb__input {
     @include color-input-input;
+}
+
+
+.color-info__wrapper {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr;
+}
+
+.color-info__color-view {
+    width: 6em;
+    height: 2em;
+    margin: 0 1em;
+}
+
+.color-info__button-add {
+    @include std-button;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    margin-left: 1.5em;
+    background-color: #666666;
+
+    &:hover {
+        background-color: #333333;
+    }
+
+    img {
+        transition: transform .1s;
+    }
+
+    &:active {
+        img {
+            transform: scale(.8);
+        }
+    }
+}
+
+.color-info__button-more {
+    @include std-button;
+    width: 1em;
+    margin-right: 1.5em;
+    justify-self: end;
+}
+
+.color-fit-text__wrapper {
+    width: 3em;
+    height: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-fit-border__wrapper {
+    width: 3em;
+    height: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-fit-border__border {
+    width: 1.5em;
+    height: 1.5em;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.color-bar__wrapper {
+    display: grid;
+    grid-template-columns: repeat(10, auto);
+    grid-template-rows: repeat(2, auto);
+    grid-column-gap: .5em;
+}
+
+.color-bar__color {
+    width: 2em;
+    height: 2em;
+    grid-row-end: 1;
+    cursor: pointer;
+    border: none;
+
+    &--selected {
+        border: 1px solid #333333;
+    }
+}
+
+.color-bar__label {
+    grid-row-start: 1;
+
+    &--selected {
+        font-weight: bold;
+    }
 }

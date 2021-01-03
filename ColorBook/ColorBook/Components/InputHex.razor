@@ -1,9 +1,9 @@
 ﻿
 <div class="input-hex__wrapper">
 
-    <label class="input-hex__label">Hex:</label>
+    <label class="@cssLabel">Hex:</label>
 
-    <input @bind-value="@Value" class="@cssInput" />
+    <input @bind-value="@Value" @bind-value:event="oninput" class="@cssInput" @onkeyup="SetValue" />
 
     <ButtonCopy Text="@Value" />
 
@@ -14,7 +14,25 @@
     [Parameter]
     public string Value { get; set; }
     [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+    [Parameter]
     public bool IsBold { get; set; }
+    [Parameter]
+    public bool IsLabelHidden { get; set; }
 
-    string cssInput => IsBold ? "input-hex__input input-hex__input--bold" : "input-hex__input";
+    string cssLabel => $"input-hex__label {(IsLabelHidden ? " input-hex__label--hidden" : "")}";
+    string cssInput => $"input-hex__input {(IsBold ? " input-hex__input--bold" : "")}";
+
+    private async Task SetValue()
+    {
+        if (isHexColor(Value))
+            await ValueChanged.InvokeAsync(Value);
+    }
+
+    private bool isHexColor(string value)
+    {
+        var pattern = "^#(?:[0-9a-fA-F]{3}){1,2}$";
+        var regex = new System.Text.RegularExpressions.Regex(pattern);
+        return regex.Match(value).Success;
+    }
 }

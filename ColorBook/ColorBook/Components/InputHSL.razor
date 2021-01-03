@@ -3,9 +3,9 @@
 
     <label class="input-hsl__label">HSL:</label>
 
-    <input type="number" @bind-value="@H" min="0" max="255" class="input-hsl__input" />
-    <input type="number" @bind-value="@S" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" />
-    <input type="number" @bind-value="@L" min="0" max="100" class="input-hsl__input" />
+    <input type="number" @bind-value="@H" @bind-value:event="oninput" min="0" max="255" class="input-hsl__input" @onchange="SetValue" />
+    <input type="number" @bind-value="@S" @bind-value:event="oninput" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" @onchange="SetValue" />
+    <input type="number" @bind-value="@L" @bind-value:event="oninput" min="0" max="100" class="input-hsl__input" @onchange="SetValue" />
 
     <ButtonCopy Text="@hsl" />
 
@@ -14,11 +14,32 @@
 
 @code {
     [Parameter]
+    public string Value
+    {
+        get => colorHex;
+        set
+        {
+            colorHex = value;
+            // set H S L
+        }
+    }
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
     public int H { get; set; }
     [Parameter]
     public int S { get; set; }
     [Parameter]
     public int L { get; set; }
 
+    string colorHex;
     string hsl => $"hsl({H},{S}%,{L}%)";
+
+    private async Task SetValue()
+    {
+        // colorHex=
+        await ValueChanged.InvokeAsync(Value);
+    }
+
 }

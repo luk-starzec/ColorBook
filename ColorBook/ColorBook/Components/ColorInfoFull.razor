@@ -1,5 +1,25 @@
-﻿<h3>ColorInfoFull</h3>
+﻿
+<div class="color-info-full__wrapper">
+
+    <button class="color-info-full__button-add">
+        <img src="/assets/add-icon.svg" />
+    </button>
+
+    <InputHex @bind-Value="ColorHex" />
+
+    <InputHSL @bind-Value="ColorHex" />
+
+    <div class="color-info-full__color-view" style="background-color: @ColorHex;"></div>
+
+
+    <button class="color-info-full__button-more">
+        <img src="/assets/dropdown-icon.svg" />
+    </button>
+
+</div>
 
 @code {
+    [Parameter]
+    public string ColorHex { get; set; }
 
 }
