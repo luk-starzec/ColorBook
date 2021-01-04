@@ -1,3 +1,4 @@
 .vs
 bin
 obj
+/ColorBook/ColorBook/JsLib/node_modules

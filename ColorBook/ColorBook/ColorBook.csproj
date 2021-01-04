@@ -7,17 +7,14 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
-    <Content Remove="wwwroot\scripts\colorPreview.min.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\styles.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\scripts\colorPreview.min.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="wwwroot\scripts\colorPreview.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,4 +28,9 @@
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="npm install" WorkingDirectory="JsLib" />
+    <Exec Command="npm run build" WorkingDirectory="JsLib" />
+  </Target>
+  
 </Project>

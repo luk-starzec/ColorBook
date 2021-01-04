@@ -4,11 +4,11 @@
     "inputFile": "Styles/styles.scss"
   },
   {
-    "outputFile": "wwwroot/scripts/clipboardCopy.js",
+    "outputFile": "wwwroot/js/clipboardCopy.js",
     "inputFile": "Scripts/clipboardCopy.js"
   },
   {
-    "outputFile": "wwwroot/scripts/colorPreview.js",
+    "outputFile": "wwwroot/js/colorPreview.js",
     "inputFile": "Scripts/colorPreview.js"
   }
 ]
