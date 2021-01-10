@@ -1,11 +1,12 @@
-﻿
+﻿@inject IJSRuntime JS
+
 <div class="input-rgb__wrapper">
 
     <label class="input-rgb__label">RGB:</label>
 
-    <input type="number" @bind-value="@R" min="0" max="255" class="input-rgb__input" />
-    <input type="number" @bind-value="@G" min="0" max="255" class="input-rgb__input input-rgb__input--no-side-border" />
-    <input type="number" @bind-value="@B" min="0" max="255" class="input-rgb__input" />
+    <input type="number" @bind="@R" @bind:event="oninput" min="0" max="255" class="input-rgb__input" />
+    <input type="number" @bind="@G" @bind:event="oninput" min="0" max="255" class="input-rgb__input input-rgb__input--no-side-border" />
+    <input type="number" @bind="@B" @bind:event="oninput" min="0" max="255" class="input-rgb__input" />
 
     <ButtonCopy Text="@rgb" />
 
@@ -14,11 +15,50 @@
 
 @code {
     [Parameter]
-    public int R { get; set; }
+    public string Value { get; set; }
     [Parameter]
-    public int G { get; set; }
-    [Parameter]
-    public int B { get; set; }
+    public EventCallback<string> ValueChanged { get; set; }
+
+    int r;
+    private int R
+    {
+        get => r;
+        set { r = value; InvokeAsync(SetValue); }
+    }
+
+    int g;
+    private int G
+    {
+        get => g;
+        set { g = value; InvokeAsync(SetValue); }
+    }
+
+    int b;
+    private int B
+    {
+        get => b;
+        set { b = value; InvokeAsync(SetValue); }
+    }
 
     string rgb => $"rgb({R},{G},{B})";
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetRGB();
+    }
+
+
+    private async Task SetValue()
+    {
+        Value = await JS.InvokeAsync<string>("ColorLib.rgbToHex", R, G, B);
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task SetRGB()
+    {
+        r = await JS.InvokeAsync<int>("ColorLib.getRed", Value);
+        g = await JS.InvokeAsync<int>("ColorLib.getGreen", Value);
+        b = await JS.InvokeAsync<int>("ColorLib.getBlue", Value);
+    }
 }

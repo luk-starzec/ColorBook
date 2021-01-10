@@ -1,33 +1,61 @@
-﻿
+﻿@inject IJSRuntime JS
+
 <div class="color-bar__wrapper">
 
-    @for (int i = 0; i <= 100; i += 10)
+    @for (int i = 0; i <= 10; i++)
     {
         int index = i;
         <div class="@GetColorCss(index)" style="background-color: @GetColorValue(index)" @onclick="()=>OnClick(index)"></div>
-        <div class="@GetLabelCss(index)">@i% </div>
+        <div class="@GetLabelCss(index)">@GetLabelText(index) </div>
     }
+
 </div>
 
 @code {
     [Parameter]
     public string ColorHex { get; set; }
-
+    [Parameter]
+    public EnumColorBarType ColorBarType { get; set; }
+    [Parameter]
+    public string SelectedColorHex { get; set; }
     int selectedColorIndex = -1;
-    int selectedLabelIndex = -1;
+
+    string[] colors = new string[11];
+    int valueStep = 10;
 
     void OnClick(int index)
     {
         selectedColorIndex = index;
-        selectedLabelIndex = index;
     }
 
-    string GetColorValue(int index)
+    async Task SetColors()
     {
-        return "#ffff00";
+        var functionName = ColorBarType switch
+        {
+            EnumColorBarType.Hue => "ColorLib.setHue",
+            EnumColorBarType.Lightness => "ColorLib.setLightness",
+            EnumColorBarType.Saturation => "ColorLib.setSaturation",
+            _ => string.Empty
+        };
+
+        valueStep = ColorBarType == EnumColorBarType.Hue ? 32 : 10;
+
+        for (int i = 0; i <= 10; i++)
+        {
+            colors[i] = await JS.InvokeAsync<string>(functionName, ColorHex, i * valueStep);
+        }
     }
+
+    string GetColorValue(int index) => colors.Length > index ? colors[index] : string.Empty;
+    string GetLabelText(int index) => ColorBarType != EnumColorBarType.Hue ? $"{index * valueStep}%" : string.Empty;
 
     string GetColorCss(int index) => $"color-bar__color{(index == selectedColorIndex ? " color-bar__color--selected" : "")}";
     string GetLabelCss(int index) => $"color-bar__label{(index == selectedColorIndex ? " color-bar__label--selected" : "")}";
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetColors();
+    }
 
 }

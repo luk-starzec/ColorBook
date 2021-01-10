@@ -1,11 +1,12 @@
-﻿
+﻿@inject IJSRuntime JS
+
 <div class="input-hsl__wrapper">
 
     <label class="input-hsl__label">HSL:</label>
 
-    <input type="number" @bind-value="@H" @bind-value:event="oninput" min="0" max="255" class="input-hsl__input" @onchange="SetValue" />
-    <input type="number" @bind-value="@S" @bind-value:event="oninput" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" @onchange="SetValue" />
-    <input type="number" @bind-value="@L" @bind-value:event="oninput" min="0" max="100" class="input-hsl__input" @onchange="SetValue" />
+    <input type="number" @bind="@H" @bind:event="oninput" min="0" max="359" class="input-hsl__input" />
+    <input type="number" @bind="@S" @bind:event="oninput" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" />
+    <input type="number" @bind="@L" @bind:event="oninput" min="0" max="100" class="input-hsl__input" />
 
     <ButtonCopy Text="@hsl" />
 
@@ -14,32 +15,56 @@
 
 @code {
     [Parameter]
-    public string Value
-    {
-        get => colorHex;
-        set
-        {
-            colorHex = value;
-            // set H S L
-        }
-    }
+    public string Value { get; set; }
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 
-    [Parameter]
-    public int H { get; set; }
-    [Parameter]
-    public int S { get; set; }
-    [Parameter]
-    public int L { get; set; }
+    int h;
+    private int H
+    {
+        get => h;
+        set { h = value; InvokeAsync(SetValue); }
+    }
+    int s;
+    private int S
+    {
+        get => s;
+        set { s = value; InvokeAsync(SetValue); }
+    }
+    int l;
+    private int L
+    {
+        get => l;
+        set { l = value; InvokeAsync(SetValue); }
+    }
 
-    string colorHex;
     string hsl => $"hsl({H},{S}%,{L}%)";
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetHSL();
+    }
+
 
     private async Task SetValue()
     {
-        // colorHex=
-        await ValueChanged.InvokeAsync(Value);
+        var newColor = await JS.InvokeAsync<string>("ColorLib.hslToHex", H, S, L);
+        if (Value != newColor)
+        {
+            Value = newColor;
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 
+    private async Task SetHSL()
+    {
+        var currentColor = await JS.InvokeAsync<string>("ColorLib.hslToHex", H, S, L);
+        if (Value != currentColor)
+        {
+            h = await JS.InvokeAsync<int>("ColorLib.getHue", Value);
+            s = await JS.InvokeAsync<int>("ColorLib.getSaturation", Value);
+            l = await JS.InvokeAsync<int>("ColorLib.getLightness", Value);
+        }
+    }
 }

@@ -3,7 +3,7 @@
 
     <label class="@cssLabel">Hex:</label>
 
-    <input @bind-value="@Value" @bind-value:event="oninput" class="@cssInput" @onkeyup="SetValue" />
+    <input @bind="@Value" @bind:event="oninput" class="@cssInput" @onkeyup="SetValue" />
 
     <ButtonCopy Text="@Value" />
 
