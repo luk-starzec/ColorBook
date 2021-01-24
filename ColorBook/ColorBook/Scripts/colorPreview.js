@@ -1,13 +1,13 @@
 ﻿window.colorPreview = {
 
-    drawImg: drawImg = (canvasId, data) => {
+    drawImg: (canvasId, data) => {
         const ctx = document.getElementById(canvasId).getContext('2d');
         const img = new Image();
         img.src = data;
         ctx.drawImage(img, 0, 0);
     },
 
-    getRGBA: getRGBA = (canvasId) => {
+    getRGBA: (canvasId) => {
         const canvas = document.getElementById(canvasId);
         const width = canvas.width;
         const height = canvas.height;
@@ -24,7 +24,7 @@
         return array;
     },
 
-    initPreview: initPreview = (canvasId, scale) => {
+    initPreview: (canvasId, scale) => {
         const canvas = document.getElementById(canvasId);
         const width = canvas.width;
         const height = canvas.height;
@@ -33,7 +33,7 @@
         ctx.scale(scale, scale);
     },
 
-    setPreview: setPreview = (imageId, canvasId, x, y, scale) => {
+    setPreview: (imageId, canvasId, x, y, scale) => {
         const image = document.getElementById(imageId);
 
         const canvas = document.getElementById(canvasId);
@@ -62,12 +62,12 @@
         //ctxPreview.putImageData(previewData, 0, 0);
     },
 
-    componentToHex: componentToHex = (c) => {
+    componentToHex: (c) => {
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     },
 
-    rgbToHex: rgbToHex = (r, g, b) => {
+    rgbToHex: (r, g, b) => {
         return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
     },
 

@@ -1,17 +1,17 @@
 ﻿
 <div class="color-info__wrapper">
 
-    <div class="color-info__basic-view">
+    <div class="@cssBasicView">
 
-        <button class="@cssButtonAdd">
-            <img src="/assets/add-icon.svg" />
+        <button class="color-info__button-add" title="add color">
+            <img src="/assets/add-icon.svg" alt="" />
         </button>
 
         <div class="@cssColorView" style="background-color: @ColorHex;"></div>
 
         <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!fullView)" IsBold="@fullView" />
 
-        <button class="@cssButtonDetalis" @onclick="ChangeView">
+        <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide details">
             <img src="/assets/dropdown-icon.svg" />
         </button>
 
@@ -27,7 +27,24 @@
             <InputHSL @bind-Value="ColorHex" />
             <InputName @bind-Value="ColorHex" />
 
+
         </div>
+
+        <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Lightness" />
+        <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Saturation" />
+        <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Hue" />
+
+        <div class="color-info__color-fit">
+
+            <ColorFitText TextColor="@ColorHex" BackgroundColor="#000000" />
+            <ColorFitText TextColor="@ColorHex" BackgroundColor="#ffffff" />
+            <ColorFitText TextColor="#000000" BackgroundColor="@ColorHex" />
+            <ColorFitText TextColor="#ffffff" BackgroundColor="@ColorHex" />
+            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="#000000" />
+            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="#ffffff" />
+
+        </div>
+
     }
 
 </div>
@@ -38,7 +55,7 @@
 
     private bool fullView = false;
 
-    private string cssButtonAdd => fullView ? "color-info__button-add color-info__button-add--details" : "color-info__button-add";
+    private string cssBasicView => fullView ? "color-info__basic-view color-info__basic-view--full" : "color-info__basic-view";
     private string cssColorView => fullView ? "color-info__color-view color-info__color-view--hidden" : "color-info__color-view";
     private string cssButtonDetalis => fullView ? "color-info__button-view color-info__button-view--full" : "color-info__button-view";
 
