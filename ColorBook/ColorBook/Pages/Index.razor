@@ -1,17 +1,16 @@
 ﻿@page "/"
 @inject IJSRuntime JS
 
-<h1>Hello, world!</h1>
 <h2>@colorHex</h2>
 
-<InputHex @bind-Value="colorHex" />
+@*<InputHex @bind-Value="colorHex" />
 <InputRGB @bind-Value="colorHex" />
-<InputHSL @bind-Value="colorHex" />
+<InputHSL @bind-Value="colorHex" />*@
 
 
 <ColorInfo ColorHex="@colorHex" />
 
-<ColorFitText TextColor="@colorHex" BackgroundColor="#000000" />
+@*<ColorFitText TextColor="@colorHex" BackgroundColor="#000000" />
 <ColorFitText TextColor="@colorHex" BackgroundColor="#ffffff" />
 <ColorFitText TextColor="#000000" BackgroundColor="@colorHex" />
 <ColorFitText TextColor="#ffffff" BackgroundColor="@colorHex" />
@@ -21,7 +20,7 @@
 
 <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Lightness" />
 <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Saturation" />
-<ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Hue" />
+<ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Hue" />*@
 
 @*<ColorInfoFull ColorHex="@colorHex" />*@
 

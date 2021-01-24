@@ -1,21 +1,49 @@
 ﻿
 <div class="color-info__wrapper">
 
-    <button class="color-info__button-add">
-        <img src="/assets/add-icon.svg" />
-    </button>
+    <div class="color-info__basic-view">
 
-    <div class="color-info__color-view" style="background-color: @ColorHex;"></div>
+        <button class="@cssButtonAdd">
+            <img src="/assets/add-icon.svg" />
+        </button>
 
-    <InputHex @bind-Value="ColorHex" IsLabelHidden="true" />
+        <div class="@cssColorView" style="background-color: @ColorHex;"></div>
 
-    <button class="color-info__button-more">
-        <img src="/assets/dropdown-icon.svg" />
-    </button>
+        <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!fullView)" IsBold="@fullView" />
+
+        <button class="@cssButtonDetalis" @onclick="ChangeView">
+            <img src="/assets/dropdown-icon.svg" />
+        </button>
+
+    </div>
+
+    @if (fullView)
+    {
+        <div class="color-info__full-view">
+
+            <div class="color-info__color-big-view" style="background-color: @ColorHex;"></div>
+
+            <InputRGB @bind-Value="ColorHex" />
+            <InputHSL @bind-Value="ColorHex" />
+            <InputName @bind-Value="ColorHex" />
+
+        </div>
+    }
 
 </div>
 
 @code {
     [Parameter]
     public string ColorHex { get; set; }
+
+    private bool fullView = false;
+
+    private string cssButtonAdd => fullView ? "color-info__button-add color-info__button-add--details" : "color-info__button-add";
+    private string cssColorView => fullView ? "color-info__color-view color-info__color-view--hidden" : "color-info__color-view";
+    private string cssButtonDetalis => fullView ? "color-info__button-view color-info__button-view--full" : "color-info__button-view";
+
+    private void ChangeView()
+    {
+        fullView = !fullView;
+    }
 }

@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-window.clipboardCopy = {
+window.colorPreview = {
 
     drawImg: drawImg = function (canvasId, data) {
         var ctx = document.getElementById(canvasId).getContext('2d');
