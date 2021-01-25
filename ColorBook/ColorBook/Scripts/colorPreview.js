@@ -16,10 +16,10 @@
 
         const ctx = canvas.getContext('2d');
         const pixel = ctx.getImageData(x, y, 1, 1).data
-        console.log(pixel);
+        //console.log(pixel);
 
         const array = Array.from(pixel);
-        console.log(array);
+        //console.log(array);
 
         return array;
     },
@@ -68,7 +68,7 @@
     },
 
     rgbToHex: (r, g, b) => {
-        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        return "#" + colorPreview.componentToHex(r) + colorPreview.componentToHex(g) + colorPreview.componentToHex(b);
     },
 
 

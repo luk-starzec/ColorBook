@@ -18,10 +18,10 @@ window.colorPreview = {
 
         var ctx = canvas.getContext('2d');
         var pixel = ctx.getImageData(x, y, 1, 1).data;
-        console.log(pixel);
+        //console.log(pixel);
 
         var array = Array.from(pixel);
-        console.log(array);
+        //console.log(array);
 
         return array;
     },
@@ -69,7 +69,7 @@ window.colorPreview = {
     },
 
     rgbToHex: function rgbToHex(r, g, b) {
-        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        return "#" + colorPreview.componentToHex(r) + colorPreview.componentToHex(g) + colorPreview.componentToHex(b);
     }
 
 };

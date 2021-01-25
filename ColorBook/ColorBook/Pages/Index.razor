@@ -9,6 +9,23 @@
 <ColorPicker Title="My Blazor ColorPicker" IsOpened="isOpened" Closed="ClosedEvent" MyColor="@colorHex">
 </ColorPicker>
 
+<div>
+
+    <InputFile OnChange="@OnInputFileChange" accept="image/*" capture />
+
+    <img id="@imageId" src="@imageDataUrl" @onmousemove="@OnMouseMove" @onmousedown="@OnMouseDown" @ref="_imgRef" />
+
+    <br />
+
+    <canvas id="@previewCanvasId" width="100" height="100" style="border: solid gray 1px"></canvas>
+
+    <br />
+
+    <div style="width: 50px; height: 50px; background: @colorHex;" />
+
+</div>
+
+
 <!--<h2>@colorHex</h2>-->
 @*<InputHex @bind-Value="colorHex" />
     <InputRGB @bind-Value="colorHex" />
@@ -36,12 +53,63 @@
 @code {
     string colorHex { get; set; } = "#ff00ff";
 
-    async Task Test()
+    int previewScale = 4;
+    string imageId = "testImg";
+    string previewCanvasId = "preview";
+    string imageDataUrl;
+    bool isImageLoaded = false;
+
+    protected ElementReference _imgRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine("test");
-        //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
+        if (firstRender)
+            await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
     }
 
+    async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var maxWidth = 400;
+        var maxHeight = 400;
+
+        var image = e.File;
+        var format = "image/png";
+        var resized = await image.RequestImageFileAsync(format, maxWidth, maxHeight);
+        var buffer = new byte[resized.Size];
+        await resized.OpenReadStream().ReadAsync(buffer);
+        imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        isImageLoaded = true;
+    }
+
+    async Task OnMouseDown(MouseEventArgs e)
+    {
+        Console.WriteLine($"x:{e.OffsetX}; y:{e.OffsetY}");
+    }
+
+    async Task OnMouseMove(MouseEventArgs e)
+    {
+        if (!isImageLoaded)
+            return;
+
+        await JS.InvokeVoidAsync("colorPreview.setPreview", imageId, previewCanvasId, e.OffsetX, e.OffsetY, previewScale);
+        await SetColor();
+    }
+
+    async Task SetColor()
+    {
+        var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", previewCanvasId);
+        var hex = await JS.InvokeAsync<string>("colorPreview.rgbToHex", rgba[0], rgba[1], rgba[2]);
+
+        colorHex = hex;
+    }
+
+
+
+    //async Task Test()
+    //{
+    //    Console.WriteLine("test");
+    //    //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
+    //}
 
     //protected override void OnInitialized()
     //{
@@ -78,7 +146,6 @@
 
 
     bool isOpened = false;
-    //string color = "#F1F7E9";
 
     void OpenModal()
     {
