@@ -1,30 +1,37 @@
 ﻿@page "/"
 @inject IJSRuntime JS
+@using BlazorColorPicker
 
-<h2>@colorHex</h2>
+<button class="" @onclick="OpenModal">
+    <div style="background-color:@colorHex" class="buttonColor">  ...  </div>
+</button>
 
+<ColorPicker Title="My Blazor ColorPicker" IsOpened="isOpened" Closed="ClosedEvent" MyColor="@colorHex">
+</ColorPicker>
+
+<!--<h2>@colorHex</h2>-->
 @*<InputHex @bind-Value="colorHex" />
-<InputRGB @bind-Value="colorHex" />
-<InputHSL @bind-Value="colorHex" />*@
+    <InputRGB @bind-Value="colorHex" />
+    <InputHSL @bind-Value="colorHex" />*@
 
 
-<ColorInfo ColorHex="@colorHex" />
 
+<!--<ColorInfo ColorHex="@colorHex" />-->
 @*<ColorFitText TextColor="@colorHex" BackgroundColor="#000000" />
-<ColorFitText TextColor="@colorHex" BackgroundColor="#ffffff" />
-<ColorFitText TextColor="#000000" BackgroundColor="@colorHex" />
-<ColorFitText TextColor="#ffffff" BackgroundColor="@colorHex" />
+    <ColorFitText TextColor="@colorHex" BackgroundColor="#ffffff" />
+    <ColorFitText TextColor="#000000" BackgroundColor="@colorHex" />
+    <ColorFitText TextColor="#ffffff" BackgroundColor="@colorHex" />
 
-<ColorFitBorder BorderColor="@colorHex" BackgroundColor="#000000" />
-<ColorFitBorder BorderColor="@colorHex" BackgroundColor="#ffffff" />
+    <ColorFitBorder BorderColor="@colorHex" BackgroundColor="#000000" />
+    <ColorFitBorder BorderColor="@colorHex" BackgroundColor="#ffffff" />
 
-<ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Lightness" />
-<ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Saturation" />
-<ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Hue" />*@
+    <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Lightness" />
+    <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Saturation" />
+    <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Hue" />*@
 
 @*<ColorInfoFull ColorHex="@colorHex" />*@
 
-<button @onclick="Test">Test</button>
+<!--<button @onclick="Test">Test</button>-->
 
 @code {
     string colorHex { get; set; } = "#ff00ff";
@@ -68,5 +75,20 @@
     //{
     //    return base.OnInitializedAsync();
     //}
+
+
+    bool isOpened = false;
+    //string color = "#F1F7E9";
+
+    void OpenModal()
+    {
+        isOpened = true;
+    }
+
+    void ClosedEvent(string value)
+    {
+        colorHex = value;
+        isOpened = false;
+    }
 
 }
