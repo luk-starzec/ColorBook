@@ -1,9 +1,10 @@
 ﻿
 <div class="input-name__wrapper">
 
-    <label class="input-name__label">Name:</label>
-
-    <input @bind="@ColorName" class="input-name__input" disabled />
+    <label class="input-name__label">
+        <span>Name:</span>
+        <input @bind="@ColorName" class="input-name__input" disabled />
+    </label>
 
     <ButtonCopy Text="@ColorName" />
 

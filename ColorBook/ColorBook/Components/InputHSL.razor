@@ -2,12 +2,12 @@
 
 <div class="input-hsl__wrapper">
 
-    <label class="input-hsl__label">HSL:</label>
-
-    <input type="number" @bind="@H" @bind:event="oninput" min="0" max="359" class="input-hsl__input" />
-    <input type="number" @bind="@S" @bind:event="oninput" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" />
-    <input type="number" @bind="@L" @bind:event="oninput" min="0" max="100" class="input-hsl__input" />
-
+    <label class="input-hsl__label">
+        <span>HSL:</span> 
+        <input type="number" @bind="@H" @bind:event="oninput" min="0" max="359" class="input-hsl__input" />
+        <input type="number" @bind="@S" @bind:event="oninput" min="0" max="100" class="input-hsl__input input-hsl__input--no-side-border" />
+        <input type="number" @bind="@L" @bind:event="oninput" min="0" max="100" class="input-hsl__input" />
+    </label>
     <ButtonCopy Text="@hsl" />
 
 </div>

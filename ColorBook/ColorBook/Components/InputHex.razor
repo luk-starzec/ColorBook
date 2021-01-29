@@ -1,9 +1,10 @@
 ﻿
 <div class="input-hex__wrapper">
 
-    <label class="@cssLabel">Hex:</label>
-
-    <input @bind="@Value" @bind:event="oninput" class="@cssInput" @onkeyup="SetValue" />
+    <label class="@cssLabel">
+        <span>Hex:</span>
+        <input @bind="@Value" @bind:event="oninput" class="@cssInput" @onkeyup="SetValue" />
+    </label>
 
     <ButtonCopy Text="@Value" />
 

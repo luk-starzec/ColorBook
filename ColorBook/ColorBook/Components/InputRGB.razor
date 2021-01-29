@@ -2,11 +2,12 @@
 
 <div class="input-rgb__wrapper">
 
-    <label class="input-rgb__label">RGB:</label>
-
-    <input type="number" @bind="@R" @bind:event="oninput" min="0" max="255" class="input-rgb__input" />
-    <input type="number" @bind="@G" @bind:event="oninput" min="0" max="255" class="input-rgb__input input-rgb__input--no-side-border" />
-    <input type="number" @bind="@B" @bind:event="oninput" min="0" max="255" class="input-rgb__input" />
+    <label class="input-rgb__label">
+        <span>RGB:</span>
+        <input type="number" @bind="@R" @bind:event="oninput" min="0" max="255" class="input-rgb__input" />
+        <input type="number" @bind="@G" @bind:event="oninput" min="0" max="255" class="input-rgb__input input-rgb__input--no-side-border" />
+        <input type="number" @bind="@B" @bind:event="oninput" min="0" max="255" class="input-rgb__input" />
+    </label>
 
     <ButtonCopy Text="@rgb" />
 

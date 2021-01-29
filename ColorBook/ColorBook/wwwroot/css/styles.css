@@ -19,16 +19,23 @@
     right: .75rem;
     top: .5rem; }
 
+input {
+  outline: none; }
+  input:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
+
 .button-copy__button {
   padding: 0;
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
+  outline: none;
   width: 3em;
   height: 1.7em;
   border-radius: 0 .3em .3em 0;
   background-color: #fcfcfc; }
+  .button-copy__button:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
   .button-copy__button:hover {
     background-color: #e5e5e5; }
   .button-copy__button:active {
@@ -53,13 +60,18 @@
   width: auto; }
 
 .input-hex__label {
-  width: 3em;
-  margin-right: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   flex-grow: 1;
-  text-align: right;
-  color: #999999;
   width: 3.5em; }
-  .input-hex__label--hidden {
+  .input-hex__label span {
+    width: 3em;
+    margin-right: 1em;
+    flex-grow: 1;
+    text-align: right;
+    color: #999999; }
+  .input-hex__label--hidden span {
     display: none; }
 
 .input-hex__input {
@@ -85,11 +97,16 @@
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05); }
 
 .input-hsl__label {
-  width: 3em;
-  margin-right: 1em;
-  flex-grow: 1;
-  text-align: right;
-  color: #999999; }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1; }
+  .input-hsl__label span {
+    width: 3em;
+    margin-right: 1em;
+    flex-grow: 1;
+    text-align: right;
+    color: #999999; }
 
 .input-hsl__input {
   width: 3.5em;
@@ -111,11 +128,16 @@
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05); }
 
 .input-rgb__label {
-  width: 3em;
-  margin-right: 1em;
-  flex-grow: 1;
-  text-align: right;
-  color: #999999; }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1; }
+  .input-rgb__label span {
+    width: 3em;
+    margin-right: 1em;
+    flex-grow: 1;
+    text-align: right;
+    color: #999999; }
 
 .input-rgb__input {
   width: 3.5em;
@@ -137,11 +159,16 @@
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05); }
 
 .input-name__label {
-  width: 3em;
-  margin-right: 1em;
-  flex-grow: 1;
-  text-align: right;
-  color: #999999; }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1; }
+  .input-name__label span {
+    width: 3em;
+    margin-right: 1em;
+    flex-grow: 1;
+    text-align: right;
+    color: #999999; }
 
 .input-name__input {
   width: 3.5em;
@@ -194,15 +221,17 @@
 .color-info__button-add {
   padding: 0;
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
+  outline: none;
   width: 2em;
   height: 2em;
   justify-self: center;
   border-radius: 50%;
   background-color: #666666;
   margin-right: 1.5em; }
+  .color-info__button-add:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
   .color-info__button-add:hover {
     background-color: #333333; }
   .color-info__button-add img {
@@ -213,15 +242,17 @@
 .color-info__button-view {
   padding: 0;
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
+  outline: none;
   height: 2em;
   width: 2em;
   margin: 0 1em;
   flex-shrink: 0;
   border-radius: 50%;
   transition: transform ease .2s; }
+  .color-info__button-view:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
   .color-info__button-view:hover {
     background-color: #e5e5e5; }
   .color-info__button-view--full {
@@ -296,9 +327,9 @@
 .color-selection__type-button {
   padding: 0;
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
+  outline: none;
   background-color: #ffffff;
   border-radius: .3em;
   height: 1.5em;
@@ -307,6 +338,8 @@
   display: flex;
   justify-content: center;
   align-items: center; }
+  .color-selection__type-button:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
   .color-selection__type-button:hover {
     background-color: #f0f0f0; }
   .color-selection__type-button:active {
@@ -329,22 +362,24 @@
 .color-selection__list-button {
   padding: 0;
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
+  outline: none;
   width: 10em;
   padding: .5em;
   display: flex;
   align-items: center; }
+  .color-selection__list-button:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
   .color-selection__list-button img {
     margin-right: .8em; }
 
 .color-selection__file-wrapper {
   padding: 0;
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
+  outline: none;
   background-color: #ffffff;
   border-radius: .3em;
   height: 1.5em;
@@ -354,6 +389,8 @@
   margin-left: .7em;
   width: 1.5em;
   text-align: center; }
+  .color-selection__file-wrapper:focus {
+    box-shadow: inset 0 0 2px 0 #b0b0b0; }
   .color-selection__file-wrapper:hover {
     background-color: #f0f0f0; }
   .color-selection__file-wrapper:active {
