@@ -2,14 +2,27 @@
 @inject IJSRuntime JS
 @using BlazorColorPicker
 
-<button class="" @onclick="OpenModal">
-    <div style="background-color:@colorHex" class="buttonColor">  ...  </div>
-</button>
 
-<ColorPicker Title="My Blazor ColorPicker" IsOpened="isOpened" Closed="ClosedEvent" MyColor="@colorHex">
-</ColorPicker>
+<ColorsScheme />
+
+<ColorSelection />
 
 <div>
+
+    <h3>color picker</h3>
+
+    <button class="" @onclick="OpenModal">
+        <div style="background-color:@colorHex" class="buttonColor">  ...  </div>
+    </button>
+
+    <ColorPicker Title="My Blazor ColorPicker" IsOpened="isOpened" Closed="ClosedEvent" MyColor="@colorHex">
+    </ColorPicker>
+
+</div>
+
+<div>
+
+    <h3>file input &amp; preview </h3>
 
     <InputFile OnChange="@OnInputFileChange" accept="image/*" capture />
 

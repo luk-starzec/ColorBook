@@ -1,0 +1,141 @@
+﻿
+<div class="colors-scheme__wrapper">
+
+    <h3 class="colors-scheme__header">COLORS SCHEME</h3>
+
+    <ul class="colors-scheme__list">
+
+        <li class="colors-scheme__list-item">
+            <div class="@GetCssSpacer(-1)" @ondrop="()=>DropInsert(-1)" @ondragenter="()=>DragEnterSpacer(-1)" @ondragend="()=>DragEnd(-1)" ondragover="event.preventDefault();">
+            </div>
+            <div class="colors-scheme__item-description">
+                @GetSpacerDesctiption(-1)
+            </div>
+        </li>
+
+        @for (int i = 0; i < colors.Count; i++)
+        {
+            int index = i;
+            <li class="colors-scheme__list-item">
+                <div @onmousedown="()=>SelectColor(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragend="()=>DragEnd(index)" ondragover="event.preventDefault();">
+                    <div class="@GetCssColorView(index)" style="background-color: @colors[i];" draggable="true"></div>
+                </div>
+                <div class="colors-scheme__item-description">
+                    @GetColorDesctiption(index)
+                </div>
+            </li>
+            <li class="colors-scheme__list-item">
+                <div class="@GetCssSpacer(index)" @ondrop="()=>DropInsert(index)" @ondragenter="()=>DragEnterSpacer(index)" @ondragend="()=>DragEnd(index)" ondragover="event.preventDefault();">
+                </div>
+                <div class="colors-scheme__item-description">
+                    @GetSpacerDesctiption(index)
+                </div>
+            </li>
+        }
+    </ul>
+
+</div>
+
+@code {
+    List<string> colors = new List<string>
+{
+        "#123456",
+        "#4DEA26",
+        "#AABBCC",
+        "#DDEEFF",
+        "#998877"
+    };
+
+
+    bool isDragMode = false;
+    int? selectedColor = null;
+    int? dragOverSpacer = null;
+    int? dragOverColor = null;
+
+    string GetCssColorView(int index)
+    {
+        var css = "colors-scheme__color-view";
+        if (selectedColor == index)
+            css += " colors-scheme__color-view--selected";
+        return css;
+    }
+
+    string GetCssSpacer(int index)
+    {
+        var css = "colors-scheme__color-spacer";
+        if (isDragMode)
+            css += " colors-scheme__color-spacer--wide";
+        if (dragOverSpacer == index)
+            css += " colors-scheme__color-spacer--drag-over";
+        return css;
+    }
+
+    string GetColorDesctiption(int index)
+    {
+        return dragOverColor == index && index != selectedColor ? "<->" : $"#{index + 1}";
+    }
+    string GetSpacerDesctiption(int index)
+    {
+        return dragOverSpacer == index ? "^" : " ";
+    }
+
+
+    void DropInsert(int index)
+    {
+        if (!selectedColor.HasValue)
+            return;
+
+        var color = colors[selectedColor.Value];
+        if (selectedColor > index)
+        {
+            colors.Insert(index + 1, color);
+            colors.RemoveAt(selectedColor.Value + 1);
+            SelectColor(index + 1);
+        }
+        else
+        {
+            colors.RemoveAt(selectedColor.Value);
+            colors.Insert(index, color);
+            SelectColor(index);
+        }
+    }
+
+    void DropSwitch(int index)
+    {
+        if (!selectedColor.HasValue)
+            return;
+        var color = colors[selectedColor.Value];
+        colors[selectedColor.Value] = colors[index];
+        colors[index] = color;
+        SelectColor(index);
+    }
+
+    void StartDrag(int index)
+    {
+        isDragMode = true;
+        SelectColor(index);
+    }
+
+    void DragEnter(int index)
+    {
+        dragOverColor = index;
+        dragOverSpacer = null;
+    }
+
+    void DragEnterSpacer(int index)
+    {
+        dragOverColor = null;
+        dragOverSpacer = index;
+    }
+
+    void DragEnd(int index)
+    {
+        isDragMode = false;
+        dragOverSpacer = null;
+        dragOverColor = null;
+    }
+    void SelectColor(int index)
+    {
+        selectedColor = index;
+    }
+}

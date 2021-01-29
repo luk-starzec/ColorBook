@@ -1,0 +1,80 @@
+﻿
+<div class="color-selection__wrapper">
+
+    <h3 class="color-selection__header">COLOR SELECTION:</h3>
+
+    <div class="color-selection__type-wrapper">
+
+        <button class="color-selection__type-button" title="@GetTitle(colorSelectionType)" @onclick="ChangeListVisibility">
+            <img src="@GetImageSrc(colorSelectionType)" alt="@GetTitle(colorSelectionType)" />
+        </button>
+
+        @if (isListVisible)
+        {
+            <ul class="color-selection__list">
+                @{ foreach (EnumColorSelectionType type in Enum.GetValues(typeof(EnumColorSelectionType)))
+                    {
+                        <li class="color-selection__list-item">
+                            <button class="color-selection__list-button" @onclick="()=>ChangeSelectionType(type)">
+                                <img src="@GetImageSrc(type)" />
+                                @GetTitle(type)
+                            </button>
+                        </li>
+                    }
+                }
+            </ul>
+        }
+
+    </div>
+
+    @if (isFileButtonVisible)
+    {
+        <div class="color-selection__file-wrapper">
+            <label class="color-selection__file-label" for="file-input" title="@GetTitleFile(colorSelectionType)">...</label>
+            <input class="color-selection__file-input" id="file-input" type="file" />
+        </div>
+    }
+
+</div>
+
+@code {
+
+    EnumColorSelectionType colorSelectionType = EnumColorSelectionType.Palette;
+
+    bool isListVisible = false;
+
+    bool isFileButtonVisible => colorSelectionType != EnumColorSelectionType.Image;
+
+    private string GetTitle(EnumColorSelectionType selectionType)
+    {
+        return selectionType switch
+        {
+            EnumColorSelectionType.Palette => "from palette",
+            EnumColorSelectionType.Image => "from image",
+            EnumColorSelectionType.Camera => "from camera",
+            _ => string.Empty,
+        };
+    }
+
+    private string GetTitleFile(EnumColorSelectionType selectionType) => selectionType == EnumColorSelectionType.Camera ? "open camera" : "open file";
+
+    private string GetImageSrc(EnumColorSelectionType selectionType)
+    {
+        var fileName = selectionType switch
+        {
+            EnumColorSelectionType.Palette => "palette-icon",
+            EnumColorSelectionType.Image => "image-icon",
+            EnumColorSelectionType.Camera => "camera-icon",
+            _ => string.Empty,
+        };
+        return $"/assets/{fileName}.svg";
+    }
+
+    private void ChangeListVisibility() => isListVisible = !isListVisible;
+
+    private void ChangeSelectionType(EnumColorSelectionType selectionType)
+    {
+        colorSelectionType = selectionType;
+        isListVisible = false;
+    }
+}
