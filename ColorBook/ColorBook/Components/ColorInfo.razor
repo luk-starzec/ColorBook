@@ -1,32 +1,37 @@
-﻿
+﻿@using BlazorColorPicker
+
 <div class="color-info__wrapper">
+
 
     <div class="@cssBasicView">
 
-        <button class="color-info__button-add" title="add color">
+        <button class="color-info__button-add" title="add color to scheme">
             <img src="/assets/add-icon.svg" alt="" />
         </button>
 
-        <div class="@cssColorView" style="background-color: @ColorHex;"></div>
+        <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+            <div class="color-info__color-change">...</div>
+        </button>
 
-        <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!fullView)" IsBold="@fullView" />
+        <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!isFullView)" IsBold="@isFullView" />
 
-        <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide details">
+        <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide color details">
             <img src="/assets/dropdown-icon.svg" />
         </button>
 
     </div>
 
-    @if (fullView)
+    @if (isFullView)
     {
         <div class="color-info__full-view">
 
-            <div class="color-info__color-big-view" style="background-color: @ColorHex;"></div>
+            <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+                <div class="color-info__color-change">...</div>
+            </button>
 
             <InputRGB @bind-Value="ColorHex" />
             <InputHSL @bind-Value="ColorHex" />
             <InputName @bind-Value="ColorHex" />
-
 
         </div>
 
@@ -44,8 +49,10 @@
             <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="#ffffff" />
 
         </div>
-
     }
+
+    <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@ColorHex">
+    </ColorPicker>
 
 </div>
 
@@ -53,14 +60,27 @@
     [Parameter]
     public string ColorHex { get; set; }
 
-    private bool fullView = false;
+    private bool isFullView = false;
 
-    private string cssBasicView => fullView ? "color-info__basic-view color-info__basic-view--full" : "color-info__basic-view";
-    private string cssColorView => fullView ? "color-info__color-view color-info__color-view--hidden" : "color-info__color-view";
-    private string cssButtonDetalis => fullView ? "color-info__button-view color-info__button-view--full" : "color-info__button-view";
+    private string cssBasicView => isFullView ? "color-info__basic-view color-info__basic-view--full" : "color-info__basic-view";
+    private string cssColorViewer => isFullView ? "color-info__color-sample color-info__color-sample--hidden" : "color-info__color-sample";
+    private string cssButtonDetalis => isFullView ? "color-info__switch-view color-info__switch-view--full" : "color-info__switch-view";
+    private string styleSampleColor => $"background-color: {ColorHex};";
 
-    private void ChangeView()
+    private void ChangeView() => isFullView = !isFullView;
+
+
+    bool isColorPickerOpened = false;
+
+    void ShowColorPicker()
     {
-        fullView = !fullView;
+        isColorPickerOpened = true;
     }
+
+    void ClosedColorPicker(string value)
+    {
+        ColorHex = value;
+        isColorPickerOpened = false;
+    }
+
 }
