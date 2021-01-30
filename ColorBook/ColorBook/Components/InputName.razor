@@ -1,25 +1,24 @@
-﻿
+﻿@inject IJSRuntime JS
+
 <div class="input-name__wrapper">
 
     <label class="input-name__label">
         <span>Name:</span>
-        <input @bind="@ColorName" class="input-name__input" disabled />
+        <input @bind="@colorName" class="input-name__input" disabled readonly />
     </label>
 
-    <ButtonCopy Text="@ColorName" />
+    <ButtonCopy Text="@colorName" />
 
 </div>
-
 
 @code {
     [Parameter]
     public string Value { get; set; }
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
 
-    private string ColorName
+    private string colorName = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
     {
-        get => Value;
-        set => Value = value;
+        colorName = await JS.InvokeAsync<string>("ColorLib.getName", Value);
     }
 }

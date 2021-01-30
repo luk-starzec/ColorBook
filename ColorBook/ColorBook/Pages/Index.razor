@@ -7,18 +7,6 @@
 
 <ColorSelection />
 
-<div>
-
-    <h3>color picker</h3>
-
-    <button class="" @onclick="OpenModal">
-        <div style="background-color:@colorHex" class="buttonColor">  ...  </div>
-    </button>
-
-    <ColorPicker Title="My Blazor ColorPicker" IsOpened="isOpened" Closed="ClosedEvent" MyColor="@colorHex">
-    </ColorPicker>
-
-</div>
 
 <div>
 
@@ -62,7 +50,7 @@
 
 @*<ColorInfoFull ColorHex="@colorHex" />*@
 
-<!--<button @onclick="Test">Test</button>-->
+<button @onclick="Test">Test</button>
 
 @code {
     string colorHex { get; set; } = "#ff00ff";
@@ -118,12 +106,12 @@
     }
 
 
-
-    //async Task Test()
-    //{
-    //    Console.WriteLine("test");
-    //    //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
-    //}
+    async Task Test()
+    {
+        Console.WriteLine("test");
+        //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
+        await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
+    }
 
     //protected override void OnInitialized()
     //{
@@ -157,19 +145,5 @@
     //{
     //    return base.OnInitializedAsync();
     //}
-
-
-    bool isOpened = false;
-
-    void OpenModal()
-    {
-        isOpened = true;
-    }
-
-    void ClosedEvent(string value)
-    {
-        colorHex = value;
-        isOpened = false;
-    }
 
 }
