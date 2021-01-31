@@ -5,7 +5,7 @@
 
     <div class="color-selection__type-wrapper">
 
-        <button class="color-selection__type-button" title="@GetTitle(colorSelectionType)" @onclick="ChangeListVisibility">
+        <button class="@cssButton" title="@GetTitle(colorSelectionType)" @onclick="ChangeListVisibility">
             <img src="@GetImageSrc(colorSelectionType)" alt="@GetTitle(colorSelectionType)" />
         </button>
 
@@ -30,8 +30,10 @@
     @if (isFileButtonVisible)
     {
         <div class="color-selection__file-wrapper">
-            <label class="color-selection__file-label" for="file-input" title="@GetTitleFile(colorSelectionType)">...</label>
-            <input class="color-selection__file-input" id="file-input" type="file" />
+            <label class="color-selection__file-label" title="@GetTitleFile(colorSelectionType)">
+                ...
+                <input class="color-selection__file-input" type="file" />
+            </label>
         </div>
     }
 
@@ -44,6 +46,8 @@
     bool isListVisible = false;
 
     bool isFileButtonVisible => colorSelectionType != EnumColorSelectionType.Image;
+
+    string cssButton => isListVisible ? "color-selection__type-button color-selection__type-button--list" : "color-selection__type-button";
 
     private string GetTitle(EnumColorSelectionType selectionType)
     {

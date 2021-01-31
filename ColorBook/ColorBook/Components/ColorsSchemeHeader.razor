@@ -1,0 +1,57 @@
+﻿@inject IJSRuntime JS
+
+<div class="colors-scheme-header__wrapper">
+
+    <h3 class="colors-scheme-header__title">COLORS SCHEME</h3>
+
+    <div class="colors-scheme-header__schemes-wrapper">
+
+        <button class="@cssButton" @onclick="ChangeListVisibility" title="generate color scheme">
+            <img src="/assets/color-wheel-icon.svg" />
+        </button>
+
+        @if (isListVisible)
+        {
+            <ul class="colors-scheme-header__list">
+
+                <li class="colors-scheme-header__list-item colors-scheme-header__list-item--info ">
+                    Based on
+                    <div class="colors-scheme-header__color-sample" style="background-color: @ColorHex"></div>
+                    generate colors:
+                </li>
+
+                @foreach (var scheme in schemes)
+                {
+                    <li class="colors-scheme-header__list-item colors-scheme-header__list-item--selectable" @onclick="()=>SchemeSelected(scheme)">
+                        @scheme
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public string ColorHex { get; set; }
+
+    string[] schemes;
+
+    bool isListVisible;
+
+    string cssButton => isListVisible ? "colors-scheme-header__button colors-scheme-header__button--list" : "colors-scheme-header__button";
+
+    protected override async Task OnInitializedAsync()
+    {
+        schemes = await JS.InvokeAsync<string[]>("ColorLib.getSchemeTypes");
+    }
+
+    void ChangeListVisibility() => isListVisible = !isListVisible;
+
+    void SchemeSelected(string scheme)
+    {
+        Console.WriteLine(scheme);
+        isListVisible = false;
+    }
+}
