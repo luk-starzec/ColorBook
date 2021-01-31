@@ -446,6 +446,11 @@ input {
 
 
 .colors-scheme__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    --color-width: 4em;
+    --spacer-width: 2em;
 }
 
 .colors-scheme__header {
@@ -461,6 +466,7 @@ input {
     justify-content: center;
     list-style: none;
     padding: 0;
+    margin: 1em 0 .5em 0;
 }
 
 .scheme-colors__list-item {
@@ -469,15 +475,17 @@ input {
     align-items: center;
 }
 
+
 .scheme-colors__color-view {
-    width: 4em;
+    width: var(--color-width);
     height: 4em;
     border-radius: .3em;
     border: none;
     transition: transform ease .1s;
+    cursor: grab;
 
     &--selected {
-        transform: scale(1.05);
+        transform: scale(1.1);
         box-shadow: 2px 2px 5px rgba(0, 0, 0, .1);
     }
 }
@@ -490,10 +498,10 @@ input {
 
 .scheme-colors__color-spacer {
     height: 4em;
-    width: .5em;
+    width: .7em;
 
     &--wide {
-        width: 2em;
+        width: var(--spacer-width);
     }
 
     &--drag-over {
@@ -501,9 +509,25 @@ input {
     }
 }
 
+.scheme-colors__remove-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--items-count)*var(--color-width) + (var(--items-count)+1)*var(--spacer-width));
+    height: 3em;
+    border-radius: .3em;
+    box-shadow: inset 1px 1px 4px rgba(0, 0, 0, .1);
+    background: no-repeat center url(/assets/delete-icon.svg);
+
+    &--drag-over {
+        background: no-repeat center url(/assets/delete-icon.svg),repeating-linear-gradient(45deg, #dddddd, #dddddd .5em, #ffffff .5em, #ffffff 1em );
+    }
+}
+
 .scheme-description__list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .scheme-description__list-item {

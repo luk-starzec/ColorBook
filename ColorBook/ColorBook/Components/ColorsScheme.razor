@@ -6,7 +6,7 @@
     <ul class="scheme-colors__list">
 
         <li class="scheme-colors__list-item">
-            <div class="@GetCssSpacer(-1)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(-1)" @ondragenter="()=>DragEnterSpacer(-1)" @ondragend="()=>DragEnd(-1)">
+            <div class="@GetCssSpacer(-1)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(-1)" @ondragenter="()=>DragEnterSpacer(-1)" @ondragleave="()=>DragLeaveSpacer(-1)" @ondragend="()=>DragEnd(-1)">
             </div>
             <div class="scheme-colors__item-description">
                 @GetSpacerDesctiption(-1)
@@ -18,14 +18,14 @@
             int index = i;
             <li class="scheme-colors__list-item">
                 <div class="@GetCssColorView(index)" style="background-color: @colors[i];" draggable="true" ondragover="event.preventDefault();"
-                     @onmousedown="()=>SelectColor(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragend="()=>DragEnd(index)">
+                     @onmousedown="()=>SelectColor(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
                 </div>
                 <div class="scheme-colors__item-info">
                     @GetColorDesctiption(index)
                 </div>
             </li>
             <li class="scheme-colors__list-item">
-                <div class="@GetCssSpacer(index)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(index)" @ondragenter="()=>DragEnterSpacer(index)" @ondragend="()=>DragEnd(index)">
+                <div class="@GetCssSpacer(index)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(index)" @ondragenter="()=>DragEnterSpacer(index)" @ondragleave="()=>DragLeaveSpacer(index)" @ondragend="()=>DragEnd(index)">
                 </div>
                 <div class="scheme-colors__item-description">
                     @GetSpacerDesctiption(index)
@@ -33,6 +33,13 @@
             </li>
         }
     </ul>
+
+    @if (isDragMode && colors.Count > 1)
+    {
+        <div class="@GetCssRemoveArea()" style="--items-count: @colors.Count;" ondragover="event.preventDefault();"
+             @ondragenter="DragEnterRemove" @ondragleave="DragLeaveRemove" @ondrop="DropRemove">
+        </div>
+    }
 
     <ul class="scheme-description__list">
 
@@ -72,6 +79,7 @@
     int? selectedColor = null;
     int? dragOverSpacer = null;
     int? dragOverColor = null;
+    bool isDragOverRemove = false;
 
     string GetCssColorView(int index)
     {
@@ -91,10 +99,19 @@
         return css;
     }
 
+    string GetCssRemoveArea()
+    {
+        var css = "scheme-colors__remove-area";
+        if (isDragOverRemove)
+            css += " scheme-colors__remove-area--drag-over";
+        return css;
+    }
+
     string GetColorDesctiption(int index)
     {
         return dragOverColor == index && index != selectedColor ? "<->" : $"#{index + 1}";
     }
+
     string GetSpacerDesctiption(int index)
     {
         return dragOverSpacer == index ? "^" : " ";
@@ -131,6 +148,15 @@
         SelectColor(index);
     }
 
+    void DropRemove()
+    {
+        if (!selectedColor.HasValue)
+            return;
+        colors.RemoveAt(selectedColor.Value);
+        SelectColor(null);
+        isDragMode = false;
+    }
+
     void StartDrag(int index)
     {
         isDragMode = true;
@@ -140,13 +166,31 @@
     void DragEnter(int index)
     {
         dragOverColor = index;
-        dragOverSpacer = null;
+    }
+
+    void DragLeave(int index)
+    {
+        dragOverColor = null;
     }
 
     void DragEnterSpacer(int index)
     {
-        dragOverColor = null;
         dragOverSpacer = index;
+    }
+
+    void DragLeaveSpacer(int index)
+    {
+        dragOverSpacer = null;
+    }
+
+    void DragEnterRemove()
+    {
+        isDragOverRemove = true;
+    }
+
+    void DragLeaveRemove()
+    {
+        isDragOverRemove = false;
     }
 
     void DragEnd(int index)
@@ -154,8 +198,10 @@
         isDragMode = false;
         dragOverSpacer = null;
         dragOverColor = null;
+        isDragOverRemove = false;
     }
-    void SelectColor(int index)
+
+    void SelectColor(int? index)
     {
         selectedColor = index;
     }
