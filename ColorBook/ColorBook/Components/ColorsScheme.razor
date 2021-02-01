@@ -2,7 +2,7 @@
 
 <div class="colors-scheme__wrapper">
 
-    <ColorsSchemeHeader ColorHex="@colors[0]" AddGeneratedColors="AddGeneratedColors" />
+    <ColorsSchemeHeader ColorHex="@colors[0]" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
 
     <ul class="scheme-colors__list">
 
@@ -215,4 +215,9 @@
         StateHasChanged();
     }
 
+    void ClearSchemeColors()
+    {
+        colors = new List<string> { colors[0] };
+        StateHasChanged();
+    }
 }
