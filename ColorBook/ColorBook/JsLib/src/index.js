@@ -216,31 +216,121 @@ export function getName(colorHex) {
     return colorUpperCase in colorNames ? colorNames[colorUpperCase] : '';
 }
 
+//export function getSchemeTypes() {
+//    return [
+//        'complementary',
+//        'splitComplementary',
+//        'splitComplementaryCW',
+//        'splitComplementaryCCW',
+//        'triadic',
+//        'clash',
+//        'tetradic',
+//        'fourToneCW',
+//        'fourToneCCW',
+//        'fiveToneA',
+//        'fiveToneB',
+//        'fiveToneC',
+//        'fiveToneD',
+//        'fiveToneE',
+//        'sixToneCW',
+//        'sixToneCCW',
+//        'neutral',
+//        'analogous',
+//    ]
+//}
+
 export function getSchemeTypes() {
     return [
-        'complementary',
-        'splitComplementary',
-        'splitComplementaryCW',
-        'splitComplementaryCCW',
-        'triadic',
-        'clash',
-        'tetradic',
-        'fourToneCW',
-        'fourToneCCW',
-        'fiveToneA',
-        'fiveToneB',
-        'fiveToneC',
-        'fiveToneD',
-        'fiveToneE',
-        'sixToneCW',
-        'sixToneCCW',
-        'neutral',
-        'analogous',
+        {
+            Name: 'Complementary',
+            Method:'complementaryScheme'
+        },
+        {
+            Name: 'Split Complementary',
+            Method:'splitComplementaryScheme'
+        },
+        {
+            Name: 'Split Complementary CW',
+            Method:'splitComplementaryCWScheme'
+        },
+        {
+            Name: 'Split Complementary CCW',
+            Method:'splitComplementaryCCWScheme'
+        },
+        {
+            Name: 'Triadic',
+            Method:'triadicScheme'
+        },
+        {
+            Name: 'Clash',
+            Method:'clashScheme'
+        },
+        {
+            Name: 'Tetradic',
+            Method:'tetradicScheme'
+        },
+        {
+            Name: 'Four Tone CW',
+            Method:'fourToneCWScheme'
+        },
+        {
+            Name: 'Four Tone CCW',
+            Method:'fourToneCCWScheme'
+        },
+        {
+            Name: 'Five Tone A',
+            Method:'fiveToneAScheme'
+        },
+        {
+            Name: 'Five Tone B',
+            Method:'fiveToneBScheme'
+        },
+        {
+            Name: 'Five Tone C',
+            Method:'fiveToneCScheme'
+        },
+        {
+            Name: 'Five Tone D',
+            Method:'fiveToneDScheme'
+        },
+        {
+            Name: 'Five Tone E',
+            Method:'fiveToneEScheme'
+        },
+        {
+            Name: 'Six Tone CW',
+            Method:'sixToneCWScheme'
+        },
+        {
+            Name: 'Six Tone CCW',
+            Method:'sixToneCCWScheme'
+        },
+        {
+            Name: 'Neutral',
+            Method:'neutralScheme'
+        },
+        {
+            Name: 'Analogous',
+            Method:'analogousScheme'
+        },
     ]
 }
 
-export function generateScheme(colorHex, schemeType) {
-    var color = Color(colorHex);
-    const test = color.tetradicScheme();
-    console.log(test);
+export function generateScheme(colorHex, method) {
+    var baseColor = Color(colorHex);
+    const colors = baseColor[method]();
+    const hexColors = colors.map(c => c.toString());
+    return hexColors;
 }
+
+export function testFn() {
+    console.log("testFn");
+    const testData =
+    {
+        name: 'nazwa',
+        value: 'wartość'
+    };
+    console.log(testData);
+    return testData;
+}
+

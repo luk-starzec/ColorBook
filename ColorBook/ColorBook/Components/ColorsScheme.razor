@@ -2,7 +2,7 @@
 
 <div class="colors-scheme__wrapper">
 
-    <ColorsSchemeHeader ColorHex="@colors[0]" />
+    <ColorsSchemeHeader ColorHex="@colors[0]" AddGeneratedColors="AddGeneratedColors" />
 
     <ul class="scheme-colors__list">
 
@@ -207,4 +207,12 @@
     {
         selectedColor = index;
     }
+
+    void AddGeneratedColors(string[] newColors)
+    {
+        colors.RemoveAt(0);
+        colors.InsertRange(0, newColors);
+        StateHasChanged();
+    }
+
 }

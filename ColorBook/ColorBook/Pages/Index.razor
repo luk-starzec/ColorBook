@@ -110,7 +110,14 @@
     {
         Console.WriteLine("test");
         //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
-        await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
+        //await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
+        var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn"); 
+    }
+
+    public class NameValue
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 
     //protected override void OnInitialized()

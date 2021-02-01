@@ -22,8 +22,8 @@
 
                 @foreach (var scheme in schemes)
                 {
-                    <li class="colors-scheme-header__list-item colors-scheme-header__list-item--selectable" @onclick="()=>SchemeSelected(scheme)">
-                        @scheme
+                    <li class="colors-scheme-header__list-item colors-scheme-header__list-item--selectable" @onclick="()=>GenerateScheme(scheme.Method)">
+                        @scheme.Name
                     </li>
                 }
             </ul>
@@ -35,8 +35,10 @@
 @code {
     [Parameter]
     public string ColorHex { get; set; }
+    [Parameter]
+    public Action<string[]> AddGeneratedColors { get; set; }
 
-    string[] schemes;
+    SchemeType[] schemes;
 
     bool isListVisible;
 
@@ -44,14 +46,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        schemes = await JS.InvokeAsync<string[]>("ColorLib.getSchemeTypes");
+        schemes = await JS.InvokeAsync<SchemeType[]>("ColorLib.getSchemeTypes");
     }
 
     void ChangeListVisibility() => isListVisible = !isListVisible;
 
-    void SchemeSelected(string scheme)
+    async Task GenerateScheme(string method)
     {
-        Console.WriteLine(scheme);
+        var colors = await JS.InvokeAsync<string[]>("ColorLib.generateScheme", ColorHex, method);
+        AddGeneratedColors?.Invoke(colors);
         isListVisible = false;
     }
 }
