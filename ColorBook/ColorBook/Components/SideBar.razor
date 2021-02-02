@@ -1,0 +1,68 @@
+﻿
+<div class="@cssWrapper">
+
+    <div class="side-bar__header">
+
+        <img class="side-bar__logo" src="/assets/logo-icon.svg" />
+
+        <h3 class="side-bar__title">ColorBook</h3>
+
+        @if (isCollapsed)
+        {
+            <button class="side-bar__menu-button" @onclick="ShowMenu">
+                <img src="/assets/menu-icon.svg" />
+            </button>
+        }
+        else
+        {
+            <button class="side-bar__close-button" @onclick="HideMenu">
+                <img src="/assets/close-icon.svg" />
+            </button>
+        }
+    </div>
+
+    @if (!isCollapsed)
+    {
+        <nav class="side-bar__nav">
+            <ul class="side-bar__list">
+
+                <li class="side-bar__list-item">
+                    <img src="/assets/create-scheme-icon.svg" />
+                    Create scheme
+                </li>
+
+                <li class="side-bar__list-item">
+                    <img src="/assets/load-scheme-icon.svg" />
+                    Load scheme
+                    <button>
+                        <img src="/assets/dropdown-icon.svg" />
+                    </button>
+                    @*<ul>
+                            <li>from file...</li>
+                            <li>from library...</li>
+                        </ul>*@
+                </li>
+
+                <li class="side-bar__list-item side-bar__list-item--blank"></li>
+
+                <li class="side-bar__list-item">
+                    <img src="/assets/settings-icon.svg" />
+                    Settings
+                </li>
+
+            </ul>
+        </nav>
+    }
+
+
+</div>
+
+@code {
+
+    bool isCollapsed = true;
+
+    string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
+
+    void ShowMenu() => isCollapsed = false;
+    void HideMenu() => isCollapsed = true;
+}

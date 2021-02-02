@@ -3,6 +3,9 @@
 @using BlazorColorPicker
 
 
+<SideBar />
+
+
 <ColorsScheme />
 
 <ColorSelection />
@@ -111,7 +114,7 @@
         Console.WriteLine("test");
         //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
         //await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
-        var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn"); 
+        var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn");
     }
 
     public class NameValue
