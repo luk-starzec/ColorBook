@@ -9,13 +9,13 @@
 
         @if (isCollapsed)
         {
-            <button class="side-bar__menu-button" @onclick="ShowMenu">
+            <button class="side-bar__menu-button" @onclick="()=>isCollapsed = false">
                 <img src="/assets/menu-icon.svg" />
             </button>
         }
         else
         {
-            <button class="side-bar__close-button" @onclick="HideMenu">
+            <button class="side-bar__close-button" @onclick="()=>isCollapsed = true">
                 <img src="/assets/close-icon.svg" />
             </button>
         }
@@ -26,28 +26,32 @@
         <nav class="side-bar__nav">
             <ul class="side-bar__list">
 
-                <li class="side-bar__list-item">
-                    <img src="/assets/create-scheme-icon.svg" />
+                <li class="side-bar__list-item side-bar__list-item--action">
+                    <img src="/assets/create-scheme-icon.svg" title="create scheme" />
                     Create scheme
                 </li>
 
                 <li class="side-bar__list-item">
-                    <img src="/assets/load-scheme-icon.svg" />
+                    <img src="/assets/load-scheme-icon.svg" title="load scheme" />
                     Load scheme
-                    <button>
-                        <img src="/assets/dropdown-icon.svg" />
-                    </button>
-                    @*<ul>
-                            <li>from file...</li>
-                            <li>from library...</li>
-                        </ul>*@
+                    <img class="side-bar__down-icon" src="/assets/dropdown-icon.svg" />
+                    <ul class="side-bar__sublist">
+                        <li class="side-bar__sublist-item">
+                            from file...
+                        </li>
+                        <li class="side-bar__sublist-item" @onclick="()=>isLibraryCollapsed=!isLibraryCollapsed">
+                            from library
+                            <img class="@cssLibraryIcon" src="/assets/dropdown-icon.svg" />
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="side-bar__list-item side-bar__list-item--blank"></li>
 
-                <li class="side-bar__list-item">
+                <li class="side-bar__list-item side-bar__list-item--action" @onclick="()=>isSettingsCollapsed=!isSettingsCollapsed">
                     <img src="/assets/settings-icon.svg" />
                     Settings
+                    <img class="@cssSettingsIcon" src="/assets/dropdown-icon.svg" />
                 </li>
 
             </ul>
@@ -60,9 +64,11 @@
 @code {
 
     bool isCollapsed = true;
-
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
 
-    void ShowMenu() => isCollapsed = false;
-    void HideMenu() => isCollapsed = true;
+    bool isLibraryCollapsed = true;
+    string cssLibraryIcon => isLibraryCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
+
+    bool isSettingsCollapsed = true;
+    string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 }

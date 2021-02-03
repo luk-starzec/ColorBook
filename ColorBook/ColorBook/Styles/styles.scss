@@ -692,7 +692,7 @@ input {
     top: 0;
     left: 0;
     height: 100vh;
-    width: 13em;
+    width: 14em;
     z-index: 200;
     display: flex;
     flex-direction: column;
@@ -701,7 +701,7 @@ input {
     transition: transform ease .4s, background-color .4s;
 
     &--collapsed {
-        transform: translateX(-10em);
+        transform: translateX(-11em);
         background-color: transparent;
     }
 }
@@ -762,7 +762,7 @@ input {
 .side-bar__title {
     flex-grow: 1;
     text-align: center;
-    font-size: 1em;
+    font-size: 1.2em;
     font-weight: normal;
 }
 
@@ -771,21 +771,25 @@ input {
 }
 
 .side-bar__list {
+    display: flex;
+    flex-direction: column;
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
     color: #666666;
-    font-size: .8em;
     height: 100%;
 }
 
 .side-bar__list-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 1em;
+    grid-column-gap: 1em;
     padding: 1em .7em 1em 1em;
+
+    ul {
+        visibility: collapse;
+    }
 
     &--blank {
         flex-grow: 1;
@@ -793,5 +797,59 @@ input {
 
     &:hover:not(.side-bar__list-item--blank) {
         background-color: #ffffff;
+
+        ul {
+            visibility: visible;
+        }
+
+        .side-bar__down-icon {
+            transform: scaleY(-1);
+        }
+    }
+
+    &--action {
+        cursor: pointer;
+    }
+}
+
+@mixin side-bar-more-icon {
+    width: 1em;
+    height: 1em;
+    transition: transform ease .2s;
+    margin-right: .5em;
+}
+
+.side-bar__down-icon {
+    @include side-bar-more-icon;
+}
+
+.side-bar__right-icon {
+    @include side-bar-more-icon;
+    transform: rotate(-90deg);
+
+    &--opened {
+        transform: rotate(-90deg) scaleY(-1);
+    }
+}
+
+.side-bar__sublist {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: .5em 0 0 0;
+    grid-column: 2/4;
+}
+
+.side-bar__sublist-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    grid-gap: 1em;
+    padding: .8em 0 .8em 1em;;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #fcfcfc;
     }
 }
