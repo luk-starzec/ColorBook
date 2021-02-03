@@ -9,8 +9,11 @@
         <li class="scheme-colors__list-item">
             <div class="@GetCssSpacer(-1)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(-1)" @ondragenter="()=>DragEnterSpacer(-1)" @ondragleave="()=>DragLeaveSpacer(-1)" @ondragend="()=>DragEnd(-1)">
             </div>
-            <div class="scheme-colors__item-description">
-                @GetSpacerDesctiption(-1)
+            <div class="scheme-colors__item-info">
+                @if (IsSpacerDropDescription(-1))
+                {
+                    <img src="/assets/insert-icon.svg" />
+                }
             </div>
         </li>
 
@@ -22,14 +25,24 @@
                      @onmousedown="()=>SelectColor(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
                 </div>
                 <div class="scheme-colors__item-info">
-                    @GetColorDesctiption(index)
+                    @if (IsColorDropDescription(index))
+                    {
+                        <img src="/assets/switch-icon.svg" />
+                    }
+                    else
+                    {
+                        @($"#{index + 1}")
+                    }
                 </div>
             </li>
             <li class="scheme-colors__list-item">
                 <div class="@GetCssSpacer(index)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(index)" @ondragenter="()=>DragEnterSpacer(index)" @ondragleave="()=>DragLeaveSpacer(index)" @ondragend="()=>DragEnd(index)">
                 </div>
-                <div class="scheme-colors__item-description">
-                    @GetSpacerDesctiption(index)
+                <div class="scheme-colors__item-info">
+                    @if (IsSpacerDropDescription(index))
+                    {
+                        <img src="/assets/insert-icon.svg" />
+                    }
                 </div>
             </li>
         }
@@ -109,15 +122,8 @@
         return css;
     }
 
-    string GetColorDesctiption(int index)
-    {
-        return dragOverColor == index && index != selectedColor ? "<->" : $"#{index + 1}";
-    }
-
-    string GetSpacerDesctiption(int index)
-    {
-        return dragOverSpacer == index ? "^" : " ";
-    }
+    bool IsColorDropDescription(int index) => dragOverColor == index && index != selectedColor;
+    bool IsSpacerDropDescription(int index) => dragOverSpacer == index;
 
 
     void DropInsert(int index)

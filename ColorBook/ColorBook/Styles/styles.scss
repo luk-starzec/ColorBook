@@ -570,9 +570,11 @@ input {
 .scheme-colors__list {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     list-style: none;
     padding: 0;
     margin: 1em 0 .5em 0;
+    max-width: 90vw;
 }
 
 .scheme-colors__list-item {
@@ -598,8 +600,13 @@ input {
 
 .scheme-colors__item-info {
     color: #666666;
-    font-size: .8em;
-    margin: .3em 0;
+    font-size: .9em;
+    margin: .4em 0;
+
+    & img {
+        width: .9em;
+        height: .9em;
+    }
 }
 
 .scheme-colors__color-spacer {
@@ -620,6 +627,7 @@ input {
     justify-content: center;
     align-items: center;
     width: calc(var(--items-count)*var(--color-width) + (var(--items-count)+1)*var(--spacer-width));
+    max-width: 90vw;
     height: 3em;
     border-radius: .3em;
     box-shadow: inset 1px 1px 4px rgba(0, 0, 0, .1);
@@ -755,6 +763,7 @@ input {
     flex-grow: 1;
     text-align: center;
     font-size: 1em;
+    font-weight: normal;
 }
 
 .side-bar__nav {
@@ -775,6 +784,7 @@ input {
 .side-bar__list-item {
     display: flex;
     align-items: center;
+    gap: 1em;
     padding: 1em .7em 1em 1em;
 
     &--blank {
