@@ -701,6 +701,7 @@ input {
     transition: transform ease .4s, background-color .4s;
 
     &--collapsed {
+        height: 3em;
         transform: translateX(-11em);
         background-color: transparent;
     }

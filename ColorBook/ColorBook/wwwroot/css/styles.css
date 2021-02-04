@@ -645,6 +645,7 @@ input {
   background-color: #fcfcfc;
   transition: transform ease .4s, background-color .4s; }
   .side-bar__wrapper--collapsed {
+    height: 3em;
     transform: translateX(-11em);
     background-color: transparent; }
 

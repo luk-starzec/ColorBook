@@ -1,6 +1,8 @@
 ﻿@page "/"
 @inject IJSRuntime JS
 @using BlazorColorPicker
+@using System
+@using System.Text
 
 
 <SideBar />
@@ -54,6 +56,13 @@
 @*<ColorInfoFull ColorHex="@colorHex" />*@
 
 <button @onclick="Test">Test</button>
+
+<a download="test_scheme.json"
+   href="data:application/json;charset=utf-8,@testData">
+    Download file
+</a>
+
+<InputFile OnChange="@LoadFile" accept="application/JSON" />
 
 @code {
     string colorHex { get; set; } = "#ff00ff";
@@ -114,7 +123,32 @@
         Console.WriteLine("test");
         //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
         //await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
-        var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn");
+        //var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn");
+
+        var aa = new NameValue
+        {
+            Name = "test",
+            Value = "001",
+        };
+
+        var aaa = new ColorScheme
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test scheme",
+            Colors = new KeyValuePair<string, string>[]
+            {
+                new KeyValuePair<string, string>("color01", "#ffffff"),
+                new KeyValuePair<string, string>("color02", "#ff0000"),
+                                                                }
+        };
+
+        testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
+        //var valueBytes = Encoding.UTF8.GetBytes(testData);
+        //testData = Convert.ToBase64String(valueBytes);
+
+        //var vv = System.Convert.FromBase64String(testData);
+        //var xx = Encoding.UTF8.GetString(vv);
+        //var xxx = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(xx);
     }
 
     public class NameValue
@@ -123,6 +157,28 @@
         public string Value { get; set; }
     }
 
+    string testData;
+
+
+    async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffers = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffers);
+        var stringData = Encoding.UTF8.GetString(buffers);
+        var scheme = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(stringData);
+        scheme.Colors = scheme.Colors.Select(r => new KeyValuePair<string, string>(r.Key, $"#{r.Value}")).ToArray();
+    }
+
+
+    //private async Task OnFileSelection(InputFileChangeEventArgs e)
+    //{
+    //    IBrowserFile imgFile = e.File;
+    //    var buffers = new byte[imgFile.Size];
+    //    await imgFile.OpenReadStream().ReadAsync(buffers);
+    //    string imageType = imgFile.ContentType;
+    //    imgUrl = $"data:{imageType};base64,{Convert.ToBase64String(buffers)}";
+    //}
     //protected override void OnInitialized()
     //{
     //    Console.WriteLine("111");
