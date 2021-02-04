@@ -1,0 +1,32 @@
+﻿@inject HttpClient Http
+
+@svg
+
+@code {
+    [Parameter]
+    public string SvgUrl { get; set; }
+
+    MarkupString svg;
+
+    protected override async Task OnInitializedAsync()
+    {
+        svg = await GetSvg(SvgUrl);
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        svg = await GetSvg(SvgUrl);
+    }
+
+    private async Task<MarkupString> GetSvg(string url)
+    {
+        try
+        {
+            return new MarkupString(await Http.GetStringAsync(url));
+        }
+        catch (Exception e)
+        {
+            return new MarkupString();
+        }
+    }
+
+}

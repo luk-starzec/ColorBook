@@ -472,8 +472,8 @@ input {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vh;
-    height: 100vw;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(255, 255, 255, .7);
     visibility: collapse;
 
@@ -721,8 +721,12 @@ input {
     @include std-button;
     width: 3em;
     height: 3em;
-    margin: .5em;
     animation: rotate .4s ease;
+
+    .close-line {
+        stroke-width: 3;
+        stroke: #666666;
+    }
 }
 
 @keyframes rotate {
@@ -817,6 +821,10 @@ input {
     height: 1em;
     transition: transform ease .2s;
     margin-right: .5em;
+
+    .dropdown-line {
+        stroke-width: 1;
+    }
 }
 
 .side-bar__down-icon {
@@ -846,7 +854,8 @@ input {
     grid-template-columns: 1fr auto;
     align-items: center;
     grid-gap: 1em;
-    padding: .8em 0 .8em 1em;;
+    padding: .8em 0 .8em 1em;
+    ;
     cursor: pointer;
 
     &:hover {

@@ -16,7 +16,7 @@
         else
         {
             <button class="side-bar__close-button" @onclick="()=>isCollapsed = true">
-                <img src="/assets/close-icon.svg" />
+                <SvgIcon SvgUrl="/assets/close-icon.svg" />
             </button>
         }
     </div>
@@ -34,14 +34,18 @@
                 <li class="side-bar__list-item">
                     <img src="/assets/load-scheme-icon.svg" title="load scheme" />
                     Load scheme
-                    <img class="side-bar__down-icon" src="/assets/dropdown-icon.svg" />
+                    <div class="side-bar__down-icon">
+                        <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                    </div>
                     <ul class="side-bar__sublist">
                         <li class="side-bar__sublist-item">
                             from file...
                         </li>
                         <li class="side-bar__sublist-item" @onclick="()=>isLibraryCollapsed=!isLibraryCollapsed">
                             from library
-                            <img class="@cssLibraryIcon" src="/assets/dropdown-icon.svg" />
+                            <div class="@cssLibraryIcon">
+                                <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                            </div>
                         </li>
                     </ul>
                 </li>
@@ -51,7 +55,9 @@
                 <li class="side-bar__list-item side-bar__list-item--action" @onclick="()=>isSettingsCollapsed=!isSettingsCollapsed">
                     <img src="/assets/settings-icon.svg" />
                     Settings
-                    <img class="@cssSettingsIcon" src="/assets/dropdown-icon.svg" />
+                    <div class="@cssSettingsIcon">
+                        <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                    </div>
                 </li>
 
             </ul>
