@@ -1,5 +1,7 @@
-﻿
+﻿@using BlazorColorPicker
+
 <div class="@cssWrapper">
+
 
     <div class="side-bar__header">
 
@@ -23,58 +25,190 @@
 
     @if (!isCollapsed)
     {
-        <nav class="side-bar__nav">
-            <ul class="side-bar__list">
+        <ul class="side-bar__list">
 
-                <li class="side-bar__list-item side-bar__list-item--action">
-                    <img src="/assets/create-scheme-icon.svg" title="create scheme" />
-                    Create scheme
-                </li>
+            <li class="side-bar__list-item side-bar__list-item--action">
+                <img src="/assets/create-scheme-icon.svg" title="create scheme" />
+                Create scheme
+            </li>
 
-                <li class="side-bar__list-item">
-                    <img src="/assets/load-scheme-icon.svg" title="load scheme" />
-                    Load scheme
-                    <div class="side-bar__down-icon">
-                        <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
-                    </div>
-                    <ul class="side-bar__sublist">
-                        <li class="side-bar__sublist-item">
-                            from file...
-                        </li>
-                        <li class="side-bar__sublist-item" @onclick="()=>isLibraryCollapsed=!isLibraryCollapsed">
-                            from library
-                            <div class="@cssLibraryIcon">
-                                <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
-                            </div>
-                        </li>
-                    </ul>
-                </li>
+            <li class="@cssLoadScheme">
+                <img src="/assets/load-scheme-icon.svg" title="load scheme" />
+                Load scheme
+                <div class="side-bar__down-icon">
+                    <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                </div>
+                <ul class="side-bar__sublist">
+                    <li class="side-bar__sublist-item">
+                        from file...
+                    </li>
+                    <li class="side-bar__sublist-item" @onclick="ChangeLibraryVisibility">
+                        from library
+                        <div class="@cssLibraryIcon">
+                            <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                        </div>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="side-bar__list-item side-bar__list-item--blank"></li>
+            <li class="side-bar__list-item side-bar__list-item--blank"></li>
 
-                <li class="side-bar__list-item side-bar__list-item--action" @onclick="()=>isSettingsCollapsed=!isSettingsCollapsed">
-                    <img src="/assets/settings-icon.svg" />
-                    Settings
-                    <div class="@cssSettingsIcon">
-                        <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
-                    </div>
-                </li>
+            <li class="side-bar__list-item side-bar__list-item--action" @onclick="ChangeSettingsVisibility">
+                <img src="/assets/settings-icon.svg" />
+                Settings
+                <div class="@cssSettingsIcon">
+                    <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                </div>
+            </li>
 
-            </ul>
-        </nav>
+        </ul>
+
     }
 
+    <div class="@cssSubMenu">
+
+        @if (!isLibraryCollapsed)
+        {
+            <div class="side-bar__library-wrapper">
+
+                <h4 class="side-bar__library-header">
+                    Schemes library
+                </h4>
+
+                <ul class="side-bar__library-list">
+                    <li class="side-bar__library-list-item">Scheme01</li>
+                    <li class="side-bar__library-list-item">Scheme02</li>
+                </ul>
+
+            </div>
+        }
+
+        @if (!isSettingsCollapsed)
+        {
+            <div class="side-bar__settings-wrapper">
+                <h4 class="side-bar__settings-header">
+                    Background sample
+                </h4>
+                <SettingsColor SettingsColorType="@EnumSettingsColorType.LightBackground"
+                               Label="light:" ColorHex="@CurrentSettings.LightBackgroundColor" ColorPickerOpened="OpenColorPicker" />
+                <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkBackground"
+                               Label="dark:" ColorHex="@CurrentSettings.DarkBackgroundColor" ColorPickerOpened="OpenColorPicker" />
+
+                <h4 class="side-bar__settings-header">
+                    Text sample
+                </h4>
+                <SettingsColor SettingsColorType="@EnumSettingsColorType.LightText"
+                               Label="light:" ColorHex="@CurrentSettings.LightTextColor" ColorPickerOpened="OpenColorPicker" />
+                <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkText"
+                               Label="dark:" ColorHex="@CurrentSettings.DarkTextColor" ColorPickerOpened="OpenColorPicker" />
+
+                <button class="side-bar__restore-button" @onclick="RestoreDefaults">
+                    <img src="/assets/restore-icon.svg" />
+                    Restore defaults
+                </button>
+            </div>
+        }
+
+    </div>
 
 </div>
 
+<ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@colorPickerColor" />
+
+
 @code {
+    Settings CurrentSettings { get; set; }
 
     bool isCollapsed = true;
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
+
+    string cssLoadScheme => isLibraryCollapsed ? "side-bar__list-item" : "side-bar__list-item side-bar__list-item--hover";
+
+    string cssSubMenu => isCollapsed ? "side-bar__submenu-wrapper--hidden" :
+        isLibraryCollapsed && isSettingsCollapsed ? "side-bar__submenu-wrapper side-bar__submenu-wrapper--collapsed" : "side-bar__submenu-wrapper";
 
     bool isLibraryCollapsed = true;
     string cssLibraryIcon => isLibraryCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
     bool isSettingsCollapsed = true;
     string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
+
+    protected override void OnInitialized()
+    {
+        RestoreDefaults();
+    }
+
+    void ChangeSettingsVisibility()
+    {
+        isSettingsCollapsed = !isSettingsCollapsed;
+        if (!isSettingsCollapsed)
+            isLibraryCollapsed = true;
+    }
+
+    void ChangeLibraryVisibility()
+    {
+        isLibraryCollapsed = !isLibraryCollapsed;
+        if (!isLibraryCollapsed)
+            isSettingsCollapsed = true;
+    }
+
+    void RestoreDefaults()
+    {
+        CurrentSettings = new Settings
+        {
+            LightBackgroundColor = "#FFFFFF",
+            DarkBackgroundColor = "#000000",
+            LightTextColor = "#FFFFFF",
+            DarkTextColor = "#333333"
+        };
+    }
+
+    bool isColorPickerOpened = false;
+    string colorPickerColor;
+    EnumSettingsColorType settingsColorType;
+
+    void OpenColorPicker(EnumSettingsColorType colorType)
+    {
+        settingsColorType = colorType;
+        colorPickerColor = GetSettingsColor(colorType);
+        isColorPickerOpened = true;
+    }
+
+    void ClosedColorPicker(string value)
+    {
+        SetSettingsColor(settingsColorType, value);
+        isColorPickerOpened = false;
+    }
+
+    string GetSettingsColor(EnumSettingsColorType settingsColorType)
+    {
+        return settingsColorType switch
+        {
+            EnumSettingsColorType.LightBackground => CurrentSettings.LightBackgroundColor,
+            EnumSettingsColorType.DarkBackground => CurrentSettings.DarkBackgroundColor,
+            EnumSettingsColorType.LightText => CurrentSettings.LightTextColor,
+            EnumSettingsColorType.DarkText => CurrentSettings.DarkTextColor,
+            _ => string.Empty,
+        };
+    }
+    void SetSettingsColor(EnumSettingsColorType settingsColorType, string color)
+    {
+        switch (settingsColorType)
+        {
+            case EnumSettingsColorType.LightBackground:
+                CurrentSettings.LightBackgroundColor = color;
+                break;
+            case EnumSettingsColorType.DarkBackground:
+                CurrentSettings.DarkBackgroundColor = color;
+                break;
+            case EnumSettingsColorType.LightText:
+                CurrentSettings.LightTextColor = color;
+                break;
+            case EnumSettingsColorType.DarkText:
+                CurrentSettings.DarkTextColor = color;
+                break;
+            default:
+                break;
+        }
+    }
 }

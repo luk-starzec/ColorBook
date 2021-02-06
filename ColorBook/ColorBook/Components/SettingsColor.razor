@@ -1,0 +1,45 @@
+﻿
+<div class="settings-color__wrapper">
+
+    <div class="settings-color__label">@Label</div>
+
+    <button class="settings-color__color-sample" style="@styleSampleColor" @onclick="OpenColorPicker"></button>
+
+    <input class="settings-color__input" @bind="ColorHex" @bind:event="oninput" @onkeyup="SetColor" />
+
+</div>
+
+@code {
+    [Parameter]
+    public EnumSettingsColorType SettingsColorType { get; set; }
+    [Parameter]
+    public string Label { get; set; }
+    [Parameter]
+    public string ColorHex { get; set; }
+    [Parameter]
+    public EventCallback<string> ColorHexChanged { get; set; }
+    [Parameter]
+    public EventCallback<EnumSettingsColorType> ColorPickerOpened { get; set; }
+
+
+    string styleSampleColor => $"background-color: {ColorHex};";
+
+    async Task SetColor()
+    {
+        if (isHexColor(ColorHex))
+            await ColorHexChanged.InvokeAsync(ColorHex);
+    }
+
+    bool isHexColor(string value)
+    {
+        var pattern = "^#(?:[0-9a-fA-F]{3}){1,2}$";
+        var regex = new System.Text.RegularExpressions.Regex(pattern);
+        return regex.Match(value).Success;
+    }
+
+    async Task OpenColorPicker()
+    {
+        await ColorPickerOpened.InvokeAsync(SettingsColorType);
+    }
+
+}
