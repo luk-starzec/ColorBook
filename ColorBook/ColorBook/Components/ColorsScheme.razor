@@ -60,7 +60,7 @@
         <li class="scheme-description__list-item">
             <label class="scheme-description__scheme-name">
                 <span>Name:</span>
-                <input type="text" class="scheme-description__input" />
+                <input type="text" class="scheme-description__input" @bind="name" />
             </label>
         </li>
 
@@ -70,16 +70,36 @@
             <li class="scheme-description__list-item">
                 <label class="@GetCssColorName(index)">
                     <span>#@(i+1):</span>
-                    <input type="text" class="scheme-description__input" @bind="colors[index].Name" />
+                    <input type="text" class="scheme-description__input" @bind="colors[index].Name" @onfocus="()=>SelectColor(index)" />
                 </label>
             </li>
         }
     </ul>
 
+    <div class="scheme-save__wrapper">
+        <button class="scheme-save__button" @onclick="SaveInLibrary">
+            @if (isSchemeInLibrary)
+            {
+                <img src="/assets/add-icon.svg" />
+                <span>Save</span>
+            }
+            else
+            {
+                <img src="/assets/insert-icon.svg" />
+                <span>Add to library</span>
+            }
+        </button>
+        <a class="scheme-save__button" download="@GetDownloadName()" href="data:application/json;charset=utf-8,@GetDownloadData()">
+            <span>Download JSON</span>
+        </a>
+
+    </div>
 
 </div>
 
 @code {
+    string name = string.Empty;
+
     List<NamedColor> colors = new List<NamedColor>
 {
         new NamedColor("#123456"),
@@ -236,5 +256,28 @@
     {
         colors = new List<NamedColor> { colors[0] };
         StateHasChanged();
+    }
+
+    bool isSchemeInLibrary = false;
+
+    void SaveInLibrary()
+    {
+        isSchemeInLibrary = !isSchemeInLibrary;
+    }
+
+    string GetDownloadName()
+    {
+        return $"{(string.IsNullOrWhiteSpace(name) ? "scheme" : name)}.json";
+    }
+
+    string GetDownloadData()
+    {
+        var scheme = new ColorScheme
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Colors = colors.ToArray(),
+        };
+        return System.Text.Json.JsonSerializer.Serialize(scheme);
     }
 }

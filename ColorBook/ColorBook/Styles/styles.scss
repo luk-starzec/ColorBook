@@ -703,6 +703,38 @@ input {
     border-radius: .3em;
 }
 
+.scheme-save__wrapper {
+    display: flex;
+    margin: .8em 0;
+}
+
+.scheme-save__button {
+    @include std-button;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2.5em;
+    width: 12em;
+    margin: .5em 1em;
+    color: #333333;
+    background-color: #fcfcfc;
+    border-radius: 999px;
+    text-decoration: none;
+
+    & img {
+        margin: 0 .5em 0 1em;
+    }
+
+    & span {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}
+
 .side-bar__wrapper {
     position: fixed;
     top: 0;
