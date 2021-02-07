@@ -2,7 +2,7 @@
 
 <div class="colors-scheme__wrapper">
 
-    <ColorsSchemeHeader ColorHex="@colors[0]" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
+    <ColorsSchemeHeader ColorHex="@(colors[0].ColorHex)" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
 
     <ul class="scheme-colors__list">
 
@@ -21,7 +21,7 @@
         {
             int index = i;
             <li class="scheme-colors__list-item">
-                <div class="@GetCssColorView(index)" style="background-color: @colors[i];" draggable="true" ondragover="event.preventDefault();"
+                <div class="@GetCssColorView(index)" style="background-color: @(colors[i].ColorHex);" draggable="true" ondragover="event.preventDefault();"
                      @onmousedown="()=>SelectColor(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
                 </div>
                 <div class="scheme-colors__item-info">
@@ -66,10 +66,11 @@
 
         @for (int i = 0; i < colors.Count; i++)
         {
+            int index = i;
             <li class="scheme-description__list-item">
-                <label class="scheme-description__color-name">
+                <label class="@GetCssColorName(index)">
                     <span>#@(i+1):</span>
-                    <input type="text" class="scheme-description__input" />
+                    <input type="text" class="scheme-description__input" @bind="colors[index].Name" />
                 </label>
             </li>
         }
@@ -79,15 +80,14 @@
 </div>
 
 @code {
-    List<string> colors = new List<string>
+    List<NamedColor> colors = new List<NamedColor>
 {
-        "#123456",
-        "#4DEA26",
-        "#AABBCC",
-        "#DDEEFF",
-        "#998877"
+        new NamedColor("#123456"),
+        new NamedColor("#4DEA26"),
+        new NamedColor("#AABBCC"),
+        new NamedColor("#DDEEFF"),
+        new NamedColor("#998877")
     };
-
 
 
     bool isDragMode = false;
@@ -119,6 +119,14 @@
         var css = "scheme-colors__remove-area";
         if (isDragOverRemove)
             css += " scheme-colors__remove-area--drag-over";
+        return css;
+    }
+
+    string GetCssColorName(int index)
+    {
+        var css = "scheme-description__color-name";
+        if (index == selectedColor)
+            css += " scheme-description__color-name--selected";
         return css;
     }
 
@@ -216,14 +224,17 @@
 
     void AddGeneratedColors(string[] newColors)
     {
+        var namedColor = newColors.Select(r => new NamedColor(r));
+
         colors.RemoveAt(0);
-        colors.InsertRange(0, newColors);
+        colors.InsertRange(0, namedColor);
+
         StateHasChanged();
     }
 
     void ClearSchemeColors()
     {
-        colors = new List<string> { colors[0] };
+        colors = new List<NamedColor> { colors[0] };
         StateHasChanged();
     }
 }

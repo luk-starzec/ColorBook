@@ -135,14 +135,17 @@
         {
             Id = Guid.NewGuid(),
             Name = "Test scheme",
-            Colors = new KeyValuePair<string, string>[]
+            Colors = new NamedColor[]
             {
-                new KeyValuePair<string, string>("color01", "#ffffff"),
-                new KeyValuePair<string, string>("color02", "#ff0000"),
+                new NamedColor("color01", "#ffffff"),
+                new NamedColor("color02", "#ff0000"),
                                                                 }
         };
 
-        testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
+        //testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
+
+        testData = System.Text.Json.JsonSerializer.Serialize(aaa);
+
         //var valueBytes = Encoding.UTF8.GetBytes(testData);
         //testData = Convert.ToBase64String(valueBytes);
 
@@ -167,7 +170,6 @@
         await file.OpenReadStream().ReadAsync(buffers);
         var stringData = Encoding.UTF8.GetString(buffers);
         var scheme = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(stringData);
-        scheme.Colors = scheme.Colors.Select(r => new KeyValuePair<string, string>(r.Key, $"#{r.Value}")).ToArray();
     }
 
 

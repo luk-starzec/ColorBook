@@ -597,7 +597,7 @@ input {
   align-items: center;
   background-color: #ffffff;
   width: 18em;
-  border: none;
+  border: solid 2px transparent;
   border-radius: .3em;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05); }
   .scheme-description__scheme-name span {
@@ -606,7 +606,7 @@ input {
     flex-grow: 1;
     text-align: right;
     color: #999999; }
-  .scheme-description__scheme-name.colors-scheme__input {
+  .scheme-description__scheme-name .scheme-description__input {
     font-weight: bold; }
 
 .scheme-description__color-name {
@@ -615,7 +615,7 @@ input {
   align-items: center;
   background-color: #ffffff;
   width: 18em;
-  border: none;
+  border: solid 2px transparent;
   border-radius: .3em;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05); }
   .scheme-description__color-name span {
@@ -624,6 +624,14 @@ input {
     flex-grow: 1;
     text-align: right;
     color: #999999; }
+  .scheme-description__color-name .scheme-description__input {
+    color: #333333; }
+  .scheme-description__color-name--selected {
+    border: solid 2px #f0f0f0; }
+    .scheme-description__color-name--selected span {
+      color: #333333; }
+    .scheme-description__color-name--selected .scheme-description__input {
+      color: #000000; }
 
 .scheme-description__input {
   height: 1.7em;

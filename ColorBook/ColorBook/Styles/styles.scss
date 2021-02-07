@@ -654,7 +654,7 @@ input {
     align-items: center;
     background-color: #ffffff;
     width: 18em;
-    border: none;
+    border: solid 2px transparent;
     border-radius: .3em;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
 
@@ -670,13 +670,29 @@ input {
 .scheme-description__scheme-name {
     @include scheme-description-input-label;
 
-    &.colors-scheme__input {
+    & .scheme-description__input {
         font-weight: bold;
     }
 }
 
 .scheme-description__color-name {
     @include scheme-description-input-label;
+
+    & .scheme-description__input {
+        color: #333333;
+    }
+
+    &--selected {
+        border: solid 2px #f0f0f0;
+
+        & span {
+            color: #333333;
+        }
+
+        & .scheme-description__input {
+            color: #000000;
+        }
+    }
 }
 
 .scheme-description__input {
