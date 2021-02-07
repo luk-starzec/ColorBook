@@ -1,4 +1,5 @@
 ﻿@using BlazorColorPicker
+@inject ISettingsService settingsService;
 
 <div class="@cssWrapper">
 
@@ -11,13 +12,13 @@
 
         @if (isCollapsed)
         {
-            <button class="side-bar__menu-button" @onclick="()=>isCollapsed = false">
+            <button class="side-bar__menu-button" @onclick="ShowMenu">
                 <img src="/assets/menu-icon.svg" />
             </button>
         }
         else
         {
-            <button class="side-bar__close-button" @onclick="()=>isCollapsed = true">
+            <button class="side-bar__close-button" @onclick="HideMenu">
                 <SvgIcon SvgUrl="/assets/close-icon.svg" />
             </button>
         }
@@ -90,17 +91,17 @@
                     Background sample
                 </h4>
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.LightBackground"
-                               Label="light:" ColorHex="@CurrentSettings.LightBackgroundColor" ColorPickerOpened="OpenColorPicker" />
+                               Label="light:" ColorHex="@currentSettings.LightBackgroundColor" ColorPickerOpened="OpenColorPicker" />
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkBackground"
-                               Label="dark:" ColorHex="@CurrentSettings.DarkBackgroundColor" ColorPickerOpened="OpenColorPicker" />
+                               Label="dark:" ColorHex="@currentSettings.DarkBackgroundColor" ColorPickerOpened="OpenColorPicker" />
 
                 <h4 class="side-bar__settings-header">
                     Text sample
                 </h4>
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.LightText"
-                               Label="light:" ColorHex="@CurrentSettings.LightTextColor" ColorPickerOpened="OpenColorPicker" />
+                               Label="light:" ColorHex="@currentSettings.LightTextColor" ColorPickerOpened="OpenColorPicker" />
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkText"
-                               Label="dark:" ColorHex="@CurrentSettings.DarkTextColor" ColorPickerOpened="OpenColorPicker" />
+                               Label="dark:" ColorHex="@currentSettings.DarkTextColor" ColorPickerOpened="OpenColorPicker" />
 
                 <button class="side-bar__restore-button" @onclick="RestoreDefaults">
                     <img src="/assets/restore-icon.svg" />
@@ -117,7 +118,7 @@
 
 
 @code {
-    Settings CurrentSettings { get; set; }
+    Settings currentSettings;
 
     bool isCollapsed = true;
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
@@ -133,9 +134,23 @@
     bool isSettingsCollapsed = true;
     string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
+
     protected override void OnInitialized()
     {
-        RestoreDefaults();
+        currentSettings = settingsService.GetCurrentSettings();
+    }
+
+
+    void ShowMenu()
+    {
+        isCollapsed = false;
+    }
+
+    void HideMenu()
+    {
+        isLibraryCollapsed = true;
+        isSettingsCollapsed = true;
+        isCollapsed = true;
     }
 
     void ChangeSettingsVisibility()
@@ -154,14 +169,9 @@
 
     void RestoreDefaults()
     {
-        CurrentSettings = new Settings
-        {
-            LightBackgroundColor = "#FFFFFF",
-            DarkBackgroundColor = "#000000",
-            LightTextColor = "#FFFFFF",
-            DarkTextColor = "#333333"
-        };
+        settingsService.RestoreDefaultSettings();
     }
+
 
     bool isColorPickerOpened = false;
     string colorPickerColor;
@@ -184,10 +194,10 @@
     {
         return settingsColorType switch
         {
-            EnumSettingsColorType.LightBackground => CurrentSettings.LightBackgroundColor,
-            EnumSettingsColorType.DarkBackground => CurrentSettings.DarkBackgroundColor,
-            EnumSettingsColorType.LightText => CurrentSettings.LightTextColor,
-            EnumSettingsColorType.DarkText => CurrentSettings.DarkTextColor,
+            EnumSettingsColorType.LightBackground => currentSettings.LightBackgroundColor,
+            EnumSettingsColorType.DarkBackground => currentSettings.DarkBackgroundColor,
+            EnumSettingsColorType.LightText => currentSettings.LightTextColor,
+            EnumSettingsColorType.DarkText => currentSettings.DarkTextColor,
             _ => string.Empty,
         };
     }
@@ -196,16 +206,16 @@
         switch (settingsColorType)
         {
             case EnumSettingsColorType.LightBackground:
-                CurrentSettings.LightBackgroundColor = color;
+                currentSettings.LightBackgroundColor = color;
                 break;
             case EnumSettingsColorType.DarkBackground:
-                CurrentSettings.DarkBackgroundColor = color;
+                currentSettings.DarkBackgroundColor = color;
                 break;
             case EnumSettingsColorType.LightText:
-                CurrentSettings.LightTextColor = color;
+                currentSettings.LightTextColor = color;
                 break;
             case EnumSettingsColorType.DarkText:
-                CurrentSettings.DarkTextColor = color;
+                currentSettings.DarkTextColor = color;
                 break;
             default:
                 break;

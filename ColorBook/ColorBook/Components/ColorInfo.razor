@@ -1,4 +1,5 @@
 ﻿@using BlazorColorPicker
+@inject ISettingsService settingsService
 
 <div class="color-info__wrapper">
 
@@ -41,23 +42,25 @@
 
         <div class="color-info__color-fit">
 
-            <ColorFitText TextColor="@ColorHex" BackgroundColor="#000000" />
-            <ColorFitText TextColor="@ColorHex" BackgroundColor="#ffffff" />
-            <ColorFitText TextColor="#000000" BackgroundColor="@ColorHex" />
-            <ColorFitText TextColor="#ffffff" BackgroundColor="@ColorHex" />
-            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="#000000" />
-            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="#ffffff" />
+            <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
+            <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
+            <ColorFitText TextColor="@settings.DarkTextColor" BackgroundColor="@ColorHex" />
+            <ColorFitText TextColor="@settings.LightTextColor" BackgroundColor="@ColorHex" />
+            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
+            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
 
         </div>
     }
 
-    <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@ColorHex"/>
+    <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@ColorHex" />
 
 </div>
 
 @code {
     [Parameter]
     public string ColorHex { get; set; }
+
+    private Settings settings;
 
     private bool isFullView = false;
 
@@ -68,6 +71,10 @@
 
     private void ChangeView() => isFullView = !isFullView;
 
+    protected override void OnInitialized()
+    {
+        settings = settingsService.GetCurrentSettings();
+    }
 
     bool isColorPickerOpened = false;
 
