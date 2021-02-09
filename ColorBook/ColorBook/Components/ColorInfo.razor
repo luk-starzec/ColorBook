@@ -71,9 +71,9 @@
 
     private void ChangeView() => isFullView = !isFullView;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        settings = settingsService.GetCurrentSettings();
+        settings = await settingsService.GetCurrentSettingsAsync();
     }
 
     bool isColorPickerOpened = false;

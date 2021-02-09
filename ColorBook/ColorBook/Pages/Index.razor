@@ -3,7 +3,7 @@
 @using BlazorColorPicker
 @using System
 @using System.Text
-
+@inject ISettingsService settingsService
 
 <SideBar />
 
@@ -139,7 +139,7 @@
             {
                 new NamedColor("color01", "#ffffff"),
                 new NamedColor("color02", "#ff0000"),
-                                                                }
+                                                                        }
         };
 
         //testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
@@ -214,4 +214,11 @@
     //    return base.OnInitializedAsync();
     //}
 
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Test Init");
+        await settingsService.SaveTestResult($"{DateTime.Now}: test");
+        var xx = await settingsService.GetCurrentSettingsAsync();
+        await settingsService.SaveSettingsAsync();
+    }
 }

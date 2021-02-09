@@ -10,8 +10,6 @@
     <link href="css/styles.min.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    <script src="js/clipboardCopy.min.js"></script>
-    <script src="js/colorPreview.min.js"></script>
     <link href="_content/BlazorColorPicker/colorpicker.css" rel="stylesheet" />
     <script src="_content/BlazorColorPicker/colorpicker.js"></script>
 </head>
@@ -24,9 +22,14 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
+    <script src="js/clipboardCopy.min.js"></script>
+    <script src="js/colorPreview.min.js"></script>
+    <script src="js/idb.js"></script>
+    <script src="js/localDataStore.js"></script>
+    <script src="js/colorLib.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
-    <script src="js/colorLib.js"></script>
 </body>
 
 </html>

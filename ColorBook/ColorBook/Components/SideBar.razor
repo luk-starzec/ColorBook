@@ -135,9 +135,9 @@
     string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        currentSettings = settingsService.GetCurrentSettings();
+        currentSettings = await settingsService.GetCurrentSettingsAsync();
     }
 
 
@@ -184,10 +184,11 @@
         isColorPickerOpened = true;
     }
 
-    void ClosedColorPicker(string value)
+    async Task ClosedColorPicker(string value)
     {
         SetSettingsColor(settingsColorType, value);
         isColorPickerOpened = false;
+        await settingsService.SaveSettingsAsync(currentSettings);
     }
 
     string GetSettingsColor(EnumSettingsColorType settingsColorType)

@@ -8,8 +8,13 @@ namespace ColorBook.Services
 {
     interface ISettingsService
     {
-        Settings GetCurrentSettings();
+        Task<Settings> GetCurrentSettingsAsync();
         Settings GetDefaultSettings();
         void RestoreDefaultSettings();
+        Task SaveSettingsAsync();
+        Task SaveSettingsAsync(Settings settings);
+
+        ValueTask SaveTestResult(string result);
+
     }
 }
