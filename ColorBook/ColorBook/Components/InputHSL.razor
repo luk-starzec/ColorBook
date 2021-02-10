@@ -49,7 +49,7 @@
 
     private async Task SetValue()
     {
-        var newColor = await JS.InvokeAsync<string>("ColorLib.hslToHex", H, S, L);
+        var newColor = await JS.InvokeAsync<string>("colorTools.hslToHex", H, S, L);
         if (Value != newColor)
         {
             Value = newColor;
@@ -59,12 +59,12 @@
 
     private async Task SetHSL()
     {
-        var currentColor = await JS.InvokeAsync<string>("ColorLib.hslToHex", H, S, L);
+        var currentColor = await JS.InvokeAsync<string>("colorTools.hslToHex", H, S, L);
         if (Value != currentColor)
         {
-            h = await JS.InvokeAsync<int>("ColorLib.getHue", Value);
-            s = await JS.InvokeAsync<int>("ColorLib.getSaturation", Value);
-            l = await JS.InvokeAsync<int>("ColorLib.getLightness", Value);
+            h = await JS.InvokeAsync<int>("colorTools.getHue", Value);
+            s = await JS.InvokeAsync<int>("colorTools.getSaturation", Value);
+            l = await JS.InvokeAsync<int>("colorTools.getLightness", Value);
         }
     }
 }

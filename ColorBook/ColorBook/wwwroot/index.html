@@ -7,7 +7,6 @@
     <title>ColorBook</title>
     <base href="/" />
     <link href="css/normalize.css" rel="stylesheet" />
-    <link href="css/styles.min.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link href="_content/BlazorColorPicker/colorpicker.css" rel="stylesheet" />
@@ -23,11 +22,8 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="js/clipboardCopy.min.js"></script>
-    <script src="js/colorPreview.min.js"></script>
-    <script src="js/idb.js"></script>
-    <script src="js/localDataStore.js"></script>
-    <script src="js/colorLib.js"></script>
+    <script src="js/styles.bundle.js"></script>
+    <script src="js/app.bundle.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>

@@ -1,6 +1,8 @@
-﻿(function () {
+﻿import { openDB } from 'idb';
 
-    const db = idb.openDB('ColorBook', 1, {
+(function () {
+
+    const db = openDB('ColorBook', 1, {
         upgrade(db) {
             db.createObjectStore('metadata');
             db.createObjectStore('settings');

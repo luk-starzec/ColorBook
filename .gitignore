@@ -2,3 +2,6 @@
 bin
 obj
 /ColorBook/ColorBook/JsLib/node_modules
+node_modules
+/ColorBook/ColorBook/package-lock.json
+/ColorBook/ColorBook/wwwroot/js

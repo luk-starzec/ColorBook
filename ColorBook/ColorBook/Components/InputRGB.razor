@@ -52,14 +52,14 @@
 
     private async Task SetValue()
     {
-        Value = await JS.InvokeAsync<string>("ColorLib.rgbToHex", R, G, B);
+        Value = await JS.InvokeAsync<string>("colorTools.rgbToHex", R, G, B);
         await ValueChanged.InvokeAsync(Value);
     }
 
     private async Task SetRGB()
     {
-        r = await JS.InvokeAsync<int>("ColorLib.getRed", Value);
-        g = await JS.InvokeAsync<int>("ColorLib.getGreen", Value);
-        b = await JS.InvokeAsync<int>("ColorLib.getBlue", Value);
+        r = await JS.InvokeAsync<int>("colorTools.getRed", Value);
+        g = await JS.InvokeAsync<int>("colorTools.getGreen", Value);
+        b = await JS.InvokeAsync<int>("colorTools.getBlue", Value);
     }
 }

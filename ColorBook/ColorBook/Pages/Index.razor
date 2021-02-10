@@ -125,26 +125,28 @@
         //await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
         //var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn");
 
-        var aa = new NameValue
-        {
-            Name = "test",
-            Value = "001",
-        };
+        await JS.InvokeVoidAsync("testTools.getTest", DateTime.Now.ToString());
 
-        var aaa = new ColorScheme
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test scheme",
-            Colors = new NamedColor[]
-            {
-                new NamedColor("color01", "#ffffff"),
-                new NamedColor("color02", "#ff0000"),
-                                                                        }
-        };
+        //var aa = new NameValue
+        //{
+        //    Name = "test",
+        //    Value = "001",
+        //};
 
-        //testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
+        //var aaa = new ColorScheme
+        //{
+        //    Id = Guid.NewGuid(),
+        //    Name = "Test scheme",
+        //    Colors = new NamedColor[]
+        //    {
+        //        new NamedColor("color01", "#ffffff"),
+        //        new NamedColor("color02", "#ff0000"),
+        //                                                                }
+        //};
 
-        testData = System.Text.Json.JsonSerializer.Serialize(aaa);
+        ////testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
+
+        //testData = System.Text.Json.JsonSerializer.Serialize(aaa);
 
         //var valueBytes = Encoding.UTF8.GetBytes(testData);
         //testData = Convert.ToBase64String(valueBytes);

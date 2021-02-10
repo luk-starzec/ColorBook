@@ -48,14 +48,15 @@ namespace ColorBook.Services
                 Console.WriteLine(aaa);
                 var bbb = await js.InvokeAsync<object>($"localDataStore.get", "settings", "current");
                 Console.WriteLine(bbb);
-                try
-                {
-                    var ccc = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.InnerException);
-                }
+                //try
+                //{
+                //    var ccc = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.InnerException);
+                //}
+
                 //var options = new JsonSerializerSettings
                 //{
                 //    ContractResolver = new CamelCasePropertyNamesContractResolver(),

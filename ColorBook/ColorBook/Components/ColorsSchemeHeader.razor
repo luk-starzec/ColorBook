@@ -91,7 +91,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        schemes = await JS.InvokeAsync<SchemeType[]>("ColorLib.getSchemeTypes");
+        schemes = await JS.InvokeAsync<SchemeType[]>("colorTools.getSchemeTypes");
     }
 
 
@@ -117,7 +117,7 @@
 
     async Task GenerateScheme(string method)
     {
-        var colors = await JS.InvokeAsync<string[]>("ColorLib.generateScheme", ColorHex, method);
+        var colors = await JS.InvokeAsync<string[]>("colorTools.generateScheme", ColorHex, method);
         AddGeneratedColors?.Invoke(colors);
         isListVisible = false;
     }
