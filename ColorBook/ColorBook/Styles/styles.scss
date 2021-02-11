@@ -716,13 +716,14 @@ input {
     height: 2.5em;
     width: 12em;
     margin: .5em 1em;
+    padding: 0 1em;
     color: #333333;
     background-color: #fcfcfc;
     border-radius: 999px;
     text-decoration: none;
 
     & img {
-        margin: 0 .5em 0 1em;
+        margin: 0 .5em 0 0;
     }
 
     & span {

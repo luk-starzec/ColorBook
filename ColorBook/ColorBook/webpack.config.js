@@ -1,14 +1,15 @@
 ﻿const path = require("path");
 const glob = require('glob');
-//const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
     entry: {
-        app: glob.sync('./Scripts/**/*.js*'),
-        styles: './Styles/styles.scss'
+        'js/app': glob.sync('./Scripts/**/*.js*'),
+        'css/styles': glob.sync('./Styles/**/*.*css')
     },
     output: {
-        path: path.join(__dirname, '/wwwroot/js'),
+        path: path.join(__dirname, '/wwwroot'),
         filename: '[name].bundle.js',
         sourceMapFilename: '[name].map'
     },
@@ -23,12 +24,17 @@ module.exports = {
             },
             {
                 test: /\.(scss|css)$/,
-                use: ['style-loader', 'css-loader?url=false', 'sass-loader']
-                //use: [MiniCssExtractPlugin.loader,'style-loader', 'css-loader?url=false', 'sass-loader']
+                //use: ['style-loader', 'css-loader?url=false', 'sass-loader']
+                use: [MiniCssExtractPlugin.loader, 'css-loader?url=false', 'sass-loader']
             }
         ]
     },
-    //plugins: [
-    //    new MiniCssExtractPlugin()
-    //]
+    plugins: [
+        new MiniCssExtractPlugin()
+    ],
+    optimization: {
+        minimizer: [
+            new CssMinimizerPlugin(),
+        ],
+    },
 };

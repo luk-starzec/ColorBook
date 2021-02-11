@@ -44,24 +44,30 @@ namespace ColorBook.Services
         {
             if (currentSettings == null)
             {
+
                 var aaa = await js.InvokeAsync<string>($"localDataStore.get", "settings", "current");
                 Console.WriteLine(aaa);
                 var bbb = await js.InvokeAsync<object>($"localDataStore.get", "settings", "current");
                 Console.WriteLine(bbb);
-                //try
-                //{
-                //    var ccc = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.InnerException);
-                //}
+                try
+                {
+                    var ccc = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
+                    Console.WriteLine(ccc);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.InnerException);
+                }
 
                 //var options = new JsonSerializerSettings
                 //{
                 //    ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 //};
-                currentSettings = JsonSerializer.Deserialize<Settings>(aaa);
+                if (aaa != null)
+                {
+                    var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                    currentSettings = JsonSerializer.Deserialize<Settings>(aaa, options);
+                }
                 //currentSettings = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
 
                 if (currentSettings == null)
@@ -88,7 +94,8 @@ namespace ColorBook.Services
 
         public async Task SaveSettingsAsync()
         {
-            var json = System.Text.Json.JsonSerializer.Serialize(currentSettings);
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var json = System.Text.Json.JsonSerializer.Serialize(currentSettings, options);
             //var options = new JsonSerializerSettings
             //{
             //    ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -105,7 +112,8 @@ namespace ColorBook.Services
 
         public async Task SaveSettingsAsync(Settings settings)
         {
-            var json = System.Text.Json.JsonSerializer.Serialize(settings);
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var json = System.Text.Json.JsonSerializer.Serialize(settings, options);
             Console.WriteLine(json);
             //var options = new JsonSerializerSettings
             //{
