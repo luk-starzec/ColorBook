@@ -1,10 +1,10 @@
 ﻿@inject IJSRuntime JS
 
-<div class="colors-scheme-header__wrapper">
+<div class="scheme-header__wrapper">
 
-    <h3 class="colors-scheme-header__title">COLORS SCHEME</h3>
+    <h3 class="scheme-header__title">COLORS SCHEME</h3>
 
-    <div class="colors-scheme-header__list-wrapper">
+    <div class="scheme-header__list-wrapper">
 
         <button class="@cssSchemesButton" @onclick="ChangeListVisibility" title="generate color scheme">
             @if (isListVisible)
@@ -19,17 +19,17 @@
 
         @if (isListVisible)
         {
-            <ul class="colors-scheme-header__list">
+            <ul class="scheme-header__list">
 
-                <li class="colors-scheme-header__list-item colors-scheme-header__list-item--info">
+                <li class="scheme-header__list-item scheme-header__list-item--info">
                     Based on
-                    <div class="colors-scheme-header__color-sample" style="background-color: @ColorHex"></div>
+                    <div class="scheme-header__color-sample" style="background-color: @ColorHex"></div>
                     generate colors:
                 </li>
 
                 @foreach (var scheme in schemes)
                 {
-                    <li class="colors-scheme-header__list-item colors-scheme-header__list-item--selectable" @onclick="() => GenerateScheme(scheme.Method)">
+                    <li class="scheme-header__list-item scheme-header__list-item--selectable" @onclick="() => GenerateScheme(scheme.Method)">
                         @scheme.Name
                     </li>
                 }
@@ -37,7 +37,7 @@
         }
     </div>
 
-    <div class="colors-scheme-header__list-wrapper">
+    <div class="scheme-header__list-wrapper">
 
         <button class="@cssRemoveButton" @onclick="ChangeQuestionVisibility" title="remove colors from scheme">
             @if (isQuestionVisible)
@@ -52,14 +52,14 @@
 
         @if (isQuestionVisible)
         {
-            <ul class="colors-scheme-header__list">
+            <ul class="scheme-header__list">
 
-                <li class="colors-scheme-header__list-item colors-scheme-header__list-item--info">
+                <li class="scheme-header__list-item scheme-header__list-item--info">
                     Do you want to remove all colors from current scheme?
                 </li>
 
-                <li class="colors-scheme-header__list-item colors-scheme-header__list-item--selectable colors-scheme-header__list-item--centered" @onclick="RemoveColors">Yes</li>
-                <li class="colors-scheme-header__list-item colors-scheme-header__list-item--selectable colors-scheme-header__list-item--centered" @onclick="ChangeQuestionVisibility">Cancel</li>
+                <li class="scheme-header__list-item scheme-header__list-item--selectable scheme-header__list-item--centered" @onclick="RemoveColors">Yes</li>
+                <li class="scheme-header__list-item scheme-header__list-item--selectable scheme-header__list-item--centered" @onclick="ChangeQuestionVisibility">Cancel</li>
 
             </ul>
 
@@ -84,9 +84,9 @@
     bool isListVisible;
     bool isQuestionVisible;
 
-    string cssSchemesButton => isListVisible ? "colors-scheme-header__button colors-scheme-header__button--list" : "colors-scheme-header__button";
-    string cssRemoveButton => isQuestionVisible ? "colors-scheme-header__button colors-scheme-header__button--list" : "colors-scheme-header__button";
-    string cssMask => isListVisible || isQuestionVisible ? "colors-scheme-header__list-mask colors-scheme-header__list-mask--visible" : "colors-scheme-header__list-mask";
+    string cssSchemesButton => isListVisible ? "scheme-header__button scheme-header__button--list" : "scheme-header__button";
+    string cssRemoveButton => isQuestionVisible ? "scheme-header__button scheme-header__button--list" : "scheme-header__button";
+    string cssMask => isListVisible || isQuestionVisible ? "scheme-header__list-mask scheme-header__list-mask--visible" : "scheme-header__list-mask";
 
 
     protected override async Task OnInitializedAsync()

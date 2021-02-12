@@ -1,226 +1,48 @@
 ﻿@page "/"
 @inject IJSRuntime JS
-@using BlazorColorPicker
 @using System
-@using System.Text
 @inject ISettingsService settingsService
+@inject ISchemeService schemeService;
 
-<SideBar />
+<main class="main__wrapper">
 
+    <SideBar />
 
-<ColorsScheme />
+    <ColorSelection />
 
-<ColorSelection />
+    <ColorInfo ColorHex="@colorHex" />
 
+    <SchemeInfo Scheme="colorScheme" />
 
-<div>
-
-    <h3>file input &amp; preview </h3>
-
-    <InputFile OnChange="@OnInputFileChange" accept="image/*" capture />
-
-    <img id="@imageId" src="@imageDataUrl" @onmousemove="@OnMouseMove" @onmousedown="@OnMouseDown" @ref="_imgRef" />
-
-    <br />
-
-    <canvas id="@previewCanvasId" width="100" height="100" style="border: solid gray 1px"></canvas>
-
-    <br />
-
-    <div style="width: 50px; height: 50px; background: @colorHex;" />
-
-</div>
-
-
-<!--<h2>@colorHex</h2>-->
-@*<InputHex @bind-Value="colorHex" />
-    <InputRGB @bind-Value="colorHex" />
-    <InputHSL @bind-Value="colorHex" />*@
-
-
-<ColorInfo ColorHex="@colorHex" />
-
-
-@*<ColorFitText TextColor="@colorHex" BackgroundColor="#000000" />
-    <ColorFitText TextColor="@colorHex" BackgroundColor="#ffffff" />
-    <ColorFitText TextColor="#000000" BackgroundColor="@colorHex" />
-    <ColorFitText TextColor="#ffffff" BackgroundColor="@colorHex" />
-
-    <ColorFitBorder BorderColor="@colorHex" BackgroundColor="#000000" />
-    <ColorFitBorder BorderColor="@colorHex" BackgroundColor="#ffffff" />
-
-    <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Lightness" />
-    <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Saturation" />
-    <ColorBar ColorHex="@colorHex" ColorBarType="@EnumColorBarType.Hue" />*@
-
-@*<ColorInfoFull ColorHex="@colorHex" />*@
-
-<button @onclick="Test">Test</button>
-
-<a download="test_scheme.json"
-   href="data:application/json;charset=utf-8,@testData">
-    Download file
-</a>
-
-<InputFile OnChange="@LoadFile" accept="application/JSON" />
+</main>
 
 @code {
+    ColorScheme colorScheme;
+
     string colorHex { get; set; } = "#ff00ff";
 
-    int previewScale = 4;
-    string imageId = "testImg";
-    string previewCanvasId = "preview";
-    string imageDataUrl;
-    bool isImageLoaded = false;
 
-    protected ElementReference _imgRef;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
-    }
-
-    async Task OnInputFileChange(InputFileChangeEventArgs e)
-    {
-        var maxWidth = 400;
-        var maxHeight = 400;
-
-        var image = e.File;
-        var format = "image/png";
-        var resized = await image.RequestImageFileAsync(format, maxWidth, maxHeight);
-        var buffer = new byte[resized.Size];
-        await resized.OpenReadStream().ReadAsync(buffer);
-        imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-        isImageLoaded = true;
-    }
-
-    async Task OnMouseDown(MouseEventArgs e)
-    {
-        Console.WriteLine($"x:{e.OffsetX}; y:{e.OffsetY}");
-    }
-
-    async Task OnMouseMove(MouseEventArgs e)
-    {
-        if (!isImageLoaded)
-            return;
-
-        await JS.InvokeVoidAsync("colorPreview.setPreview", imageId, previewCanvasId, e.OffsetX, e.OffsetY, previewScale);
-        await SetColor();
-    }
-
-    async Task SetColor()
-    {
-        var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", previewCanvasId);
-        var hex = await JS.InvokeAsync<string>("colorPreview.rgbToHex", rgba[0], rgba[1], rgba[2]);
-
-        colorHex = hex;
-    }
-
-
-    async Task Test()
-    {
-        Console.WriteLine("test");
-        //var x = await JS.InvokeAsync<string>("ColorLib.colorTest");
-        //await JS.InvokeVoidAsync("ColorLib.generateScheme", colorHex, "aaa");
-        //var x = await JS.InvokeAsync<NameValue>("ColorLib.testFn");
-
-        await JS.InvokeVoidAsync("testTools.getTest", DateTime.Now.ToString());
-
-        //var aa = new NameValue
-        //{
-        //    Name = "test",
-        //    Value = "001",
-        //};
-
-        //var aaa = new ColorScheme
-        //{
-        //    Id = Guid.NewGuid(),
-        //    Name = "Test scheme",
-        //    Colors = new NamedColor[]
-        //    {
-        //        new NamedColor("color01", "#ffffff"),
-        //        new NamedColor("color02", "#ff0000"),
-        //                                                                }
-        //};
-
-        ////testData = System.Text.Json.JsonSerializer.Serialize(aaa).Replace("#", "");
-
-        //testData = System.Text.Json.JsonSerializer.Serialize(aaa);
-
-        //var valueBytes = Encoding.UTF8.GetBytes(testData);
-        //testData = Convert.ToBase64String(valueBytes);
-
-        //var vv = System.Convert.FromBase64String(testData);
-        //var xx = Encoding.UTF8.GetString(vv);
-        //var xxx = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(xx);
-    }
-
-    public class NameValue
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
-
-    string testData;
-
-
-    async Task LoadFile(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
-        var buffers = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(buffers);
-        var stringData = Encoding.UTF8.GetString(buffers);
-        var scheme = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(stringData);
-    }
-
-
-    //private async Task OnFileSelection(InputFileChangeEventArgs e)
-    //{
-    //    IBrowserFile imgFile = e.File;
-    //    var buffers = new byte[imgFile.Size];
-    //    await imgFile.OpenReadStream().ReadAsync(buffers);
-    //    string imageType = imgFile.ContentType;
-    //    imgUrl = $"data:{imageType};base64,{Convert.ToBase64String(buffers)}";
-    //}
-    //protected override void OnInitialized()
-    //{
-    //    Console.WriteLine("111");
-    //    base.OnInitialized();
-    //}
-
-    //protected override void OnParametersSet()
-    //{
-    //    Console.WriteLine("222");
-    //    base.OnParametersSet();
-    //}
-
-    //protected override void OnAfterRender(bool firstRender)
-    //{
-    //    Console.WriteLine("333");
-    //    base.OnAfterRender(firstRender);
-    //}
-
-    //protected override Task OnParametersSetAsync()
-    //{
-    //    return base.OnParametersSetAsync();
-    //}
-
-    //protected override Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    return base.OnAfterRenderAsync(firstRender);
-    //}
-
-    //protected override Task OnInitializedAsync()
-    //{
-    //    return base.OnInitializedAsync();
-    //}
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Test Init");
-        await settingsService.SaveTestResult($"{DateTime.Now}: test");
-        var xx = await settingsService.GetCurrentSettingsAsync();
-        await settingsService.SaveSettingsAsync();
+        colorScheme = GetColorScheme();
+    }
+
+
+    private ColorScheme GetColorScheme()
+    {
+        return new ColorScheme
+        {
+            Id = Guid.NewGuid(),
+            Name = string.Empty,
+            Colors = new List<NamedColor>
+{
+                new NamedColor("#123456"),
+                new NamedColor("#4DEA26"),
+                new NamedColor("#AABBCC"),
+                new NamedColor("#DDEEFF"),
+                new NamedColor("#998877")
+            }
+        };
     }
 }

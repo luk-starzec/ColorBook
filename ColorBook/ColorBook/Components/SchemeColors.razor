@@ -1,0 +1,169 @@
+﻿
+<div class="scheme-colors__wrapper">
+
+    <ul class="scheme-colors__list">
+
+        <li class="scheme-colors__list-item">
+            <div class="@GetCssSpacer(-1)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(-1)" @ondragenter="()=>DragEnterSpacer(-1)" @ondragleave="()=>DragLeaveSpacer(-1)" @ondragend="()=>DragEnd(-1)">
+            </div>
+            <div class="scheme-colors__item-info">
+                @if (IsSpacerDropDescription(-1))
+                {
+                    <img src="/assets/insert-icon.svg" />
+                }
+            </div>
+        </li>
+
+        @for (int i = 0; i < Scheme.Colors.Count; i++)
+        {
+            int index = i;
+            <li class="scheme-colors__list-item">
+                <div class="@GetCssColorView(index)" style="background-color: @(Scheme.Colors[i].ColorHex);" draggable="true" ondragover="event.preventDefault();"
+                     @onmousedown="()=>SelectIndex(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
+                </div>
+                <div class="scheme-colors__item-info">
+                    @if (IsItemDropDescription(index))
+                    {
+                        <img src="/assets/switch-icon.svg" />
+                    }
+                    else
+                    {
+                        @($"#{index + 1}")
+                    }
+                </div>
+            </li>
+            <li class="scheme-colors__list-item">
+                <div class="@GetCssSpacer(index)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(index)" @ondragenter="()=>DragEnterSpacer(index)" @ondragleave="()=>DragLeaveSpacer(index)" @ondragend="()=>DragEnd(index)">
+                </div>
+                <div class="scheme-colors__item-info">
+                    @if (IsSpacerDropDescription(index))
+                    {
+                        <img src="/assets/insert-icon.svg" />
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+
+    @if (isDragMode && Scheme.Colors.Count > 1)
+    {
+        <div class="@GetCssRemoveArea()" style="--items-count: @Scheme.Colors.Count;" ondragover="event.preventDefault();"
+             @ondragenter="DragEnterRemove" @ondragleave="DragLeaveRemove" @ondrop="DropRemove">
+        </div>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public ColorScheme Scheme { get; set; }
+    [Parameter]
+    public int? SelectedIndex { get; set; }
+    [Parameter]
+    public EventCallback<int?> SelectedIndexChanged { get; set; }
+
+
+    bool isDragMode = false;
+
+    int? dragOverItem = null;
+    int? dragOverSpacer = null;
+    bool isDragOverRemove = false;
+
+    string GetCssColorView(int index)
+    {
+        var css = "scheme-colors__color-view";
+        if (SelectedIndex == index)
+            css += " scheme-colors__color-view--selected";
+        return css;
+    }
+
+    string GetCssSpacer(int index)
+    {
+        var css = "scheme-colors__color-spacer";
+        if (isDragMode)
+            css += " scheme-colors__color-spacer--wide";
+        if (dragOverSpacer == index)
+            css += " scheme-colors__color-spacer--drag-over";
+        return css;
+    }
+
+    string GetCssRemoveArea()
+    {
+        var css = "scheme-colors__remove-area";
+        if (isDragOverRemove)
+            css += " scheme-colors__remove-area--drag-over";
+        return css;
+    }
+
+    bool IsItemDropDescription(int index) => dragOverItem == index && index != SelectedIndex;
+    bool IsSpacerDropDescription(int index) => dragOverSpacer == index;
+
+
+    async Task SelectIndex(int? index)
+    {
+        SelectedIndex = index;
+        await SelectedIndexChanged.InvokeAsync(index);
+    }
+
+    async Task DropInsert(int index)
+    {
+        if (!SelectedIndex.HasValue)
+            return;
+
+        var color = Scheme.Colors[SelectedIndex.Value];
+        if (SelectedIndex > index)
+        {
+            Scheme.Colors.Insert(index + 1, color);
+            Scheme.Colors.RemoveAt(SelectedIndex.Value + 1);
+            await SelectIndex(index + 1);
+        }
+        else
+        {
+            Scheme.Colors.RemoveAt(SelectedIndex.Value);
+            Scheme.Colors.Insert(index, color);
+            await SelectIndex(index);
+        }
+    }
+
+    async Task DropSwitch(int index)
+    {
+        if (!SelectedIndex.HasValue)
+            return;
+        var color = Scheme.Colors[SelectedIndex.Value];
+        Scheme.Colors[SelectedIndex.Value] = Scheme.Colors[index];
+        Scheme.Colors[index] = color;
+        await SelectIndex(index);
+    }
+
+    async Task DropRemove()
+    {
+        if (!SelectedIndex.HasValue)
+            return;
+        Scheme.Colors.RemoveAt(SelectedIndex.Value);
+        await SelectIndex(null);
+        isDragMode = false;
+    }
+
+    async Task StartDrag(int index)
+    {
+        isDragMode = true;
+        await SelectIndex(index);
+    }
+
+    void DragEnter(int index) => dragOverItem = index;
+    void DragLeave(int index) => dragOverItem = null;
+
+    void DragEnterSpacer(int index) => dragOverSpacer = index;
+    void DragLeaveSpacer(int index) => dragOverSpacer = null;
+
+    void DragEnterRemove() => isDragOverRemove = true;
+    void DragLeaveRemove() => isDragOverRemove = false;
+
+    void DragEnd(int index)
+    {
+        isDragMode = false;
+        dragOverSpacer = null;
+        dragOverItem = null;
+        isDragOverRemove = false;
+    }
+}

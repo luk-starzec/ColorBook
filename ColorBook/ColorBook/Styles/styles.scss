@@ -349,6 +349,7 @@ input {
 .color-selection__wrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: row;
     background-color: #fcfcfc;
     height: 3em;
@@ -448,27 +449,27 @@ input {
     height: 1px;
 }
 
-.colors-scheme-header__wrapper {
+.scheme-header__wrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     margin: .5em 0;
     background-color: #fcfcfc;
 }
 
-.colors-scheme-header__title {
+.scheme-header__title {
     color: #666666;
     font-weight: 400;
     text-align: center;
-    flex-grow: 1;
     margin-right: 2em;
 }
 
-.colors-scheme-header__list-wrapper {
+.scheme-header__list-wrapper {
     position: relative;
 }
 
-.colors-scheme-header__list-mask {
-    z-index: 30;
+@mixin page-mask {
     position: absolute;
     top: 0;
     left: 0;
@@ -482,7 +483,12 @@ input {
     }
 }
 
-.colors-scheme-header__button {
+.scheme-header__list-mask {
+    z-index: 30;
+    @include page-mask;
+}
+
+.scheme-header__button {
     @include std-button;
     position: relative;
     z-index: 35;
@@ -516,7 +522,7 @@ input {
     }
 }
 
-.colors-scheme-header__list {
+.scheme-header__list {
     z-index: 39;
     position: absolute;
     top: 1em;
@@ -527,7 +533,7 @@ input {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
 }
 
-.colors-scheme-header__list-item {
+.scheme-header__list-item {
     background-color: #ffffff;
     padding: .5em 1em;
 
@@ -552,14 +558,14 @@ input {
     }
 }
 
-.colors-scheme-header__color-sample {
+.scheme-header__color-sample {
     width: 1.5em;
     height: 1.5em;
     border-radius: .3em;
     margin: 0 .3em;
 }
 
-.colors-scheme__wrapper {
+.scheme-info__wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -703,28 +709,24 @@ input {
     border-radius: .3em;
 }
 
-.scheme-save__wrapper {
+.scheme-footer__wrapper {
     display: flex;
     margin: .8em 0;
 }
 
-.scheme-save__button {
+.scheme-footer__button {
     @include std-button;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 2.5em;
     width: 12em;
-    margin: .5em 1em;
+    margin: .5em .5em;
     padding: 0 1em;
     color: #333333;
     background-color: #fcfcfc;
     border-radius: 999px;
     text-decoration: none;
-
-    & img {
-        margin: 0 .5em 0 0;
-    }
 
     & span {
         flex-grow: 1;
@@ -801,6 +803,10 @@ input {
     }
 }
 
+.side-bar__mask {
+    z-index: 39;
+    @include page-mask;
+}
 
 .side-bar__header {
     grid-area: header;

@@ -1,0 +1,45 @@
+﻿
+<div class="scheme-info__wrapper">
+
+    @if (Scheme == null)
+    {
+        <div>
+            Loading...
+        </div>
+    }
+    else
+    {
+        <SchemeHeader ColorHex="@(Scheme.Colors[0].ColorHex)" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
+
+        <SchemeColors Scheme="Scheme" @bind-SelectedIndex="selectedIndex" />
+
+        <SchemeDescription Scheme="Scheme" @bind-SelectedIndex="selectedIndex" />
+
+        <SchemeFooter Scheme="Scheme" />
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public ColorScheme Scheme { get; set; }
+
+    int? selectedIndex = null;
+
+
+    void AddGeneratedColors(string[] newColors)
+    {
+        var namedColor = newColors.Select(r => new NamedColor(r));
+
+        Scheme.Colors.RemoveAt(0);
+        Scheme.Colors.InsertRange(0, namedColor);
+
+        StateHasChanged();
+    }
+
+    void ClearSchemeColors()
+    {
+        Scheme.Colors = new List<NamedColor> { Scheme.Colors[0] };
+        StateHasChanged();
+    }
+}

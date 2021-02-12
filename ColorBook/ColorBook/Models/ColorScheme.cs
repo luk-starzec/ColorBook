@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ColorBook.Models
 {
@@ -6,6 +7,6 @@ namespace ColorBook.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public NamedColor[] Colors { get; set; }
+        public List<NamedColor> Colors { get; set; }
     }
 }

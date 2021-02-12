@@ -3,7 +3,6 @@
 
 <div class="@cssWrapper">
 
-
     <div class="side-bar__header">
 
         <img class="side-bar__logo" src="/assets/logo-icon.svg" />
@@ -116,12 +115,14 @@
 
 <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@colorPickerColor" />
 
+<div class="@cssMask"></div>
 
 @code {
     Settings currentSettings;
 
     bool isCollapsed = true;
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
+    string cssMask => isCollapsed ? "side-bar__mask" : "side-bar__mask side-bar__mask--visible";
 
     string cssLoadScheme => isLibraryCollapsed ? "side-bar__list-item" : "side-bar__list-item side-bar__list-item--hover";
 
