@@ -75,9 +75,9 @@
     [Parameter]
     public string ColorHex { get; set; }
     [Parameter]
-    public Action<string[]> AddGeneratedColors { get; set; }
+    public EventCallback<string[]> AddGeneratedColors { get; set; }
     [Parameter]
-    public Action ClearSchemeColors { get; set; }
+    public EventCallback ClearSchemeColors { get; set; }
 
     SchemeType[] schemes;
 
@@ -118,13 +118,13 @@
     async Task GenerateScheme(string method)
     {
         var colors = await JS.InvokeAsync<string[]>("colorTools.generateScheme", ColorHex, method);
-        AddGeneratedColors?.Invoke(colors);
+        await AddGeneratedColors.InvokeAsync(colors);
         isListVisible = false;
     }
 
-    void RemoveColors()
+    async Task RemoveColors()
     {
-        ClearSchemeColors?.Invoke();
+        await ClearSchemeColors.InvokeAsync();
         isQuestionVisible = false;
     }
 }

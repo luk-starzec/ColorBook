@@ -33,13 +33,10 @@
 
         Scheme.Colors.RemoveAt(0);
         Scheme.Colors.InsertRange(0, namedColor);
-
-        StateHasChanged();
     }
 
     void ClearSchemeColors()
     {
         Scheme.Colors = new List<NamedColor> { Scheme.Colors[0] };
-        StateHasChanged();
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using BlazorColorPicker
 @inject ISettingsService settingsService;
+@inject ISchemeService schemeService;
 
 <div class="@cssWrapper">
 
@@ -27,7 +28,7 @@
     {
         <ul class="side-bar__list">
 
-            <li class="side-bar__list-item side-bar__list-item--action">
+            <li class="side-bar__list-item side-bar__list-item--action" @onclick="CreateScheme">
                 <img src="/assets/create-scheme-icon.svg" title="create scheme" />
                 Create scheme
             </li>
@@ -39,8 +40,12 @@
                     <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
                 </div>
                 <ul class="side-bar__sublist">
-                    <li class="side-bar__sublist-item">
-                        from file...
+                    <li class="side-bar__sublist-item side-bar__sublist-item--no-padding">
+                        <label class="side-bar__file-label">
+                            from file...
+                            <InputFile class="side-bar__file-input" OnChange="LoadSchemeFromFile" accept="application/JSON" />
+                        </label>
+
                     </li>
                     <li class="side-bar__sublist-item" @onclick="ChangeLibraryVisibility">
                         from library
@@ -76,8 +81,12 @@
                 </h4>
 
                 <ul class="side-bar__library-list">
-                    <li class="side-bar__library-list-item">Scheme01</li>
-                    <li class="side-bar__library-list-item">Scheme02</li>
+                    @foreach (var scheme in library)
+                    {
+                        <li class="side-bar__library-list-item" @key="scheme.Id" @onclick="()=>LoadSchemeFromLibrary(scheme.Id)">
+                            @scheme.Name
+                        </li>
+                    }
                 </ul>
 
             </div>
@@ -118,7 +127,11 @@
 <div class="@cssMask"></div>
 
 @code {
+    [Parameter]
+    public EventCallback<ColorScheme> SchemeLoaded { get; set; }
+
     Settings currentSettings;
+    ColorScheme[] library;
 
     bool isCollapsed = true;
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
@@ -139,8 +152,36 @@
     protected override async Task OnInitializedAsync()
     {
         currentSettings = await settingsService.GetCurrentSettingsAsync();
+        library = await schemeService.LibraryListAsync();
     }
 
+    async Task CreateScheme()
+    {
+        var scheme = schemeService.GetEmptyScheme();
+        await LoadScheme(scheme);
+    }
+
+    async Task LoadSchemeFromFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffers = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffers);
+        var stringData = System.Text.Encoding.UTF8.GetString(buffers);
+        var scheme = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(stringData);
+        await LoadScheme(scheme);
+    }
+
+    async Task LoadSchemeFromLibrary(Guid id)
+    {
+        var scheme = library.Single(r => r.Id == id);
+        await LoadScheme(scheme);
+    }
+
+    async Task LoadScheme(ColorScheme scheme)
+    {
+        await SchemeLoaded.InvokeAsync(scheme);
+        HideMenu();
+    }
 
     void ShowMenu()
     {
