@@ -1,23 +1,29 @@
-﻿
+﻿@inject ISchemeService schemeService
+
 <div class="scheme-footer__wrapper">
 
-    <button class="scheme-footer__button" @onclick="SaveInLibrary">
-        @if (isSchemeInLibrary)
-        {
-            <img src="/assets/library-save-icon.svg" />
-            <span>Save</span>
-        }
-        else
-        {
-            <img src="/assets/library-add-icon.svg" />
-            <span>Add to library</span>
-        }
+    <button class="scheme-footer__button" @onclick="AddToLibrary" title="Add color scheme to library">
+        <img src="/assets/library-add-icon.svg" />
+        <span>Add to library</span>
     </button>
 
-    <a class="scheme-footer__button" download="@downloadName" href="@downloadData">
+    <a class="scheme-footer__button" download="@downloadName" href="@downloadData" title="Download color scheme as JSON file">
         <img src="/assets/download-icon.svg" />
         <span>Download JSON</span>
     </a>
+
+    @if (isSchemeInLibrary)
+    {
+        <button class="scheme-footer__button" @onclick="SaveInLibrary" title="Save changes in library">
+            <img src="/assets/library-save-icon.svg" />
+            <span>Save</span>
+        </button>
+
+        <button class="scheme-footer__button" @onclick="RemoveFromLibrary" title="Remove color scheme from library">
+            <img src="/assets/library-remove-icon.svg" />
+            <span>Remove</span>
+        </button>
+    }
 
 </div>
 
@@ -26,10 +32,30 @@
     public ColorScheme Scheme { get; set; }
 
     string downloadName => $"{(string.IsNullOrWhiteSpace(Scheme.Name) ? "scheme" : Scheme.Name)}.json";
-    string downloadData => $"data:application/json;charset=utf-8,{System.Text.Json.JsonSerializer.Serialize(Scheme)}";
+    string downloadData => $"data:application/json;charset=utf-8,{schemeService.SchemeToJson(Scheme)}";
 
     bool isSchemeInLibrary = false;
 
-    void SaveInLibrary() => isSchemeInLibrary = !isSchemeInLibrary;
+    protected override async Task OnParametersSetAsync()
+    {
+        isSchemeInLibrary = Scheme != null ? await schemeService.ExistsInLibrary(Scheme.Id) : false;
+    }
+
+    async Task AddToLibrary()
+    {
+        Scheme = await schemeService.LibraryAdd(Scheme);
+        isSchemeInLibrary = true;
+    }
+
+    async Task SaveInLibrary()
+    {
+        await schemeService.LibrarySave(Scheme);
+    }
+
+    async Task RemoveFromLibrary()
+    {
+        await schemeService.LibraryRemove(Scheme.Id);
+        isSchemeInLibrary = false;
+    }
 
 }

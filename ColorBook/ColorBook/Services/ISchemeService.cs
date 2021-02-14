@@ -9,10 +9,13 @@ namespace ColorBook.Services
     interface ISchemeService
     {
         ColorScheme GetEmptyScheme();
-        Task<ColorScheme[]> LibraryListAsync();
-        Task<bool> ExistsInLibraryAsync(Guid id);
-        Task LibrarySaveAsync(ColorScheme scheme);
-        Task LibraryRemoveAsync(ColorScheme scheme);
+        Task<ColorScheme[]> LibraryList();
+        Task<bool> ExistsInLibrary(Guid id);
+        Task<ColorScheme> LibraryAdd(ColorScheme scheme);
+        Task LibrarySave(ColorScheme scheme);
+        Task LibraryRemove(Guid id);
 
+        string SchemeToJson(ColorScheme scheme);
+        ColorScheme JsonToScheme(string json);
     }
 }

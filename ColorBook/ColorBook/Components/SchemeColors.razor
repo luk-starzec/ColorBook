@@ -14,12 +14,12 @@
             </div>
         </li>
 
-        @for (int i = 0; i < Scheme.Colors.Count; i++)
+        @for (int i = 0; i < Scheme.Colors.Count(); i++)
         {
             int index = i;
             <li class="scheme-colors__list-item">
-                <div class="@GetCssColorView(index)" style="background-color: @(Scheme.Colors[i].ColorHex);" draggable="true" ondragover="event.preventDefault();"
-                     @onmousedown="()=>SelectIndex(index)" @ondrop="()=>DropSwitch(index)" @ondrag="()=>StartDrag(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
+                <div class="@GetCssColorView(index)" style="background-color: @(Scheme.GetColor(i).ColorHex);" draggable="true" ondragover="event.preventDefault();"
+                     @onmousedown="()=>SelectIndex(index)" @ondragstart="()=>DragStart(index)" @ondrop="()=>DropSwitch(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
                 </div>
                 <div class="scheme-colors__item-info">
                     @if (IsItemDropDescription(index))
@@ -45,9 +45,9 @@
         }
     </ul>
 
-    @if (isDragMode && Scheme.Colors.Count > 1)
+    @if (isDragMode && Scheme.Colors.Count() > 1)
     {
-        <div class="@GetCssRemoveArea()" style="--items-count: @Scheme.Colors.Count;" ondragover="event.preventDefault();"
+        <div class="@GetCssRemoveArea()" style="--items-count: @Scheme.Colors.Count();" ondragover="event.preventDefault();"
              @ondragenter="DragEnterRemove" @ondragleave="DragLeaveRemove" @ondrop="DropRemove">
         </div>
     }
@@ -109,29 +109,15 @@
     {
         if (!SelectedIndex.HasValue)
             return;
-
-        var color = Scheme.Colors[SelectedIndex.Value];
-        if (SelectedIndex > index)
-        {
-            Scheme.Colors.Insert(index + 1, color);
-            Scheme.Colors.RemoveAt(SelectedIndex.Value + 1);
-            await SelectIndex(index + 1);
-        }
-        else
-        {
-            Scheme.Colors.RemoveAt(SelectedIndex.Value);
-            Scheme.Colors.Insert(index, color);
-            await SelectIndex(index);
-        }
+        var i = Scheme.ReorderColors(SelectedIndex.Value, index);
+        await SelectIndex(i);
     }
 
     async Task DropSwitch(int index)
     {
         if (!SelectedIndex.HasValue)
             return;
-        var color = Scheme.Colors[SelectedIndex.Value];
-        Scheme.Colors[SelectedIndex.Value] = Scheme.Colors[index];
-        Scheme.Colors[index] = color;
+        Scheme.SwitchColors(SelectedIndex.Value, index);
         await SelectIndex(index);
     }
 
@@ -139,15 +125,16 @@
     {
         if (!SelectedIndex.HasValue)
             return;
-        Scheme.Colors.RemoveAt(SelectedIndex.Value);
+        Scheme.RemoveColor(SelectedIndex.Value);
         await SelectIndex(null);
         isDragMode = false;
     }
 
-    async Task StartDrag(int index)
+    async Task DragStart(int index)
     {
+        //await SelectIndex(index);
+        await Task.Delay(100);
         isDragMode = true;
-        await SelectIndex(index);
     }
 
     void DragEnter(int index) => dragOverItem = index;

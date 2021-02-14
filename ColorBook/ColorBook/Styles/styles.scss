@@ -475,11 +475,14 @@ input {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(240, 240, 240, .7);
+    background-color: rgba(240, 240, 240, .8);
     visibility: collapse;
+    opacity: 0;
+    transition: opacity ease .2s;
 
     &--visible {
         visibility: visible;
+        opacity: 1;
     }
 }
 
@@ -570,7 +573,7 @@ input {
     flex-direction: column;
     align-items: center;
     --color-width: 4em;
-    --spacer-width: 1em;
+    --spacer-width: 2em;
 }
 
 .scheme-colors__list {
@@ -618,6 +621,7 @@ input {
 .scheme-colors__color-spacer {
     height: 4em;
     width: .7em;
+    transition: width ease .2s;
 
     &--wide {
         width: var(--spacer-width);
@@ -625,14 +629,16 @@ input {
 
     &--drag-over {
         background: repeating-linear-gradient(45deg, #dddddd, #dddddd .5em, #ffffff .5em, #ffffff 1em );
+        width: var(--color-width);
     }
 }
 
 .scheme-colors__remove-area {
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(var(--items-count)*var(--color-width) + (var(--items-count)+1)*var(--spacer-width));
+    width: calc(var(--items-count+1)*var(--color-width) + (var(--items-count))*var(--spacer-width));
     max-width: 90vw;
     height: 3em;
     border-radius: .3em;
@@ -711,7 +717,9 @@ input {
 
 .scheme-footer__wrapper {
     display: flex;
+    justify-content: center;
     margin: .8em 0;
+    flex-wrap: wrap;
 }
 
 .scheme-footer__button {
@@ -735,6 +743,10 @@ input {
 
     &:hover {
         background-color: #f0f0f0;
+    }
+
+    &:active {
+        transform: scale(.9);
     }
 }
 

@@ -9,7 +9,7 @@
     }
     else
     {
-        <SchemeHeader ColorHex="@(Scheme.Colors[0].ColorHex)" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
+        <SchemeHeader ColorHex="@(Scheme.GetColor(0).ColorHex)" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
 
         <SchemeColors Scheme="Scheme" @bind-SelectedIndex="selectedIndex" />
 
@@ -31,12 +31,12 @@
     {
         var namedColor = newColors.Select(r => new NamedColor(r));
 
-        Scheme.Colors.RemoveAt(0);
-        Scheme.Colors.InsertRange(0, namedColor);
+        Scheme.RemoveColor(0);
+        Scheme.InsertColors(0, namedColor);
     }
 
     void ClearSchemeColors()
     {
-        Scheme.Colors = new List<NamedColor> { Scheme.Colors[0] };
+        Scheme.Colors = new List<NamedColor> { Scheme.GetColor(0) };
     }
 }

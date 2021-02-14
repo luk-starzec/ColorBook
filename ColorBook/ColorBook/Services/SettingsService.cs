@@ -44,31 +44,7 @@ namespace ColorBook.Services
         {
             if (currentSettings == null)
             {
-
-                var aaa = await js.InvokeAsync<string>($"localDataStore.get", "settings", "current");
-                Console.WriteLine(aaa);
-                var bbb = await js.InvokeAsync<object>($"localDataStore.get", "settings", "current");
-                Console.WriteLine(bbb);
-                try
-                {
-                    var ccc = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
-                    Console.WriteLine(ccc);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.InnerException);
-                }
-
-                //var options = new JsonSerializerSettings
-                //{
-                //    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                //};
-                if (aaa != null)
-                {
-                    var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-                    currentSettings = JsonSerializer.Deserialize<Settings>(aaa, options);
-                }
-                //currentSettings = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
+                currentSettings = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
 
                 if (currentSettings == null)
                     currentSettings = new Settings
@@ -112,16 +88,7 @@ namespace ColorBook.Services
 
         public async Task SaveSettingsAsync(Settings settings)
         {
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var json = System.Text.Json.JsonSerializer.Serialize(settings, options);
-            Console.WriteLine(json);
-            //var options = new JsonSerializerSettings
-            //{
-            //    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            //};
-            //var json = JsonConvert.SerializeObject(settings, options);
-            await js.InvokeVoidAsync($"localDataStore.put", "settings", "current", json);
-            await js.InvokeVoidAsync($"localDataStore.test");
+            await js.InvokeVoidAsync($"localDataStore.put", "settings", "current", settings);
         }
 
         public ValueTask SaveTestResult(string result)

@@ -124,7 +124,7 @@
 
 <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@colorPickerColor" />
 
-<div class="@cssMask"></div>
+<div class="@cssMask" @onclick="HideMenu"></div>
 
 @code {
     [Parameter]
@@ -152,7 +152,9 @@
     protected override async Task OnInitializedAsync()
     {
         currentSettings = await settingsService.GetCurrentSettingsAsync();
-        library = await schemeService.LibraryListAsync();
+        library = (await schemeService.LibraryList())
+            .OrderByDescending(r => r.LastUpdate)
+            .ToArray();
     }
 
     async Task CreateScheme()
@@ -167,7 +169,7 @@
         var buffers = new byte[file.Size];
         await file.OpenReadStream().ReadAsync(buffers);
         var stringData = System.Text.Encoding.UTF8.GetString(buffers);
-        var scheme = System.Text.Json.JsonSerializer.Deserialize<ColorScheme>(stringData);
+        var scheme = schemeService.JsonToScheme(stringData);
         await LoadScheme(scheme);
     }
 

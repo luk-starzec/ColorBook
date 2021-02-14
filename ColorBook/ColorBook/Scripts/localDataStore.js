@@ -6,7 +6,9 @@
         upgrade(db) {
             db.createObjectStore('metadata');
             db.createObjectStore('settings');
-            db.createObjectStore('library', { keyPath: 'id' });
+            //db.createObjectStore('library', { keyPath: 'id' });
+            db.createObjectStore('library');
+            db.createObjectStore('test');
         },
     });
 
@@ -15,6 +17,10 @@
             console.log("test");
             const aaa = await (await db).transaction('settings').store.get('current');
             console.log(aaa);
+        },
+        exists: async (storeName, key) => {
+            const item = await (await db).transaction(storeName).store.get(key);
+            return item !== undefined;
         },
         get: async (storeName, key) => (await db).transaction(storeName).store.get(key),
         getByKeys: async (storeName, keys) => {
@@ -29,6 +35,7 @@
             return results;
         },
         getAll: async (storeName) => (await db).transaction(storeName).store.getAll(),
+
         getFirstFromIndex: async (storeName, indexName, direction) => {
             const cursor = await (await db).transaction(storeName).store.index(indexName).openCursor(null, direction);
             return (cursor && cursor.value) || null;
