@@ -11,9 +11,9 @@
     {
         <SchemeHeader ColorHex="@(Scheme.GetColor(0).ColorHex)" AddGeneratedColors="AddGeneratedColors" ClearSchemeColors="ClearSchemeColors" />
 
-        <SchemeColors Scheme="Scheme" @bind-SelectedIndex="selectedIndex" />
+        <SchemeColors Scheme="Scheme" @bind-SelectedIndex="SelectedIndex" />
 
-        <SchemeDescription Scheme="Scheme" @bind-SelectedIndex="selectedIndex" />
+        <SchemeDescription Scheme="Scheme" @bind-SelectedIndex="SelectedIndex" />
 
         <SchemeFooter Scheme="Scheme" />
     }
@@ -23,20 +23,34 @@
 @code {
     [Parameter]
     public ColorScheme Scheme { get; set; }
+    [Parameter]
+    public EventCallback<string> OnColorSelect { get; set; }
 
     int? selectedIndex = null;
+    int? SelectedIndex
+    {
+        get => selectedIndex;
+        set
+        {
+            if (value.HasValue && selectedIndex != value)
+                OnColorSelect.InvokeAsync(Scheme.GetColor(value.Value).ColorHex);
+            selectedIndex = value;
+        }
+    }
+
 
 
     void AddGeneratedColors(string[] newColors)
     {
-        var namedColor = newColors.Select(r => new NamedColor(r));
+        var namedColors = newColors.Select(r => new NamedColor(r));
 
         Scheme.RemoveColor(0);
-        Scheme.InsertColors(0, namedColor);
+        Scheme.InsertColors(0, namedColors);
     }
 
     void ClearSchemeColors()
     {
         Scheme.Colors = new List<NamedColor> { Scheme.GetColor(0) };
     }
+
 }

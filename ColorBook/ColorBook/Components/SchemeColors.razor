@@ -19,7 +19,7 @@
             int index = i;
             <li class="scheme-colors__list-item">
                 <div class="@GetCssColorView(index)" style="background-color: @(Scheme.GetColor(i).ColorHex);" draggable="true" ondragover="event.preventDefault();"
-                     @onmousedown="()=>SelectIndex(index)" @ondragstart="()=>DragStart(index)" @ondrop="()=>DropSwitch(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
+                     @onmouseup="()=>SwitchSelctedIndex(index)" @ondragstart="()=>DragStart(index)" @ondrop="()=>DropSwitch(index)" @ondragenter="()=>DragEnter(index)" @ondragleave="()=>DragLeave(index)" @ondragend="()=>DragEnd(index)">
                 </div>
                 <div class="scheme-colors__item-info">
                     @if (IsItemDropDescription(index))
@@ -98,11 +98,15 @@
     bool IsItemDropDescription(int index) => dragOverItem == index && index != SelectedIndex;
     bool IsSpacerDropDescription(int index) => dragOverSpacer == index;
 
+    async Task SwitchSelctedIndex(int index)
+    {
+        await SelectIndex(SelectedIndex != index ? index : null);
+    }
 
     async Task SelectIndex(int? index)
     {
         SelectedIndex = index;
-        await SelectedIndexChanged.InvokeAsync(index);
+        await SelectedIndexChanged.InvokeAsync(SelectedIndex);
     }
 
     async Task DropInsert(int index)
@@ -132,8 +136,7 @@
 
     async Task DragStart(int index)
     {
-        //await SelectIndex(index);
-        await Task.Delay(100);
+        await SelectIndex(index);
         isDragMode = true;
     }
 

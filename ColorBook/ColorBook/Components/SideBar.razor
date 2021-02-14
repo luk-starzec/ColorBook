@@ -128,7 +128,7 @@
 
 @code {
     [Parameter]
-    public EventCallback<ColorScheme> SchemeLoaded { get; set; }
+    public EventCallback<ColorScheme> OnSchemeLoad { get; set; }
 
     Settings currentSettings;
     ColorScheme[] library;
@@ -181,7 +181,7 @@
 
     async Task LoadScheme(ColorScheme scheme)
     {
-        await SchemeLoaded.InvokeAsync(scheme);
+        await OnSchemeLoad.InvokeAsync(scheme);
         HideMenu();
     }
 

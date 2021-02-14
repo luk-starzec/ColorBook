@@ -6,7 +6,7 @@
 
     <div class="@cssBasicView">
 
-        <button class="color-info__button-add" title="add color to scheme">
+        <button class="color-info__button-add" title="add color to scheme" @onclick="AddColor">
             <img src="/assets/add-icon.svg" alt="" />
         </button>
 
@@ -59,6 +59,8 @@
 @code {
     [Parameter]
     public string ColorHex { get; set; }
+    [Parameter]
+    public EventCallback<string> OnAddColor { get; set; }
 
     private Settings settings;
 
@@ -89,4 +91,8 @@
         isColorPickerOpened = false;
     }
 
+    async Task AddColor()
+    {
+        await OnAddColor.InvokeAsync(ColorHex);
+    }
 }

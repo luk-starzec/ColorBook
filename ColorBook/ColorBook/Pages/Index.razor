@@ -6,13 +6,13 @@
 
 <main class="main__wrapper">
 
-    <SideBar SchemeLoaded="SetScheme" />
+    <SideBar OnSchemeLoad="SetScheme" />
 
     <ColorSelection />
 
-    <ColorInfo ColorHex="@colorHex" />
+    <ColorInfo ColorHex="@colorHex" OnAddColor="AddColor" />
 
-    <SchemeInfo Scheme="colorScheme" />
+    <SchemeInfo Scheme="colorScheme" OnColorSelect="SetColor" />
 
 </main>
 
@@ -32,6 +32,16 @@
     void SetScheme(ColorScheme scheme)
     {
         colorScheme = scheme;
+    }
+
+    void AddColor(string colorHex)
+    {
+        colorScheme.AddColor(colorHex);
+    }
+
+    void SetColor(string color)
+    {
+        colorHex = color;
     }
 
     private ColorScheme GetColorScheme()
