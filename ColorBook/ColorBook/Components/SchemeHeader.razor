@@ -2,7 +2,10 @@
 
 <div class="scheme-header__wrapper">
 
-    <h3 class="scheme-header__title">COLORS SCHEME</h3>
+    <label class="scheme-header__name-label">
+        <span>Scheme:</span>
+        <input type="text" class="scheme-header__input" @bind="@Name" @bind:event="oninput" @onkeyup="SetName" />
+    </label>
 
     <div class="scheme-header__list-wrapper">
 
@@ -73,11 +76,15 @@
 
 @code {
     [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public EventCallback<string> NameChanged { get; set; }
+    [Parameter]
     public string ColorHex { get; set; }
     [Parameter]
-    public EventCallback<string[]> AddGeneratedColors { get; set; }
+    public EventCallback<string[]> OnGenerateColors { get; set; }
     [Parameter]
-    public EventCallback ClearSchemeColors { get; set; }
+    public EventCallback OnClearColors { get; set; }
 
     SchemeType[] schemes;
 
@@ -115,16 +122,21 @@
         isQuestionVisible = false;
     }
 
+    async Task SetName()
+    {
+        await NameChanged.InvokeAsync(Name);
+    }
+
     async Task GenerateScheme(string method)
     {
         var colors = await JS.InvokeAsync<string[]>("colorTools.generateScheme", ColorHex, method);
-        await AddGeneratedColors.InvokeAsync(colors);
+        await OnGenerateColors.InvokeAsync(colors);
         isListVisible = false;
     }
 
     async Task RemoveColors()
     {
-        await ClearSchemeColors.InvokeAsync();
+        await OnClearColors.InvokeAsync();
         isQuestionVisible = false;
     }
 }

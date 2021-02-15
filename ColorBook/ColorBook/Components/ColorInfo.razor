@@ -2,54 +2,62 @@
 @inject ISettingsService settingsService
 
 <div class="color-info__wrapper">
-
-
-    <div class="@cssBasicView">
-
-        <button class="color-info__button-add" title="add color to scheme" @onclick="AddColor">
-            <img src="/assets/add-icon.svg" alt="" />
-        </button>
-
-        <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
-            <div class="color-info__color-change">...</div>
-        </button>
-
-        <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!isFullView)" IsBold="@isFullView" />
-
-        <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide color details">
-            <img src="/assets/dropdown-icon.svg" />
-        </button>
-
-    </div>
-
-    @if (isFullView)
+    @if (isDisabled)
     {
-        <div class="color-info__full-view">
+        <div class="color-info__disabled-info">
+            <img src="/assets/dropdown-icon.svg" />
+            select scheme color
+            <img src="/assets/dropdown-icon.svg" />
+        </div>
+    }
+    else
+    {
+        <div class="@cssBasicView">
 
-            <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+            <ColorSelection />
+
+            <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
                 <div class="color-info__color-change">...</div>
             </button>
 
-            <InputRGB @bind-Value="ColorHex" />
-            <InputHSL @bind-Value="ColorHex" />
-            <InputName Value="@ColorHex" />
+            <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!isFullView)" IsBold="@isFullView" />
+
+            <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide color details">
+                <img src="/assets/dropdown-icon.svg" />
+            </button>
 
         </div>
 
-        <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Lightness" />
-        <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Saturation" />
-        <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Hue" />
+        @if (isFullView)
+        {
+            <div class="color-info__full-view">
 
-        <div class="color-info__color-fit">
+                <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+                    <div class="color-info__color-change">...</div>
+                </button>
 
-            <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
-            <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
-            <ColorFitText TextColor="@settings.DarkTextColor" BackgroundColor="@ColorHex" />
-            <ColorFitText TextColor="@settings.LightTextColor" BackgroundColor="@ColorHex" />
-            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
-            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
+                <InputRGB @bind-Value="ColorHex" />
+                <InputHSL @bind-Value="ColorHex" />
+                <InputName Value="@ColorHex" />
 
-        </div>
+            </div>
+
+            <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Lightness" />
+            <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Saturation" />
+            <ColorBar ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Hue" />
+
+            <div class="color-info__color-fit">
+
+                <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
+                <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
+                <ColorFitText TextColor="@settings.DarkTextColor" BackgroundColor="@ColorHex" />
+                <ColorFitText TextColor="@settings.LightTextColor" BackgroundColor="@ColorHex" />
+                <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
+                <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
+
+            </div>
+        }
+
     }
 
     <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@ColorHex" />
@@ -57,26 +65,42 @@
 </div>
 
 @code {
+    string colorHex;
     [Parameter]
-    public string ColorHex { get; set; }
+    public string ColorHex
+    {
+        get => colorHex;
+        set
+        {
+            if (colorHex == value)
+                return;
+            colorHex = value;
+            ColorHexChanged.InvokeAsync(value);
+        }
+    }
     [Parameter]
-    public EventCallback<string> OnAddColor { get; set; }
+    public EventCallback<string> ColorHexChanged { get; set; }
 
-    private Settings settings;
+    Settings settings;
 
-    private bool isFullView = false;
+    bool isDisabled => string.IsNullOrEmpty(ColorHex);
 
-    private string cssBasicView => isFullView ? "color-info__basic-view color-info__basic-view--full" : "color-info__basic-view";
-    private string cssColorViewer => isFullView ? "color-info__color-sample color-info__color-sample--hidden" : "color-info__color-sample";
-    private string cssButtonDetalis => isFullView ? "color-info__switch-view color-info__switch-view--full" : "color-info__switch-view";
-    private string styleSampleColor => $"background-color: {ColorHex};";
+    bool isFullView = false;
 
-    private void ChangeView() => isFullView = !isFullView;
+    string cssBasicView => isFullView ? "color-info__basic-view color-info__basic-view--full" : "color-info__basic-view";
+    string cssColorViewer => isFullView ? "color-info__color-sample color-info__color-sample--hidden" : "color-info__color-sample";
+    string cssButtonDetalis => isFullView ? "color-info__switch-view color-info__switch-view--full" : "color-info__switch-view";
+    string styleSampleColor => $"background-color: {ColorHex};";
+
 
     protected override async Task OnInitializedAsync()
     {
         settings = await settingsService.GetCurrentSettingsAsync();
     }
+
+
+    void ChangeView() => isFullView = !isFullView;
+
 
     bool isColorPickerOpened = false;
 
@@ -89,10 +113,5 @@
     {
         ColorHex = value;
         isColorPickerOpened = false;
-    }
-
-    async Task AddColor()
-    {
-        await OnAddColor.InvokeAsync(ColorHex);
     }
 }

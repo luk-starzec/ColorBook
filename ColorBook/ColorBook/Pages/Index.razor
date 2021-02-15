@@ -4,22 +4,17 @@
 @inject ISettingsService settingsService
 @inject ISchemeService schemeService;
 
-<main class="main__wrapper">
+<SideBar OnSchemeLoad="SetScheme" />
 
-    <SideBar OnSchemeLoad="SetScheme" />
+<ColorInfo @bind-ColorHex="ColorHex" />
 
-    <ColorSelection />
-
-    <ColorInfo ColorHex="@colorHex" OnAddColor="AddColor" />
-
-    <SchemeInfo Scheme="colorScheme" OnColorSelect="SetColor" />
-
-</main>
+<SchemeInfo @ref="schemeInfo" Scheme="colorScheme" @bind-SelectedColor="ColorHex" />
 
 @code {
+    SchemeInfo schemeInfo;
     ColorScheme colorScheme;
 
-    string colorHex { get; set; } = "#ff00ff";
+    string ColorHex { get; set; }
 
 
 
@@ -31,6 +26,7 @@
 
     void SetScheme(ColorScheme scheme)
     {
+        ColorHex = null;
         colorScheme = scheme;
     }
 
@@ -39,10 +35,6 @@
         colorScheme.AddColor(colorHex);
     }
 
-    void SetColor(string color)
-    {
-        colorHex = color;
-    }
 
     private ColorScheme GetColorScheme()
     {

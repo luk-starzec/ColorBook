@@ -1,0 +1,89 @@
+﻿@import 'shared';
+
+input {
+    @include focus-outline;
+}
+
+.button-copy__button {
+    @include std-button;
+    width: 3em;
+    height: 1.7em;
+    border-radius: 0 .3em .3em 0;
+    background-color: #fcfcfc;
+
+    &:hover {
+        background-color: #e5e5e5;
+    }
+
+    &:active {
+        .button-copy__icon {
+            transform: scale(.8);
+        }
+    }
+}
+
+.button-copy__icon {
+    vertical-align: middle;
+    transition: transform .1s;
+}
+
+.input-hex__wrapper {
+    @include color-input-wrapper;
+    width: auto;
+}
+
+.input-hex__label {
+    @include color-input-label;
+    width: 3.5em;
+
+    &--hidden span {
+        display: none;
+    }
+}
+
+.input-hex__input {
+    @include color-input-input;
+    width: 7.5em;
+
+    &--bold {
+        font-weight: bold;
+    }
+}
+
+.input-hsl__wrapper {
+    @include color-input-wrapper;
+}
+
+.input-hsl__label {
+    @include color-input-label;
+}
+
+.input-hsl__input {
+    @include color-input-input;
+}
+
+.input-rgb__wrapper {
+    @include color-input-wrapper;
+}
+
+.input-rgb__label {
+    @include color-input-label;
+}
+
+.input-rgb__input {
+    @include color-input-input;
+}
+
+.input-name__wrapper {
+    @include color-input-wrapper;
+}
+
+.input-name__label {
+    @include color-input-label;
+}
+
+.input-name__input {
+    @include color-input-input;
+    width: 10.5em;
+    background-color: #ffffff;
+}

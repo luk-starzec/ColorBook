@@ -214,7 +214,7 @@ window.colorTools = {
 
     getName: (colorHex) => {
         const colorNames = colorTools.getColorNames();
-        const colorUpperCase = colorHex.toUpperCase();
+        const colorUpperCase = colorHex?.toUpperCase();
         return colorUpperCase in colorNames ? colorNames[colorUpperCase] : '';
     },
 

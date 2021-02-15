@@ -1,11 +1,9 @@
 ﻿
 <div class="color-selection__wrapper">
 
-    <h3 class="color-selection__header">COLOR SELECTION:</h3>
-
     <div class="color-selection__type-wrapper">
 
-        <button class="@cssButton" title="@GetTitle(colorSelectionType)" @onclick="ChangeListVisibility">
+        <button class="@cssTypeButton" title="@GetTitle(colorSelectionType)" @onclick="ChangeListVisibility">
             <img src="@GetImageSrc(colorSelectionType)" alt="@GetTitle(colorSelectionType)" />
         </button>
 
@@ -37,6 +35,9 @@
         </div>
     }
 
+    <div class="@cssMask" @onclick="HideList">
+    </div>
+
 </div>
 
 @code {
@@ -47,9 +48,22 @@
 
     bool isFileButtonVisible => colorSelectionType != EnumColorSelectionType.Palette;
 
-    string cssButton => isListVisible ? "color-selection__type-button color-selection__type-button--list" : "color-selection__type-button";
+    string cssTypeButton
+    {
+        get
+        {
+            var css = "color-selection__type-button";
+            if (isListVisible)
+                css += " color-selection__type-button--list";
+            if (isFileButtonVisible)
+                css += " color-selection__type-button--file";
+            return css;
+        }
+    }
 
-    private string GetTitle(EnumColorSelectionType selectionType)
+    string cssMask => isListVisible ? "color-selection__list-mask color-selection__list-mask--visible" : "color-selection__list-mask";
+
+    string GetTitle(EnumColorSelectionType selectionType)
     {
         return selectionType switch
         {
@@ -60,9 +74,9 @@
         };
     }
 
-    private string GetTitleFile(EnumColorSelectionType selectionType) => selectionType == EnumColorSelectionType.Camera ? "open camera" : "open file";
+    string GetTitleFile(EnumColorSelectionType selectionType) => selectionType == EnumColorSelectionType.Camera ? "open camera" : "open file";
 
-    private string GetImageSrc(EnumColorSelectionType selectionType)
+    string GetImageSrc(EnumColorSelectionType selectionType)
     {
         var fileName = selectionType switch
         {
@@ -74,9 +88,11 @@
         return $"/assets/{fileName}.svg";
     }
 
-    private void ChangeListVisibility() => isListVisible = !isListVisible;
+    void ChangeListVisibility() => isListVisible = !isListVisible;
 
-    private void ChangeSelectionType(EnumColorSelectionType selectionType)
+    void HideList() => isListVisible = false;
+
+    void ChangeSelectionType(EnumColorSelectionType selectionType)
     {
         colorSelectionType = selectionType;
         isListVisible = false;

@@ -10,7 +10,7 @@ namespace ColorBook.Models
 
         public string Name { get; set; }
 
-        private List<NamedColor> colors;
+        private List<NamedColor> colors = new List<NamedColor>();
         public IEnumerable<NamedColor> Colors
         {
             get => colors;
@@ -22,8 +22,8 @@ namespace ColorBook.Models
 
         public NamedColor GetColor(int index) => colors[index];
 
-
         public void AddColor(string colorHex) => colors.Add(new NamedColor(colorHex));
+
         public void AddColor(NamedColor color) => colors.Add(color);
 
         public void AddColors(IEnumerable<NamedColor> colors) => this.colors.AddRange(colors);
