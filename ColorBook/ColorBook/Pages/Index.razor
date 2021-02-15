@@ -6,9 +6,13 @@
 
 <SideBar OnSchemeLoad="SetScheme" />
 
-<ColorInfo @bind-ColorHex="ColorHex" />
+<main class="main__wrapper">
 
-<SchemeInfo @ref="schemeInfo" Scheme="colorScheme" @bind-SelectedColor="ColorHex" />
+    <ColorInfo @bind-ColorHex="ColorHex" />
+
+    <SchemeInfo @ref="schemeInfo" Scheme="colorScheme" @bind-SelectedColor="ColorHex" />
+
+</main>
 
 @code {
     SchemeInfo schemeInfo;

@@ -129,6 +129,4 @@
 
 @mixin width-wrapper {
     width: clamp(19em, 90vw, 31em);
-    margin: 0 auto;
-    padding: 0 1em 0 3em;
 }

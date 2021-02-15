@@ -22,7 +22,9 @@ namespace ColorBook.Models
 
         public NamedColor GetColor(int index) => colors[index];
 
-        public void AddColor(string colorHex) => colors.Add(new NamedColor(colorHex));
+        public void AddColor() => AddColor("#E8F6E9");
+
+        public void AddColor(string colorHex) => AddColor(new NamedColor(colorHex));
 
         public void AddColor(NamedColor color) => colors.Add(color);
 

@@ -6,7 +6,6 @@
     align-items: center;
     background-color: #fafafa;
     @include width-wrapper;
-    position: relative;
 }
 
 .color-info__disabled-info {
@@ -25,7 +24,7 @@
     display: grid;
     grid-template-columns: minmax(auto, 6em) minmax(auto, 7.5em) 10.5em auto;
     align-items: center;
-    padding: .5em;
+    padding: .5em 0;
 
     &--full {
         grid-template-columns: minmax(auto, 8em) 15em 4em;
@@ -37,7 +36,8 @@
     grid-template-columns: minmax(auto, 8em) 19em;
     grid-template-rows: 2em 2.5em 2em;
     align-items: center;
-    padding: 1em;
+    padding: 0;
+    margin: 1em 0;
 }
 
 .color-info__color-sample {
@@ -77,7 +77,7 @@
     @extend .color-info__color-sample;
     justify-self: start;
     height: 6em;
-    width: 75%;
+    width: 80%;
     max-width: 6em;
     border-radius: .7em;
     margin: 0 1em 0 0;
@@ -90,31 +90,7 @@
         border-radius: .5em 0 0 0;
     }
 }
-/*
-.color-info__button-add {
-    @include std-button;
-    width: 2em;
-    height: 2em;
-    justify-self: center;
-    border-radius: 50%;
-    background-color: #666666;
-    margin-right: 1.5em;
 
-    &:hover {
-        background-color: #333333;
-    }
-
-    img {
-        transition: transform .1s;
-    }
-
-    &:active {
-        img {
-            transform: scale(.8);
-        }
-    }
-}
-*/
 .color-info__switch-view {
     @include std-button;
     height: 2em;

@@ -14,8 +14,9 @@
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    background-color: #fcfcfc;
     @include width-wrapper;
+    height: 3em;
+    background-color: #fafafa;
 }
 
 .scheme-header__name-label {
@@ -31,6 +32,7 @@
 
 .scheme-header__input {
     color: #333333;
+    height: 1.7em;
     flex-grow: 1;
     width: 90%;
     text-align: center;
@@ -57,7 +59,7 @@
     border-radius: .3em;
     height: 2em;
     width: 2em;
-    margin-left: .5em;
+    margin: 0 .5em;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
     display: flex;
     justify-content: center;
@@ -87,7 +89,7 @@
     z-index: 39;
     position: absolute;
     top: 1em;
-    right: 0;
+    right: .5em;
     list-style: none;
     padding: 0;
     color: #666666;
@@ -104,6 +106,7 @@
         white-space: nowrap;
         background-color: #fcfcfc;
         font-weight: bold;
+        padding: .8em 1.3em;
     }
 
     &--selectable {
@@ -145,7 +148,7 @@
 
 .scheme-colors__color-view {
     width: var(--color-width);
-    height: 4em;
+    height: var(--color-width);
     border-radius: .3em;
     border: none;
     transition: transform ease .1s;
@@ -180,6 +183,27 @@
     &--drag-over {
         background: repeating-linear-gradient(45deg, #dddddd, #dddddd .5em, #ffffff .5em, #ffffff 1em );
         width: var(--color-width);
+    }
+}
+
+.scheme-colors__add-button {
+    @include std-button;
+    width: var(--color-width);
+    height: var(--color-width);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcfcfc;
+    border-radius: .3em;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    &:active {
+        img {
+            transform: scale(.9);
+        }
     }
 }
 
