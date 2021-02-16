@@ -17,17 +17,21 @@
     [Parameter]
     public string ColorHex { get; set; }
     [Parameter]
-    public EnumColorBarType ColorBarType { get; set; }
+    public EventCallback<string> ColorHexChanged { get; set; }
     [Parameter]
-    public string SelectedColorHex { get; set; }
+    public EnumColorBarType ColorBarType { get; set; }
+
     int selectedColorIndex = -1;
 
     string[] colors = new string[11];
+
     int valueStep = 10;
 
-    void OnClick(int index)
+    async Task OnClick(int index)
     {
         selectedColorIndex = index;
+        ColorHex = colors[selectedColorIndex];
+        await ColorHexChanged.InvokeAsync(ColorHex);
     }
 
     async Task SetColors()
@@ -42,9 +46,14 @@
 
         valueStep = ColorBarType == EnumColorBarType.Hue ? 32 : 10;
 
+        selectedColorIndex = -1;
+
         for (int i = 0; i <= 10; i++)
         {
             colors[i] = await JS.InvokeAsync<string>(functionName, ColorHex, i * valueStep);
+
+            if (colors[i].ToLower() == ColorHex.ToLower())
+                selectedColorIndex = i;
         }
     }
 

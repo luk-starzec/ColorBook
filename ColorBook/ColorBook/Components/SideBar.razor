@@ -80,14 +80,17 @@
                     Schemes library
                 </h4>
 
-                <ul class="side-bar__library-list">
-                    @foreach (var scheme in library)
-                    {
-                        <li class="side-bar__library-list-item" @key="scheme.Id" @onclick="()=>LoadSchemeFromLibrary(scheme.Id)">
-                            @scheme.Name
-                        </li>
-                    }
-                </ul>
+                @if (isLibraryLoaded)
+                {
+                    <ul class="side-bar__library-list">
+                        @foreach (var scheme in library)
+                        {
+                            <li class="side-bar__library-list-item" @key="scheme.Id" @onclick="()=>LoadSchemeFromLibrary(scheme.Id)">
+                                @scheme.Name
+                            </li>
+                        }
+                    </ul>
+                }
 
             </div>
         }
@@ -131,7 +134,8 @@
     public EventCallback<ColorScheme> OnSchemeLoad { get; set; }
 
     Settings currentSettings;
-    ColorScheme[] library;
+    ColorScheme[] library = null;
+    bool isLibraryLoaded => library != null;
 
     bool isCollapsed = true;
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
@@ -152,9 +156,6 @@
     protected override async Task OnInitializedAsync()
     {
         currentSettings = await settingsService.GetCurrentSettingsAsync();
-        library = (await schemeService.LibraryList())
-            .OrderByDescending(r => r.LastUpdate)
-            .ToArray();
     }
 
     async Task CreateScheme()
@@ -195,6 +196,7 @@
         isLibraryCollapsed = true;
         isSettingsCollapsed = true;
         isCollapsed = true;
+        library = null;
     }
 
     void ChangeSettingsVisibility()
@@ -204,11 +206,22 @@
             isLibraryCollapsed = true;
     }
 
-    void ChangeLibraryVisibility()
+    async Task ChangeLibraryVisibility()
     {
         isLibraryCollapsed = !isLibraryCollapsed;
         if (!isLibraryCollapsed)
+        {
+            if (!isLibraryLoaded)
+                await LoadLibrary();
             isSettingsCollapsed = true;
+        }
+    }
+
+    async Task LoadLibrary()
+    {
+        library = (await schemeService.LibraryList())
+            .OrderByDescending(r => r.LastUpdate)
+            .ToArray();
     }
 
     void RestoreDefaults()

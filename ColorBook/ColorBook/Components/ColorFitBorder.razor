@@ -1,6 +1,6 @@
 ﻿
-<div class="color-fit-border__wrapper" style="background-color: @BackgroundColor">
-    <div class="color-fit-border__border" style="border-color: @BorderColor"></div>
+<div class="color-fit-border__wrapper" style="@styleWrapper">
+    <div class="color-fit-border__border" style="@styleBorder"></div>
 </div>
 
 @code {
@@ -8,4 +8,7 @@
     public string BackgroundColor { get; set; }
     [Parameter]
     public string BorderColor { get; set; }
+
+    string styleWrapper => $"background-color: {BackgroundColor};";
+    string styleBorder => $"border-color: {BorderColor};";
 }

@@ -1,5 +1,5 @@
 ﻿
-<div class="color-fit-text__wrapper" style="background-color: @BackgroundColor;  color: @TextColor">
+<div class="color-fit-text__wrapper" style="@style">
     Abc
 </div>
 
@@ -8,5 +8,7 @@
     public string BackgroundColor { get; set; }
     [Parameter]
     public string TextColor { get; set; }
+
+    string style => $"background-color: {BackgroundColor}; color: {TextColor};";
 
 }

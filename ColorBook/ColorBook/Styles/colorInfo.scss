@@ -117,3 +117,148 @@
     flex-wrap: wrap;
     margin: 1em 0;
 }
+
+
+.color-fit-text__wrapper {
+    @include color-fit-wrapper
+}
+
+.color-fit-border__wrapper {
+    @include color-fit-wrapper
+}
+
+.color-fit-border__border {
+    width: 1.5em;
+    height: 1.5em;
+    border-width: 1px;
+    border-style: solid;
+}
+
+
+.color-bar__wrapper {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: .5em;
+    flex-wrap: wrap;
+    margin: .5em 0;
+}
+
+.color-bar__color {
+    width: 2em;
+    height: 2em;
+    grid-row-end: 1;
+    cursor: pointer;
+    border: none;
+    transition: transform .2s ease;
+
+    &--selected {
+        transform: scale(1.1);
+        border-radius: .2em;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, .1);
+    }
+}
+
+.color-bar__label {
+    grid-row-start: 1;
+    font-size: .8em;
+    text-align: center;
+    margin-top: .2em;
+
+    &--selected {
+        font-weight: bold;
+    }
+}
+
+.color-selection__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    justify-self: start;
+}
+
+.color-selection__type-wrapper {
+    position: relative;
+}
+
+.color-selection__type-button {
+    position: relative;
+    @include color-selection-button;
+    width: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &--list {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        z-index: 45;
+    }
+
+    &--file {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+.color-selection__list {
+    position: absolute;
+    z-index: 45;
+    top: 1em;
+    left: 0;
+    list-style: none;
+    padding: 0;
+    color: #666666;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+}
+
+.color-selection__list-item {
+    background-color: #ffffff;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}
+
+.color-selection__list-button {
+    @include std-button;
+    width: 10em;
+    padding: .5em;
+    display: flex;
+    align-items: center;
+
+    & img {
+        margin-right: .8em;
+    }
+}
+
+.color-selection__file-wrapper {
+    @include color-selection-button;
+    position: relative;
+    overflow: hidden;
+    width: 2em;
+    text-align: center;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.color-selection__file-label {
+    color: #666666;
+    display: block;
+    position: relative;
+    line-height: 1.5em;
+    cursor: pointer;
+}
+
+.color-selection__file-input {
+    opacity: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+}
+
+.color-selection__list-mask {
+    z-index: 40;
+    @include page-mask;
+}
