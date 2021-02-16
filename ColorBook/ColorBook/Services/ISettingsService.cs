@@ -10,11 +10,9 @@ namespace ColorBook.Services
     {
         Task<Settings> GetCurrentSettingsAsync();
         Settings GetDefaultSettings();
-        void RestoreDefaultSettings();
+        Task RestoreDefaultSettings();
         Task SaveSettingsAsync();
         Task SaveSettingsAsync(Settings settings);
-
-        ValueTask SaveTestResult(string result);
 
     }
 }

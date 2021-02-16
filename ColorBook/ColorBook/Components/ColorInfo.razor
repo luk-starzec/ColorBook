@@ -95,12 +95,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        settings = await settingsService.GetCurrentSettingsAsync();
+        await LoadSettings();
     }
 
+    async Task LoadSettings() => settings = await settingsService.GetCurrentSettingsAsync();
 
-    void ChangeView() => isFullView = !isFullView;
-
+    async Task ChangeView()
+    {
+        isFullView = !isFullView;
+        if (isFullView)
+            await LoadSettings();
+    }
 
     bool isColorPickerOpened = false;
 

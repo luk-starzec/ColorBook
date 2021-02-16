@@ -221,7 +221,6 @@
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("Test Init");
-        await settingsService.SaveTestResult($"{DateTime.Now}: test");
         var xx = await settingsService.GetCurrentSettingsAsync();
         await settingsService.SaveSettingsAsync();
 

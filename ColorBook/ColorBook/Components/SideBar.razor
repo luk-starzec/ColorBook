@@ -224,9 +224,10 @@
             .ToArray();
     }
 
-    void RestoreDefaults()
+    async Task RestoreDefaults()
     {
-        settingsService.RestoreDefaultSettings();
+        await settingsService.RestoreDefaultSettings();
+        currentSettings = await settingsService.GetCurrentSettingsAsync();
     }
 
 
