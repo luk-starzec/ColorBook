@@ -5,31 +5,34 @@
 @using System.Text
 @inject ISettingsService settingsService
 
-<SideBar />
+<ImagePreview />
 
 
-<ColorsScheme Scheme="colorScheme" />
-
-<ColorSelection />
+@*<SideBar />
 
 
-<div>
+    <ColorsScheme Scheme="colorScheme" />
 
-    <h3>file input &amp; preview </h3>
+    <ColorSelection />
 
-    <InputFile OnChange="@OnInputFileChange" accept="image/*" capture />
 
-    <img id="@imageId" src="@imageDataUrl" @onmousemove="@OnMouseMove" @onmousedown="@OnMouseDown" @ref="_imgRef" />
+    <div>
 
-    <br />
+        <h3>file input &amp; preview </h3>
 
-    <canvas id="@previewCanvasId" width="100" height="100" style="border: solid gray 1px"></canvas>
+        <InputFile OnChange="@OnInputFileChange" accept="image/*" capture />
 
-    <br />
+        <img id="@imageId" src="@imageDataUrl" @onmousemove="@OnMouseMove" @onmousedown="@OnMouseDown" @ref="_imgRef" />
 
-    <div style="width: 50px; height: 50px; background: @colorHex;" />
+        <br />
 
-</div>
+        <canvas id="@previewCanvasId" width="100" height="100" style="border: solid gray 1px"></canvas>
+
+        <br />
+
+        <div style="width: 50px; height: 50px; background: @colorHex;" />
+
+    </div>*@
 
 
 <!--<h2>@colorHex</h2>-->
@@ -55,14 +58,14 @@
 
 @*<ColorInfoFull ColorHex="@colorHex" />*@
 
-<button @onclick="TestAsync">Test</button>
+@*<button @onclick="TestAsync">Test</button>
 
-<a download="test_scheme.json"
-   href="data:application/json;charset=utf-8,@testData">
-    Download file
-</a>
+    <a download="test_scheme.json"
+       href="data:application/json;charset=utf-8,@testData">
+        Download file
+    </a>
 
-<InputFile OnChange="@LoadFile" accept="application/JSON" />
+    <InputFile OnChange="@LoadFile" accept="application/JSON" />*@
 
 @code {
     ColorScheme colorScheme;
@@ -79,8 +82,8 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-            await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
+        //if (firstRender)
+        //    await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
     }
 
     async Task OnInputFileChange(InputFileChangeEventArgs e)
@@ -235,7 +238,7 @@
             Id = Guid.NewGuid(),
             Name = string.Empty,
             Colors = new List<NamedColor>
-        {
+    {
                 new NamedColor("#123456"),
                 new NamedColor("#4DEA26"),
                 new NamedColor("#AABBCC"),

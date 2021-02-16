@@ -26,8 +26,8 @@
 
     initPreview: (canvasId, scale) => {
         const canvas = document.getElementById(canvasId);
-        const width = canvas.width;
-        const height = canvas.height;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
 
         const ctx = canvas.getContext('2d');
         ctx.scale(scale, scale);

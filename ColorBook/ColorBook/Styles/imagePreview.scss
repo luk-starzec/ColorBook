@@ -1,0 +1,25 @@
+﻿
+.image-preview__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-preview__image {
+}
+
+.image-preview__details-view {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, .1);
+
+    &--hidden{
+        visibility: collapse;
+    }
+}
