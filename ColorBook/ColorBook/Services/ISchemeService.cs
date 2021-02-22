@@ -9,6 +9,7 @@ namespace ColorBook.Services
     interface ISchemeService
     {
         ColorScheme GetEmptyScheme();
+        ColorScheme DuplicateScheme(ColorScheme scheme);
         Task<ColorScheme[]> LibraryList();
         Task<bool> ExistsInLibrary(Guid id);
         Task<ColorScheme> LibraryAdd(ColorScheme scheme);

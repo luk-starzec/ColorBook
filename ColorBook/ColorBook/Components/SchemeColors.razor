@@ -43,14 +43,14 @@
                 </div>
             </li>
         }
-        @if (!isDragMode)
-        {
-            <li class="scheme-colors__list-item">
-                <button class="scheme-colors__add-button" title="add new color" @onclick="AddColor">
+        <li class="scheme-colors__list-item">
+            <button class="scheme-colors__add-button" title="add new color" @onclick="AddColor">
+                @if (!isDragMode)
+                {
                     <img src="/assets/add-icon.svg" />
-                </button>
-            </li>
-        }
+                }
+            </button>
+        </li>
     </ul>
 
     @if (isDragMode && Scheme.Colors.Count() > 1)

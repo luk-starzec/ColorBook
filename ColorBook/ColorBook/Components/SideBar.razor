@@ -33,6 +33,11 @@
                 Create scheme
             </li>
 
+            <li class="side-bar__list-item side-bar__list-item--action" @onclick="DuplicateScheme">
+                <img src="/assets/copy-scheme-icon.svg" title="duplicate scheme" />
+                Duplicate scheme
+            </li>
+
             <li class="@cssLoadScheme">
                 <img src="/assets/load-scheme-icon.svg" title="load scheme" />
                 Load scheme
@@ -131,6 +136,8 @@
 
 @code {
     [Parameter]
+    public ColorScheme CurrentScheme { get; set; }
+    [Parameter]
     public EventCallback<ColorScheme> OnSchemeLoad { get; set; }
 
     Settings currentSettings;
@@ -161,6 +168,12 @@
     async Task CreateScheme()
     {
         var scheme = schemeService.GetEmptyScheme();
+        await LoadScheme(scheme);
+    }
+
+    async Task DuplicateScheme()
+    {
+        var scheme = schemeService.DuplicateScheme(CurrentScheme);
         await LoadScheme(scheme);
     }
 

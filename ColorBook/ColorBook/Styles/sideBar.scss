@@ -5,10 +5,10 @@
     top: 0;
     left: 0;
     height: 100vh;
-    width: 14em;
+    width: 15em;
     z-index: 40;
     display: grid;
-    grid-template-columns: 14em auto;
+    grid-template-columns: 15em auto;
     grid-template-rows: auto 1fr;
     grid-template-areas: "header submenu" "menu submenu";
     transform: translateX(0);
@@ -16,7 +16,7 @@
 
     &--collapsed {
         height: 3em;
-        transform: translateX(-11em);
+        transform: translateX(-12em);
         background-color: transparent;
     }
 }

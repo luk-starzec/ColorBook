@@ -5,7 +5,7 @@ namespace ColorBook.Models
     public class NamedColor
     {
         public string Name { get; set; }
-        public string Color { get => colorHex.Replace("#", ""); set => colorHex = $"#{value}"; }
+        public string Color { get => colorHex?.Replace("#", ""); set => colorHex = $"#{value}"; }
         [JsonIgnore]
         public string ColorHex { get => colorHex; set => colorHex = value; }
 

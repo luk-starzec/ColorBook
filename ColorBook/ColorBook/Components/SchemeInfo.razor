@@ -21,8 +21,19 @@
 </div>
 
 @code {
+    ColorScheme scheme;
     [Parameter]
-    public ColorScheme Scheme { get; set; }
+    public ColorScheme Scheme
+    {
+        get => scheme;
+        set
+        {
+            if (scheme == value)
+                return;
+            scheme = value;
+            SelectedIndex = null;
+        }
+    }
     [Parameter]
     public string SelectedColor
     {

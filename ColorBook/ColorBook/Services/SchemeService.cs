@@ -27,6 +27,7 @@ namespace ColorBook.Services
                 {
                     new NamedColor("#333333"),
                 },
+                LastUpdate = DateTime.Now,
             };
         }
 
@@ -61,7 +62,7 @@ namespace ColorBook.Services
         private async Task<string> DeduplicateName(string schemeName)
         {
             var result = schemeName;
-            
+
             var schemesNames = (await LibraryList()).Select(r => r.Name);
 
             var marker = schemeName.IndexOf("(");
@@ -93,6 +94,17 @@ namespace ColorBook.Services
         {
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             return JsonSerializer.Deserialize<ColorScheme>(json, options);
+        }
+
+        public ColorScheme DuplicateScheme(ColorScheme scheme)
+        {
+            return new ColorScheme
+            {
+                Id = Guid.NewGuid(),
+                Name = string.IsNullOrWhiteSpace(scheme.Name) ? string.Empty : $"{scheme.Name} (copy)",
+                Colors = scheme.Colors.ToArray(),
+                LastUpdate = DateTime.Now,
+            };
         }
     }
 }
