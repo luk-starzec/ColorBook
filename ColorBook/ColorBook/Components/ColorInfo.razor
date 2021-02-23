@@ -3,8 +3,6 @@
 
 <div class="color-info__wrapper">
 
-    <ColorSelection @bind-SelectedFile="previewFile" @bind-ColorSelectionType="colorSelectionType" />
-
     @if (isDisabled)
     {
         <div class="color-info__disabled-info">
@@ -13,8 +11,9 @@
             <img src="/assets/dropdown-icon.svg" />
         </div>
     }
-    else
-    {
+
+    <div class="@cssView">
+
         @if (isImagePreview)
         {
             <div class="color-info__image-wrapper">
@@ -31,7 +30,7 @@
 
         <div class="@cssBasicView">
 
-            <div></div>
+            <ColorSelection @bind-SelectedFile="previewFile" @bind-ColorSelectionType="colorSelectionType" />
 
             <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
                 <div class="color-info__color-change">...</div>
@@ -45,7 +44,7 @@
 
         </div>
 
-        @if (isFullView)
+        @if (!isDisabled && isFullView)
         {
             <div class="color-info__full-view">
 
@@ -75,7 +74,7 @@
             </div>
         }
 
-    }
+    </div>
 
     <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@ColorHex" />
 
@@ -106,6 +105,7 @@
 
     bool isFullView = false;
 
+    string cssView => isDisabled ? "color-info__content color-info__content--hidden" : "color-info__content";
     string cssBasicView => isFullView ? "color-info__basic-view color-info__basic-view--full" : "color-info__basic-view";
     string cssColorViewer => isFullView ? "color-info__color-sample color-info__color-sample--hidden" : "color-info__color-sample";
     string cssButtonDetalis => isFullView ? "color-info__switch-view color-info__switch-view--full" : "color-info__switch-view";

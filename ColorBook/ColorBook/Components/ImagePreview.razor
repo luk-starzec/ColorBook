@@ -3,7 +3,7 @@
 <div class="image-preview__wrapper">
 
     <img class="image-preview__image" id="@imageId" src="@imageDataUrl"
-         @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" />
+         @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" @onmousemove:stopPropagation="true" />
 
     <canvas class="@cssDetails" id="@previewCanvasId"></canvas>
 
