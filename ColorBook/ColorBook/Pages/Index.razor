@@ -8,19 +8,17 @@
 
 <main class="main__wrapper">
 
+
     <ColorInfo @bind-ColorHex="ColorHex" />
 
-    <SchemeInfo @ref="schemeInfo" Scheme="colorScheme" @bind-SelectedColor="ColorHex" />
+    <SchemeInfo Scheme="colorScheme" @bind-SelectedColor="ColorHex" />
 
 </main>
 
 @code {
-    SchemeInfo schemeInfo;
     ColorScheme colorScheme;
 
     string ColorHex { get; set; }
-
-
 
     protected override async Task OnInitializedAsync()
     {

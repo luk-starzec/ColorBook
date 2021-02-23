@@ -2,26 +2,48 @@
 
 <div class="image-preview__wrapper">
 
-    <InputFile OnChange="@OnInputFileChange" accept="image/*" capture />
-
-    <img class="image-preview__image" id="@imageId" src="@imageDataUrl" @onmousemove="@OnMouseMove" @onmousedown="@OnMouseDown" />
+    <img class="image-preview__image" id="@imageId" src="@imageDataUrl"
+         @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" />
 
     <canvas class="@cssDetails" id="@previewCanvasId"></canvas>
-
-    <div style="width: 50px; height: 50px; background: @colorHex;" />
 
 </div>
 
 @code {
-    string colorHex { get; set; } = "#ff00ff";
+    [Parameter]
+    public bool IsTracking { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsTrackingChanged { get; set; }
+    [Parameter]
+    public string ColorHex { get; set; }
+    [Parameter]
+    public EventCallback<string> ColorHexChanged { get; set; }
+
+    IBrowserFile file;
+    [Parameter]
+    public IBrowserFile File
+    {
+        get => file;
+        set
+        {
+            if (file == value)
+                return;
+            file = value;
+            InvokeAsync(SetImageData);
+        }
+    }
 
     int previewScale = 4;
-    string imageId = "testImg";
-    string previewCanvasId = "preview";
-    string imageDataUrl;
-    bool isImageLoaded = false;
+    string imageId = "imageId";
+    string previewCanvasId = "previewId";
 
-    string cssDetails => isImageLoaded ? "image-preview__details-view" : "image-preview__details-view image-preview__details-view--hidden";
+    string imageDataUrl;
+
+    bool isImageLoaded => imageDataUrl != null;
+
+    bool isMouseOver = false;
+
+    string cssDetails => isImageLoaded && isMouseOver ? "image-preview__details-view" : "image-preview__details-view image-preview__details-view--hidden";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,10 +51,15 @@
             await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
     }
 
+    void OnMouseOver(MouseEventArgs e) => isMouseOver = true;
+
+    void OnMouseOut(MouseEventArgs e) => isMouseOver = false;
+
     async Task OnMouseDown(MouseEventArgs e)
     {
-        Console.WriteLine($"x:{e.OffsetX}; y:{e.OffsetY}");
         await SetColor();
+        if (IsTracking)
+            await IsTrackingChanged.InvokeAsync(false);
     }
 
     async Task OnMouseMove(MouseEventArgs e)
@@ -41,6 +68,9 @@
             return;
 
         await JS.InvokeVoidAsync("colorPreview.setPreview", imageId, previewCanvasId, e.OffsetX, e.OffsetY, previewScale);
+
+        if (IsTracking)
+            await SetColor();
     }
 
     async Task SetColor()
@@ -48,21 +78,28 @@
         var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", previewCanvasId);
         var hex = await JS.InvokeAsync<string>("colorPreview.rgbToHex", rgba[0], rgba[1], rgba[2]);
 
-        colorHex = hex;
+        ColorHex = hex;
+        await ColorHexChanged.InvokeAsync(ColorHex);
     }
 
-    async Task OnInputFileChange(InputFileChangeEventArgs e)
+    async Task SetImageData()
     {
+        if (file == null)
+        {
+            imageDataUrl = null;
+            return;
+        }
+
         var maxWidth = 400;
         var maxHeight = 400;
 
-        var image = e.File;
         var format = "image/png";
-        var resized = await image.RequestImageFileAsync(format, maxWidth, maxHeight);
+        var resized = await file.RequestImageFileAsync(format, maxWidth, maxHeight);
         var buffer = new byte[resized.Size];
         await resized.OpenReadStream().ReadAsync(buffer);
         imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-        isImageLoaded = true;
+
+        StateHasChanged();
     }
 
 }

@@ -3,8 +3,8 @@
 
     <div class="color-selection__type-wrapper">
 
-        <button class="@cssTypeButton" title="@GetTitle(colorSelectionType)" @onclick="ChangeListVisibility">
-            <img src="@GetImageSrc(colorSelectionType)" alt="@GetTitle(colorSelectionType)" />
+        <button class="@cssTypeButton" title="@GetTitle(ColorSelectionType)" @onclick="ChangeListVisibility">
+            <img src="@GetImageSrc(ColorSelectionType)" alt="@GetTitle(ColorSelectionType)" />
         </button>
 
         @if (isListVisible)
@@ -28,9 +28,9 @@
     @if (isFileButtonVisible)
     {
         <div class="color-selection__file-wrapper">
-            <label class="color-selection__file-label" title="@GetTitleFile(colorSelectionType)">
+            <label class="color-selection__file-label" title="@GetTitleFile(ColorSelectionType)">
                 ...
-                <input class="color-selection__file-input" type="file" />
+                <InputFile class="color-selection__file-input" OnChange="@OnInputFileChange" accept="image/*" />
             </label>
         </div>
     }
@@ -41,12 +41,18 @@
 </div>
 
 @code {
-
-    EnumColorSelectionType colorSelectionType = EnumColorSelectionType.Palette;
+    [Parameter]
+    public EnumColorSelectionType ColorSelectionType { get; set; }
+    [Parameter]
+    public EventCallback<EnumColorSelectionType> ColorSelectionTypeChanged { get; set; }
+    [Parameter]
+    public IBrowserFile SelectedFile { get; set; }
+    [Parameter]
+    public EventCallback<IBrowserFile> SelectedFileChanged { get; set; }
 
     bool isListVisible = false;
 
-    bool isFileButtonVisible => colorSelectionType != EnumColorSelectionType.Palette;
+    bool isFileButtonVisible => ColorSelectionType != EnumColorSelectionType.Palette;
 
     string cssTypeButton
     {
@@ -92,9 +98,22 @@
 
     void HideList() => isListVisible = false;
 
-    void ChangeSelectionType(EnumColorSelectionType selectionType)
+    async Task ChangeSelectionType(EnumColorSelectionType selectionType)
     {
-        colorSelectionType = selectionType;
+        ColorSelectionType = selectionType;
+        await ColorSelectionTypeChanged.InvokeAsync(ColorSelectionType);
         isListVisible = false;
+
+        if (ColorSelectionType == EnumColorSelectionType.Palette)
+        {
+            SelectedFile = null;
+            await SelectedFileChanged.InvokeAsync(SelectedFile);
+        }
+    }
+
+    async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        SelectedFile = e.File;
+        await SelectedFileChanged.InvokeAsync(SelectedFile);
     }
 }

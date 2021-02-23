@@ -5,8 +5,18 @@
 @using System.Text
 @inject ISettingsService settingsService
 
-<ImagePreview />
 
+<label class="@cssTrack">
+    <input type="checkbox" @bind="isTracking" />
+    <img src="/assets/track-icon.svg" />
+</label>
+
+<hr />
+
+<ImagePreview @ref="imagePreviewRef" IsTracking="isTracking" @bind-ColorHex="colorHex" />
+
+
+<ColorInfo ColorHex="@colorHex" OnFileSelected="OnFileSelected" />
 
 @*<SideBar />
 
@@ -41,8 +51,6 @@
     <InputHSL @bind-Value="colorHex" />*@
 
 
-<ColorInfo ColorHex="@colorHex" />
-
 
 @*<ColorFitText TextColor="@colorHex" BackgroundColor="#000000" />
     <ColorFitText TextColor="@colorHex" BackgroundColor="#ffffff" />
@@ -68,7 +76,12 @@
     <InputFile OnChange="@LoadFile" accept="application/JSON" />*@
 
 @code {
+    ImagePreview imagePreviewRef;
+
     ColorScheme colorScheme;
+
+    bool isTracking = false;
+    string cssTrack => isTracking ? "image-preview__track-label image-preview__track-label--active" : "image-preview__track-label";
 
     string colorHex { get; set; } = "#ff00ff";
 
@@ -86,18 +99,22 @@
         //    await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
     }
 
+    //async Task OnFileSelected(IBrowserFile file) => await imagePreviewRef.LoadFile(file);
+
     async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
-        var maxWidth = 400;
-        var maxHeight = 400;
+        //await imagePreviewRef.LoadFile(e.File);
 
-        var image = e.File;
-        var format = "image/png";
-        var resized = await image.RequestImageFileAsync(format, maxWidth, maxHeight);
-        var buffer = new byte[resized.Size];
-        await resized.OpenReadStream().ReadAsync(buffer);
-        imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-        isImageLoaded = true;
+        //var maxWidth = 400;
+        //var maxHeight = 400;
+
+        //var image = e.File;
+        //var format = "image/png";
+        //var resized = await image.RequestImageFileAsync(format, maxWidth, maxHeight);
+        //var buffer = new byte[resized.Size];
+        //await resized.OpenReadStream().ReadAsync(buffer);
+        //imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        //isImageLoaded = true;
     }
 
     async Task OnMouseDown(MouseEventArgs e)
@@ -238,7 +255,7 @@
             Id = Guid.NewGuid(),
             Name = string.Empty,
             Colors = new List<NamedColor>
-    {
+{
                 new NamedColor("#123456"),
                 new NamedColor("#4DEA26"),
                 new NamedColor("#AABBCC"),

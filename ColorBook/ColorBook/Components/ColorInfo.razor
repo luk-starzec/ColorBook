@@ -2,6 +2,9 @@
 @inject ISettingsService settingsService
 
 <div class="color-info__wrapper">
+
+    <ColorSelection @bind-SelectedFile="previewFile" @bind-ColorSelectionType="colorSelectionType" />
+
     @if (isDisabled)
     {
         <div class="color-info__disabled-info">
@@ -12,9 +15,23 @@
     }
     else
     {
+        @if (isImagePreview)
+        {
+            <div class="color-info__image-wrapper">
+
+                <label class="@cssTrack">
+                    <input type="checkbox" @bind="isTracking" />
+                    <img src="/assets/track-icon.svg" />
+                </label>
+
+                <ImagePreview @ref="imagePreviewRef" @bind-IsTracking="isTracking" @bind-ColorHex="ColorHex" File="previewFile" />
+
+            </div>
+        }
+
         <div class="@cssBasicView">
 
-            <ColorSelection />
+            <div></div>
 
             <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
                 <div class="color-info__color-change">...</div>
@@ -81,6 +98,8 @@
     [Parameter]
     public EventCallback<string> ColorHexChanged { get; set; }
 
+    ImagePreview imagePreviewRef;
+
     Settings settings;
 
     bool isDisabled => string.IsNullOrEmpty(ColorHex);
@@ -92,6 +111,12 @@
     string cssButtonDetalis => isFullView ? "color-info__switch-view color-info__switch-view--full" : "color-info__switch-view";
     string styleSampleColor => $"background-color: {ColorHex};";
 
+    IBrowserFile previewFile = null;
+    EnumColorSelectionType colorSelectionType = EnumColorSelectionType.Palette;
+
+    bool isImagePreview => previewFile != null;
+    bool isTracking = false;
+    string cssTrack => isTracking ? "color-info__track-label color-info__track-label--active" : "color-info__track-label";
 
     protected override async Task OnInitializedAsync()
     {

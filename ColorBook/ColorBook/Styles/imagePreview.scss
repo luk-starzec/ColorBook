@@ -1,4 +1,5 @@
-﻿
+﻿@import 'shared';
+
 .image-preview__wrapper {
     position: relative;
     display: flex;
@@ -8,18 +9,20 @@
 }
 
 .image-preview__image {
+    z-index: 10;
 }
 
 .image-preview__details-view {
+    z-index: 11;
     position: absolute;
     top: 0;
-    right: 0;
+    right: -2em;
     width: 5em;
     height: 5em;
     border-radius: 50%;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, .1);
 
-    &--hidden{
+    &--hidden {
         visibility: collapse;
     }
 }
