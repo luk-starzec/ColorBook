@@ -27,7 +27,6 @@
     }
 }
 
-
 .side-bar__menu-button {
     @include std-button;
     width: 3em;
@@ -95,6 +94,13 @@
     text-align: center;
     font-size: 1.2em;
     font-weight: normal;
+
+    @media (max-device-width: $breakpoint-width) {
+        &--small {
+            visibility: hidden;
+            width: 0;
+        }
+    }
 }
 
 

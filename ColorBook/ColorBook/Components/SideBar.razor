@@ -8,10 +8,7 @@
 
         <img class="side-bar__logo" src="/assets/logo-icon.svg" />
 
-        @if (isSecondLevelCollapsed)
-        {
-            <h3 class="side-bar__title">ColorBook</h3>
-        }
+        <h3 class="@cssTitle">ColorBook</h3>
 
         @if (isCollapsed)
         {
@@ -157,12 +154,18 @@
     ColorScheme[] library = null;
     bool isLibraryLoaded => library != null;
 
-    bool isSecondLevelCollapsed => isLibraryCollapsed && isSettingsCollapsed;
 
     bool isCollapsed = true;
+    bool isLibraryCollapsed = true;
+    bool isSettingsCollapsed = true;
+    bool isSecondLevelCollapsed => isLibraryCollapsed && isSettingsCollapsed;
+
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" :
         isSecondLevelCollapsed ? "side-bar__wrapper" : "side-bar__wrapper side-bar__wrapper--small";
+
     string cssMask => isCollapsed ? "side-bar__mask" : "side-bar__mask side-bar__mask--visible";
+
+    string cssTitle => isSecondLevelCollapsed ? "side-bar__title" : "side-bar__title side-bar__title--small";
 
     string cssLoadScheme => isLibraryCollapsed ? cssListItem : $"{cssListItem} side-bar__list-item--hover";
 
@@ -171,10 +174,8 @@
 
     string cssListItem => isSecondLevelCollapsed ? "side-bar__list-item" : "side-bar__list-item side-bar__list-item--small";
 
-    bool isLibraryCollapsed = true;
     string cssLibraryIcon => isLibraryCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
-    bool isSettingsCollapsed = true;
     string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
 
