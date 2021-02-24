@@ -5,27 +5,27 @@
 
     @if (isDisabled)
     {
-        <div class="color-info__disabled-info">
-            <img src="/assets/dropdown-icon.svg" />
-            select color from scheme
-            <img src="/assets/dropdown-icon.svg" />
-        </div>
+    <div class="color-info__disabled-info">
+        <img src="/assets/dropdown-icon.svg" />
+        select color from scheme
+        <img src="/assets/dropdown-icon.svg" />
+    </div>
     }
 
     <div class="@cssView">
 
         @if (isImagePreview)
         {
-            <div class="color-info__image-wrapper">
+        <div class="color-info__image-wrapper">
 
-                <label class="@cssTrack">
-                    <input type="checkbox" @bind="isTracking" />
-                    <img src="/assets/track-icon.svg" />
-                </label>
+            <label class="@cssTrack">
+                <input type="checkbox" @bind="isTracking" />
+                <img src="/assets/track-icon.svg" />
+            </label>
 
-                <ImagePreview @ref="imagePreviewRef" @bind-IsTracking="isTracking" @bind-ColorHex="ColorHex" File="previewFile" />
+            <ImagePreview @ref="imagePreviewRef" @bind-IsTracking="isTracking" @bind-ColorHex="ColorHex" File="previewFile" />
 
-            </div>
+        </div>
         }
 
         <div class="@cssBasicView">
@@ -46,32 +46,45 @@
 
         @if (!isDisabled && isFullView)
         {
-            <div class="color-info__full-view">
+        <div class="color-info__full-view">
 
-                <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
-                    <div class="color-info__color-change">...</div>
-                </button>
+            <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+                <div class="color-info__color-change">...</div>
+            </button>
 
-                <InputRGB @bind-Value="ColorHex" />
-                <InputHSL @bind-Value="ColorHex" />
-                <InputName Value="@ColorHex" />
+            <InputRGB @bind-Value="ColorHex" />
+            <InputHSL @bind-Value="ColorHex" />
+            <InputName Value="@ColorHex" />
 
-            </div>
+        </div>
+
+        <div class="color-info__color-bars">
 
             <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Lightness" />
             <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Saturation" />
             <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Hue" />
 
-            <div class="color-info__color-fit">
+        </div>
+
+        <div class="color-info__color-fit">
+
+            <div class="color-info__color-fit-group">
 
                 <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
                 <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
                 <ColorFitText TextColor="@settings.DarkTextColor" BackgroundColor="@ColorHex" />
                 <ColorFitText TextColor="@settings.LightTextColor" BackgroundColor="@ColorHex" />
+
+            </div>
+
+            <div class="color-info__color-fit-group">
+
                 <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
                 <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
 
             </div>
+
+        </div>
         }
 
     </div>

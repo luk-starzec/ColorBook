@@ -12,31 +12,31 @@
         <button class="@cssSchemesButton" @onclick="ChangeListVisibility" title="generate color scheme">
             @if (isListVisible)
             {
-                <img src="/assets/close-icon.svg" />
+            <img src="/assets/close-icon.svg" />
             }
             else
             {
-                <img src="/assets/color-wheel-icon.svg" />
+            <img src="/assets/color-wheel-icon.svg" />
             }
         </button>
 
         @if (isListVisible)
         {
-            <ul class="scheme-header__list">
+        <ul class="scheme-header__list">
 
-                <li class="scheme-header__list-item scheme-header__list-item--info">
-                    Based on
-                    <div class="scheme-header__color-sample" style="background-color: @ColorHex"></div>
-                    generate colors:
-                </li>
+            <li class="scheme-header__list-item scheme-header__list-item--info">
+                Based on
+                <div class="scheme-header__color-sample" style="background-color: @ColorHex"></div>
+                generate colors:
+            </li>
 
-                @foreach (var scheme in schemes)
+            @foreach (var scheme in schemes)
                 {
-                    <li class="scheme-header__list-item scheme-header__list-item--selectable" @onclick="() => GenerateScheme(scheme.Method)">
-                        @scheme.Name
-                    </li>
+            <li class="scheme-header__list-item scheme-header__list-item--selectable" @onclick="() => GenerateScheme(scheme.Method)">
+                @scheme.Name
+            </li>
                 }
-            </ul>
+        </ul>
         }
     </div>
 
@@ -45,26 +45,26 @@
         <button class="@cssRemoveButton" @onclick="ChangeQuestionVisibility" title="remove colors from scheme">
             @if (isQuestionVisible)
             {
-                <img src="/assets/close-icon.svg" />
+            <img src="/assets/close-icon.svg" />
             }
             else
             {
-                <img src="/assets/delete-all-icon.svg" />
+            <img src="/assets/delete-all-icon.svg" />
             }
         </button>
 
         @if (isQuestionVisible)
         {
-            <ul class="scheme-header__list">
+        <ul class="scheme-header__list">
 
-                <li class="scheme-header__list-item scheme-header__list-item--info">
-                    Do you want to remove all colors from current scheme?
-                </li>
+            <li class="scheme-header__list-item scheme-header__list-item--info">
+                Do you want to remove all colors from current scheme?
+            </li>
 
-                <li class="scheme-header__list-item scheme-header__list-item--selectable scheme-header__list-item--centered" @onclick="RemoveColors">Yes</li>
-                <li class="scheme-header__list-item scheme-header__list-item--selectable scheme-header__list-item--centered" @onclick="ChangeQuestionVisibility">Cancel</li>
+            <li class="scheme-header__list-item scheme-header__list-item--selectable scheme-header__list-item--centered" @onclick="RemoveColors">Yes</li>
+            <li class="scheme-header__list-item scheme-header__list-item--selectable scheme-header__list-item--centered" @onclick="ChangeQuestionVisibility">Cancel</li>
 
-            </ul>
+        </ul>
 
         }
     </div>
