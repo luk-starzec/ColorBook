@@ -103,10 +103,16 @@
     &--info {
         display: flex;
         align-items: center;
-        white-space: nowrap;
         background-color: #fcfcfc;
+        white-space: nowrap;
         font-weight: bold;
         padding: .8em 1.3em;
+
+        @media (max-device-width: $breakpoint-width) {
+            width: 80vw;
+            white-space: normal;
+            text-align: center;
+        }
     }
 
     &--selectable {

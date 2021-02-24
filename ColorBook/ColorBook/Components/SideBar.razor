@@ -8,7 +8,10 @@
 
         <img class="side-bar__logo" src="/assets/logo-icon.svg" />
 
-        <h3 class="side-bar__title">ColorBook</h3>
+        @if (isSecondLevelCollapsed)
+        {
+            <h3 class="side-bar__title">ColorBook</h3>
+        }
 
         @if (isCollapsed)
         {
@@ -28,32 +31,40 @@
     {
         <ul class="side-bar__list">
 
-            <li class="side-bar__list-item side-bar__list-item--action" @onclick="CreateScheme">
+            <li class="@cssListItem side-bar__list-item--action" @onclick="CreateScheme">
                 <img src="/assets/create-scheme-icon.svg" title="create scheme" />
-                Create scheme
+                <span>
+                    Create scheme
+                </span>
             </li>
 
-            <li class="side-bar__list-item side-bar__list-item--action" @onclick="DuplicateScheme">
+            <li class="@cssListItem side-bar__list-item--action" @onclick="DuplicateScheme">
                 <img src="/assets/copy-scheme-icon.svg" title="duplicate scheme" />
-                Duplicate scheme
+                <span>
+                    Duplicate scheme
+                </span>
             </li>
 
             <li class="@cssLoadScheme">
                 <img src="/assets/load-scheme-icon.svg" title="load scheme" />
-                Load scheme
+                <span>
+                    Load scheme
+                </span>
                 <div class="side-bar__down-icon">
                     <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
                 </div>
                 <ul class="side-bar__sublist">
                     <li class="side-bar__sublist-item side-bar__sublist-item--no-padding">
                         <label class="side-bar__file-label">
-                            from file...
+                            <span>from file</span>...
                             <InputFile class="side-bar__file-input" OnChange="LoadSchemeFromFile" accept="application/JSON" />
                         </label>
 
                     </li>
                     <li class="side-bar__sublist-item" @onclick="ChangeLibraryVisibility">
-                        from library
+                        <span>
+                            from library
+                        </span>
                         <div class="@cssLibraryIcon">
                             <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
                         </div>
@@ -63,9 +74,11 @@
 
             <li class="side-bar__list-item side-bar__list-item--blank"></li>
 
-            <li class="side-bar__list-item side-bar__list-item--action" @onclick="ChangeSettingsVisibility">
+            <li class="@cssListItem side-bar__list-item--action" @onclick="ChangeSettingsVisibility">
                 <img src="/assets/settings-icon.svg" />
-                Settings
+                <span>
+                    Settings
+                </span>
                 <div class="@cssSettingsIcon">
                     <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
                 </div>
@@ -144,14 +157,19 @@
     ColorScheme[] library = null;
     bool isLibraryLoaded => library != null;
 
+    bool isSecondLevelCollapsed => isLibraryCollapsed && isSettingsCollapsed;
+
     bool isCollapsed = true;
-    string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" : "side-bar__wrapper";
+    string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" :
+        isSecondLevelCollapsed ? "side-bar__wrapper" : "side-bar__wrapper side-bar__wrapper--small";
     string cssMask => isCollapsed ? "side-bar__mask" : "side-bar__mask side-bar__mask--visible";
 
-    string cssLoadScheme => isLibraryCollapsed ? "side-bar__list-item" : "side-bar__list-item side-bar__list-item--hover";
+    string cssLoadScheme => isLibraryCollapsed ? cssListItem : $"{cssListItem} side-bar__list-item--hover";
 
     string cssSubMenu => isCollapsed ? "side-bar__submenu-wrapper--hidden" :
-        isLibraryCollapsed && isSettingsCollapsed ? "side-bar__submenu-wrapper side-bar__submenu-wrapper--collapsed" : "side-bar__submenu-wrapper";
+        isSecondLevelCollapsed ? "side-bar__submenu-wrapper side-bar__submenu-wrapper--collapsed" : "side-bar__submenu-wrapper";
+
+    string cssListItem => isSecondLevelCollapsed ? "side-bar__list-item" : "side-bar__list-item side-bar__list-item--small";
 
     bool isLibraryCollapsed = true;
     string cssLibraryIcon => isLibraryCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";

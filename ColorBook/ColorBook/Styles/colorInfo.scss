@@ -18,6 +18,10 @@
     margin: 0;
     color: #999999;
     gap: 1em;
+
+    img {
+        opacity: .1;
+    }
 }
 
 .color-info__content {
@@ -119,8 +123,6 @@
         transform: rotate(180deg);
     }
 }
-
-$breakpoint-width: 400px;
 
 .color-info__color-fit {
     display: flex;
@@ -271,7 +273,7 @@ $breakpoint-width: 400px;
     display: flex;
     align-items: center;
 
-    & img {
+    img {
         margin-right: .8em;
     }
 }

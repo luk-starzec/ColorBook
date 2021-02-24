@@ -1,4 +1,6 @@
 ﻿
+$breakpoint-width: 400px;
+
 @mixin focus-outline {
     outline: none;
 
@@ -80,7 +82,7 @@
 }
 
 @mixin page-mask {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
@@ -106,7 +108,7 @@
     border-radius: .3em;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
 
-    & span {
+    span {
         width: 3em;
         margin-right: .5em;
         flex-grow: 1;

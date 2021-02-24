@@ -19,6 +19,12 @@
         transform: translateX(-12em);
         background-color: transparent;
     }
+
+    @media (max-device-width: $breakpoint-width) {
+        &--small {
+            grid-template-columns: auto auto;
+        }
+    }
 }
 
 
@@ -134,6 +140,14 @@
 
     &--action {
         cursor: pointer;
+    }
+
+    @media (max-device-width: $breakpoint-width) {
+        &--small {
+            span {
+                display: none;
+            }
+        }
     }
 }
 
