@@ -28,13 +28,26 @@ input {
 }
 
 .input-hex__wrapper {
+    grid-area: hex;
     @include color-input-wrapper;
-    width: auto;
+
+    @media (max-device-width: $breakpoint-width) {
+        justify-self: stretch;
+        width: auto;
+        margin: 0 1em;
+    }
+
+    &--auto {
+        width: auto;
+    }
 }
 
 .input-hex__label {
     @include color-input-label;
-    width: 3.5em;
+
+    span {
+        flex-grow: 0;
+    }
 
     &--hidden span {
         display: none;
@@ -43,7 +56,7 @@ input {
 
 .input-hex__input {
     @include color-input-input;
-    width: 7.5em;
+    flex-grow: 1;
 
     &--bold {
         font-weight: bold;
@@ -51,6 +64,7 @@ input {
 }
 
 .input-hsl__wrapper {
+    grid-area: hsl;
     @include color-input-wrapper;
 }
 
@@ -63,6 +77,7 @@ input {
 }
 
 .input-rgb__wrapper {
+    grid-area: rgb;
     @include color-input-wrapper;
 }
 
@@ -75,6 +90,7 @@ input {
 }
 
 .input-name__wrapper {
+    grid-area: name;
     @include color-input-wrapper;
 }
 

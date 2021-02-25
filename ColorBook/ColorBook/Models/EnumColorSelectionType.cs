@@ -8,7 +8,6 @@ namespace ColorBook.Models
     public enum EnumColorSelectionType
     {
         Palette,
-        Image,
-        Camera
+        Image
     }
 }

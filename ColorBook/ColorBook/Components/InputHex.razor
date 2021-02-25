@@ -1,5 +1,5 @@
 ﻿
-<div class="input-hex__wrapper">
+<div class="@cssWrapper">
 
     <label class="@cssLabel">
         <span>Hex:</span>
@@ -21,6 +21,7 @@
     [Parameter]
     public bool IsLabelHidden { get; set; }
 
+    string cssWrapper => $"input-hex__wrapper {(IsLabelHidden ? " input-hex__wrapper--auto" : "")}";
     string cssLabel => $"input-hex__label {(IsLabelHidden ? " input-hex__label--hidden" : "")}";
     string cssInput => $"input-hex__input {(IsBold ? " input-hex__input--bold" : "")}";
 

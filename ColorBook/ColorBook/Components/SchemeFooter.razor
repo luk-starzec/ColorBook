@@ -2,16 +2,6 @@
 
 <div class="scheme-footer__wrapper">
 
-    <button class="scheme-footer__button" @onclick="AddToLibrary" title="Add color scheme to library">
-        <img src="/assets/library-add-icon.svg" />
-        <span>Add to library</span>
-    </button>
-
-    <a class="scheme-footer__button" download="@downloadName" href="@downloadData" title="Download color scheme as JSON file">
-        <img src="/assets/download-icon.svg" />
-        <span>Download JSON</span>
-    </a>
-
     @if (isSchemeInLibrary)
     {
         <button class="scheme-footer__button" @onclick="SaveInLibrary" title="Save changes in library">
@@ -24,6 +14,16 @@
             <span>Remove</span>
         </button>
     }
+
+    <button class="scheme-footer__button" @onclick="AddToLibrary" title="Add color scheme to library">
+        <img src="/assets/library-add-icon.svg" />
+        <span>Add to library</span>
+    </button>
+
+    <a class="scheme-footer__button" download="@downloadName" href="@downloadData" title="Download color scheme as JSON file">
+        <img src="/assets/download-icon.svg" />
+        <span>Download JSON</span>
+    </a>
 
 </div>
 

@@ -10,7 +10,7 @@
 }
 
 .color-info__disabled-info {
-    height: 3em;
+    height: 4em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,28 +34,36 @@
     }
 }
 
-.color-info__basic-view {
-    height: 3em;
+.color-info__view {
     display: grid;
-    grid-template-columns: minmax(auto, 6em) minmax(auto, 7.5em) 10.5em auto;
+    grid-template-columns: minmax(auto, 4em) minmax(auto, 11em) 12em;
+    grid-template-rows: 3em;
+    grid-template-areas: "switch color hex";
     align-items: center;
-    padding: .5em 0;
+    padding: .5em 1em;
+
+
+    @media (max-device-width: $breakpoint-width) {
+        grid-template-columns: auto minmax(auto, 8em) 10em;
+    }
 
     &--full {
-        grid-template-columns: minmax(auto, 8em) 15em 4em;
+        grid-template-columns: minmax(auto, 8em) 19em;
+        grid-template-rows: 3em 2em 2.5em 2em auto auto;
+        grid-template-areas: "switch hex" "color rgb" "color hsl" "color name" "bars bars" "fit fit";
+        justify-items: center;
+
+        @media (max-device-width: $breakpoint-width) {
+            grid-template-columns: auto minmax(10em,1fr);
+            grid-template-rows: 2em 4em 2em 2.5em 2em auto auto;
+            grid-template-areas: "switch hex" "color color" "rgb rgb" "hsl hsl" "name name" "bars bars" "fit fit";
+            justify-items: center;
+        }
     }
 }
 
-.color-info__full-view {
-    display: grid;
-    grid-template-columns: minmax(auto, 8em) 19em;
-    grid-template-rows: 2em 2.5em 2em;
-    align-items: center;
-    padding: 0;
-    margin: 1em 0;
-}
-
 .color-info__color-sample {
+    grid-area: color;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
@@ -63,7 +71,7 @@
     outline: none;
     padding: 0;
     height: 2em;
-    margin: 0 1em;
+    margin: 0 2em;
     border-radius: .3em;
     cursor: pointer;
 
@@ -74,6 +82,10 @@
     &:hover .color-info__color-change {
         background-color: rgba(255, 255, 255, .3);
     }
+
+    @media (max-device-width: $breakpoint-width) {
+        margin: 0 1em;
+    }
 }
 
 .color-info__color-change {
@@ -83,9 +95,6 @@
     width: 2em;
     height: 2em;
     background-color: transparent;
-
-    &:hover {
-    }
 }
 
 .color-info__color-big-sample {
@@ -96,22 +105,28 @@
     max-width: 6em;
     border-radius: .7em;
     margin: 0 1em 0 0;
-    grid-row: 1/4;
-    grid-column: 1/2;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, .1);
     cursor: pointer;
 
     & .color-info__color-change {
         border-radius: .5em 0 0 0;
     }
+
+    @media (max-device-width: $breakpoint-width) {
+        height: 2em;
+        max-width: none;
+        width: 90%;
+        margin: 0;
+        justify-self: center;
+    }
 }
 
 .color-info__switch-view {
     @include std-button;
+    grid-area: switch;
     height: 2em;
     width: 2em;
-    margin: 0 0 0 2em;
-    justify-self: end;
+    justify-self: start;
     border-radius: 50%;
     transition: transform ease .2s;
 
@@ -125,6 +140,7 @@
 }
 
 .color-info__color-fit {
+    grid-area: fit;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -156,6 +172,10 @@
 }
 
 .color-info__color-bars {
+    grid-area: bars;
+    justify-self: stretch;
+    margin-top: 1em;
+
     @media (max-device-width: $breakpoint-width) {
         display: flex;
         justify-content: center;
@@ -166,14 +186,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-items: center;
-    gap: .3em;
+    justify-content: space-between;
     flex-wrap: wrap;
     margin: .5em 0;
 
     @media (max-device-width: $breakpoint-width) {
         flex-direction: column;
         align-items: flex-start;
+        gap: .5em;
     }
 }
 

@@ -28,7 +28,7 @@
     @if (isFileButtonVisible)
     {
         <div class="color-selection__file-wrapper">
-            <label class="color-selection__file-label" title="@GetTitleFile(ColorSelectionType)">
+            <label class="color-selection__file-label" title="open file">
                 ...
                 <InputFile class="color-selection__file-input" OnChange="@OnInputFileChange" accept="image/*" />
             </label>
@@ -75,12 +75,9 @@
         {
             EnumColorSelectionType.Palette => "from palette",
             EnumColorSelectionType.Image => "from image",
-            EnumColorSelectionType.Camera => "from camera",
             _ => string.Empty,
         };
     }
-
-    string GetTitleFile(EnumColorSelectionType selectionType) => selectionType == EnumColorSelectionType.Camera ? "open camera" : "open file";
 
     string GetImageSrc(EnumColorSelectionType selectionType)
     {
@@ -88,7 +85,6 @@
         {
             EnumColorSelectionType.Palette => "palette-icon",
             EnumColorSelectionType.Image => "image-icon",
-            EnumColorSelectionType.Camera => "camera-icon",
             _ => string.Empty,
         };
         return $"/assets/{fileName}.svg";
