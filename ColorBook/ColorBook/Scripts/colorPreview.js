@@ -1,5 +1,9 @@
 ﻿window.colorPreview = {
 
+    getWindowWidth: () => window.innerWidth,
+
+    getWindowHeight: () => window.innerHeight,
+
     drawImg: (canvasId, data) => {
         const ctx = document.getElementById(canvasId).getContext('2d');
         const img = new Image();
@@ -16,11 +20,8 @@
 
         const ctx = canvas.getContext('2d');
         const pixel = ctx.getImageData(x, y, 1, 1).data
-        //console.log(pixel);
 
         const array = Array.from(pixel);
-        //console.log(array);
-
         return array;
     },
 
@@ -70,22 +71,4 @@
     rgbToHex: (r, g, b) => {
         return "#" + colorPreview.componentToHex(r) + colorPreview.componentToHex(g) + colorPreview.componentToHex(b);
     },
-
-
-    //draw = () => {
-    //    var ctx = document.getElementById('canvas').getContext('2d');
-    //    var img = new Image();
-    //    img.onload = function () {
-    //        ctx.drawImage(img, 0, 0);
-    //        ctx.beginPath();
-    //        ctx.moveTo(30, 96);
-    //        ctx.lineTo(70, 66);
-    //        ctx.lineTo(103, 76);
-    //        ctx.lineTo(170, 15);
-    //        ctx.stroke();
-    //    };
-    //    img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
-    //    return true;
-    //}
-
 }

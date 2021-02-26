@@ -1,7 +1,7 @@
 ﻿@using BlazorColorPicker
 @inject ISettingsService settingsService
 
-<div class="color-info__wrapper">
+<section class="color-info__wrapper">
 
     @if (isDisabled)
     {
@@ -16,80 +16,79 @@
 
         @if (isImagePreview)
         {
-            <div class="color-info__image-wrapper">
+            <section class="color-info__image-section">
 
-                <label class="@cssTrack">
-                    <input type="checkbox" @bind="isTracking" />
-                    <img src="/assets/track-icon.svg" />
-                </label>
+                <ImagePreview @ref="imagePreviewRef" @bind-ColorHex="ColorHex" File="previewFile" />
 
-                <ImagePreview @ref="imagePreviewRef" @bind-IsTracking="isTracking" @bind-ColorHex="ColorHex" File="previewFile" />
-
-            </div>
+            </section>
         }
 
-    <div class="@cssView">
+        <section class="color-info__color-section">
 
-        <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide color details">
-            <img src="/assets/dropdown-icon.svg" />
-        </button>
+            <ColorSelection @bind-SelectedFile="previewFile" @bind-ColorSelectionType="colorSelectionType" />
 
-        @*<ColorSelection @bind-SelectedFile="previewFile" @bind-ColorSelectionType="colorSelectionType" />*@
+            <div class="@cssView">
 
-        <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
-            <div class="color-info__color-change">...</div>
-        </button>
+                <button class="@cssButtonDetalis" @onclick="ChangeView" title="show/hide color details">
+                    <img src="/assets/dropdown-icon.svg" />
+                </button>
 
-        <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!isFullView)" IsBold="@isFullView" />
+                <button class="@cssColorViewer" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+                    <div class="color-info__color-change">...</div>
+                </button>
 
-        @if (!isDisabled && isFullView)
-        {
+                <InputHex @bind-Value="ColorHex" IsLabelHidden="@(!isFullView)" IsBold="@isFullView" />
 
-            <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
-                <div class="color-info__color-change">...</div>
-            </button>
+                @if (!isDisabled && isFullView)
+                {
 
-            <InputRGB @bind-Value="ColorHex" />
-            <InputHSL @bind-Value="ColorHex" />
-            <InputName Value="@ColorHex" />
+                    <button class="color-info__color-big-sample" style="@styleSampleColor" title="choose different color" @onclick="ShowColorPicker">
+                        <div class="color-info__color-change">...</div>
+                    </button>
 
-            <div class="color-info__color-bars">
+                    <InputRGB @bind-Value="ColorHex" />
+                    <InputHSL @bind-Value="ColorHex" />
+                    <InputName Value="@ColorHex" />
 
-                <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Lightness" />
-                <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Saturation" />
-                <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Hue" />
+                    <div class="color-info__color-bars">
+
+                        <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Lightness" />
+                        <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Saturation" />
+                        <ColorBar @bind-ColorHex="@ColorHex" ColorBarType="@EnumColorBarType.Hue" />
+
+                    </div>
+
+                    <div class="color-info__color-fit">
+
+                        <div class="color-info__color-fit-group">
+
+                            <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
+                            <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
+                            <ColorFitText TextColor="@settings.DarkTextColor" BackgroundColor="@ColorHex" />
+                            <ColorFitText TextColor="@settings.LightTextColor" BackgroundColor="@ColorHex" />
+
+                        </div>
+
+                        <div class="color-info__color-fit-group">
+
+                            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
+                            <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
+
+                        </div>
+
+                    </div>
+                }
 
             </div>
 
-            <div class="color-info__color-fit">
-
-                <div class="color-info__color-fit-group">
-
-                    <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
-                    <ColorFitText TextColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
-                    <ColorFitText TextColor="@settings.DarkTextColor" BackgroundColor="@ColorHex" />
-                    <ColorFitText TextColor="@settings.LightTextColor" BackgroundColor="@ColorHex" />
-
-                </div>
-
-                <div class="color-info__color-fit-group">
-
-                    <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.DarkBackgroundColor" />
-                    <ColorFitBorder BorderColor="@ColorHex" BackgroundColor="@settings.LightBackgroundColor" />
-
-                </div>
-
-            </div>
-        }
-
-    </div>
+        </section>
 
 
     </div>
 
     <ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@ColorHex" />
 
-</div>
+</section>
 
 @code {
     string colorHex;
@@ -126,8 +125,6 @@
     EnumColorSelectionType colorSelectionType = EnumColorSelectionType.Palette;
 
     bool isImagePreview => previewFile != null;
-    bool isTracking = false;
-    string cssTrack => isTracking ? "color-info__track-label color-info__track-label--active" : "color-info__track-label";
 
     protected override async Task OnInitializedAsync()
     {

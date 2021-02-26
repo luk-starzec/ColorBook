@@ -1,19 +1,28 @@
 ﻿@inject IJSRuntime JS
 
-<div class="image-preview__wrapper">
+<section class="image-preview__wrapper">
 
-    <img class="image-preview__image" id="@imageId" src="@imageDataUrl"
-         @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" @onmousemove:stopPropagation="true" />
+    <div>
+        <img class="image-preview__image" id="@_imageId" src="@imageDataUrl"
+             @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" @onmousemove:stopPropagation="true" />
+        <canvas class="@cssDetails" id="@_previewCanvasId"></canvas>
+    </div>
 
-    <canvas class="@cssDetails" id="@previewCanvasId"></canvas>
+    <div class="image-preview__options">
 
-</div>
+        <button class="@cssTracking" @onclick="ChangeTracking" title="tracking color under cursor">
+            <img src="/assets/track-icon.svg" />
+        </button>
+
+        <button class="@cssTrackingLocked" @onclick="ChangeTrackingLocked" title="constant tracking color under cursor">
+            <img src="/assets/track-lock-icon.svg" />
+        </button>
+
+    </div>
+
+</section>
 
 @code {
-    [Parameter]
-    public bool IsTracking { get; set; }
-    [Parameter]
-    public EventCallback<bool> IsTrackingChanged { get; set; }
     [Parameter]
     public string ColorHex { get; set; }
     [Parameter]
@@ -24,18 +33,12 @@
     public IBrowserFile File
     {
         get => file;
-        set
-        {
-            if (file == value)
-                return;
-            file = value;
-            InvokeAsync(SetImageData);
-        }
+        set => SetFile(value);
     }
 
-    int previewScale = 4;
-    string imageId = "imageId";
-    string previewCanvasId = "previewId";
+    readonly int _previewScale = 4;
+    readonly string _imageId = "imageId";
+    readonly string _previewCanvasId = "previewId";
 
     string imageDataUrl;
 
@@ -45,10 +48,16 @@
 
     string cssDetails => isImageLoaded && isMouseOver ? "image-preview__details-view" : "image-preview__details-view image-preview__details-view--hidden";
 
+    bool isTracking = false;
+    bool isTrackingLocked = false;
+    string cssTracking => isTracking ? "image-preview__option image-preview__option--first image-preview__option--active" : "image-preview__option image-preview__option--first";
+    string cssTrackingLocked => isTrackingLocked ? "image-preview__option image-preview__option--last image-preview__option--active" : "image-preview__option image-preview__option--last";
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await JS.InvokeVoidAsync("colorPreview.initPreview", previewCanvasId, previewScale);
+            await JS.InvokeVoidAsync("colorPreview.initPreview", _previewCanvasId, _previewScale);
     }
 
     void OnMouseOver(MouseEventArgs e) => isMouseOver = true;
@@ -58,8 +67,8 @@
     async Task OnMouseDown(MouseEventArgs e)
     {
         await SetColor();
-        if (IsTracking)
-            await IsTrackingChanged.InvokeAsync(false);
+        if (isTracking)
+            isTracking = false;
     }
 
     async Task OnMouseMove(MouseEventArgs e)
@@ -67,19 +76,27 @@
         if (!isImageLoaded)
             return;
 
-        await JS.InvokeVoidAsync("colorPreview.setPreview", imageId, previewCanvasId, e.OffsetX, e.OffsetY, previewScale);
+        await JS.InvokeVoidAsync("colorPreview.setPreview", _imageId, _previewCanvasId, e.OffsetX, e.OffsetY, _previewScale);
 
-        if (IsTracking)
+        if (isTracking || isTrackingLocked)
             await SetColor();
     }
 
     async Task SetColor()
     {
-        var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", previewCanvasId);
+        var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", _previewCanvasId);
         var hex = await JS.InvokeAsync<string>("colorPreview.rgbToHex", rgba[0], rgba[1], rgba[2]);
 
         ColorHex = hex;
         await ColorHexChanged.InvokeAsync(ColorHex);
+    }
+
+    void SetFile(IBrowserFile value)
+    {
+        if (file == value)
+            return;
+        file = value;
+        InvokeAsync(SetImageData);
     }
 
     async Task SetImageData()
@@ -90,8 +107,11 @@
             return;
         }
 
-        var maxWidth = 400;
-        var maxHeight = 400;
+        var width = await JS.InvokeAsync<int>("colorPreview.getWindowWidth");
+        var height = await JS.InvokeAsync<int>("colorPreview.getWindowHeight");
+
+        var maxWidth = width < 500 ? width : 500;
+        var maxHeight = height < 700 ? height : 700; ;
 
         var format = "image/png";
         var resized = await file.RequestImageFileAsync(format, maxWidth, maxHeight);
@@ -100,6 +120,20 @@
         imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
 
         StateHasChanged();
+    }
+
+    void ChangeTracking()
+    {
+        isTracking = !isTracking;
+        if (isTracking)
+            isTrackingLocked = false;
+    }
+
+    void ChangeTrackingLocked()
+    {
+        isTrackingLocked = !isTrackingLocked;
+        if (isTrackingLocked)
+            isTracking = false;
     }
 
 }

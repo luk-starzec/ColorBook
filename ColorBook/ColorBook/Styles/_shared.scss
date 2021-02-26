@@ -64,23 +64,6 @@ $breakpoint-width: 400px;
     align-items: center;
 }
 
-
-@mixin color-selection-button {
-    @include std-button;
-    background-color: #ffffff;
-    border-radius: .3em;
-    height: 2em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
-
-    &:hover {
-        background-color: #f0f0f0;
-    }
-
-    &:active {
-        transform: scale(.9);
-    }
-}
-
 @mixin page-mask {
     position: fixed;
     top: 0;
