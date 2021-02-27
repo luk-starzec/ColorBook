@@ -4,6 +4,11 @@
 
     getWindowHeight: () => window.innerHeight,
 
+    getElementXY: (elementId) => {
+        var rect = document.getElementById(elementId).getBoundingClientRect();
+        return [rect.left, rect.top];
+    },
+
     drawImg: (canvasId, data) => {
         const ctx = document.getElementById(canvasId).getContext('2d');
         const img = new Image();

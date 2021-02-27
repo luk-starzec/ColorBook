@@ -17,6 +17,7 @@
     @include width-wrapper;
     height: 4em;
     background-color: #fafafa;
+    padding: 0 1em;
 }
 
 .scheme-header__name-label {
@@ -25,7 +26,6 @@
     align-items: center;
 
     & span {
-        margin-left: .5em;
         text-align: right;
     }
 }
@@ -34,12 +34,16 @@
     color: #333333;
     height: 1.7em;
     flex-grow: 1;
-    width: 90%;
-    text-align: center;
+    width: 50%;
     margin: 0 1em;
+    text-align: center;
     border: solid 2px transparent;
     border-radius: .3em;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+
+    @media (max-width: $breakpoint-width) {
+        margin: 0 .5em;
+    }
 }
 
 .scheme-header__list-wrapper {
@@ -59,7 +63,7 @@
     border-radius: .3em;
     height: 2em;
     width: 2em;
-    margin: 0 .5em;
+    margin: 0 .25em;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
     display: flex;
     justify-content: center;
@@ -89,7 +93,7 @@
     z-index: 39;
     position: absolute;
     top: 1em;
-    right: .5em;
+    right: .25em;
     list-style: none;
     padding: 0;
     color: #666666;
@@ -108,7 +112,7 @@
         font-weight: bold;
         padding: .8em 1.3em;
 
-        @media (max-device-width: $breakpoint-width) {
+        @media (max-width: $breakpoint-width) {
             width: 80vw;
             white-space: normal;
             text-align: center;
@@ -262,6 +266,7 @@
 
 .scheme-description__input {
     height: 1.7em;
+    max-width: 80%;
     border: none;
     text-align: center;
     flex-grow: 1;

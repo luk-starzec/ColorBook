@@ -86,7 +86,7 @@ $breakpoint-width: 400px;
     flex-direction: row;
     align-items: center;
     background-color: #ffffff;
-    width: 18em;
+    max-width: 90vw;
     border: solid 2px transparent;
     border-radius: .3em;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);

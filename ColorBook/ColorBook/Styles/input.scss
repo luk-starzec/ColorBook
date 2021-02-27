@@ -34,7 +34,7 @@ input {
     @media (max-device-width: $breakpoint-width) {
         justify-self: stretch;
         width: auto;
-        margin: 0 1em;
+        max-width: 16em;
     }
 
     &--auto {
@@ -47,6 +47,7 @@ input {
 
     span {
         flex-grow: 0;
+        width: 3.5em;
     }
 
     &--hidden span {

@@ -20,7 +20,7 @@
         background-color: transparent;
     }
 
-    @media (max-device-width: $breakpoint-width) {
+    @media (max-width: $breakpoint-width) {
         &--small {
             grid-template-columns: auto auto;
         }
@@ -95,7 +95,7 @@
     font-size: 1.2em;
     font-weight: normal;
 
-    @media (max-device-width: $breakpoint-width) {
+    @media (max-width: $breakpoint-width) {
         &--small {
             visibility: hidden;
             width: 0;
@@ -150,7 +150,7 @@
         cursor: pointer;
     }
 
-    @media (max-device-width: $breakpoint-width) {
+    @media (max-width: $breakpoint-width) {
         &--small {
             span {
                 display: none;

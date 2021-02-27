@@ -4,7 +4,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    @include width-wrapper;
     padding-top: 1em;
 }
 
@@ -19,6 +18,7 @@
     color: #999999;
     background-color: #fafafa;
     gap: 1em;
+    @include width-wrapper;
 
     img {
         opacity: .1;
@@ -29,7 +29,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
 
     &--hidden {
         display: none;
@@ -37,7 +36,6 @@
 }
 
 .color-info__image-section {
-    position: relative;
     margin: .5em 0;
 
     &--hidden {
@@ -46,7 +44,7 @@
 }
 
 .color-info__color-section {
-    width: 100%;
+    @include width-wrapper;
 }
 
 .color-info__view {

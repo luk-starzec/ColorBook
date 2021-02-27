@@ -2,21 +2,21 @@
 
 <section class="image-preview__wrapper">
 
-    <div>
-        <img class="image-preview__image" id="@_imageId" src="@imageDataUrl"
-             @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" @onmousemove:stopPropagation="true" />
-        <canvas class="@cssDetails" id="@_previewCanvasId"></canvas>
-    </div>
+    <img class="image-preview__image" id="@_imageId" src="@imageDataUrl"
+         @onmousemove="OnMouseMove" @onmousedown="OnMouseDown" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" @onmousemove:stopPropagation="true"
+         @ontouchmove="OnTouchMove" @ontouchstart="OnTouchStart" @ontouchend="OnTouchEnd" @ontouchmove:stopPropagation="true" />
 
-    <div class="image-preview__options">
+    <canvas class="@cssDetails" style="@styleDetails" id="@_detailsCanvasId"></canvas>
 
-        <button class="@cssTracking" @onclick="ChangeTracking" title="tracking color under cursor">
-            <img src="/assets/track-icon.svg" />
-        </button>
+    <div class="image-preview__footer">
 
-        <button class="@cssTrackingLocked" @onclick="ChangeTrackingLocked" title="constant tracking color under cursor">
-            <img src="/assets/track-lock-icon.svg" />
-        </button>
+        <div class="image-preview__options">
+
+            <button class="@cssTracking" @onclick="ChangeTracking" title="tracking color under cursor">
+                <img src="/assets/track-icon.svg" />
+            </button>
+
+        </div>
 
     </div>
 
@@ -36,9 +36,9 @@
         set => SetFile(value);
     }
 
-    readonly int _previewScale = 4;
+    readonly int _detailsScale = 4;
     readonly string _imageId = "imageId";
-    readonly string _previewCanvasId = "previewId";
+    readonly string _detailsCanvasId = "previewId";
 
     string imageDataUrl;
 
@@ -47,17 +47,17 @@
     bool isMouseOver = false;
 
     string cssDetails => isImageLoaded && isMouseOver ? "image-preview__details-view" : "image-preview__details-view image-preview__details-view--hidden";
+    int detailsOffset = 0;
+    string styleDetails => $"--offset: {detailsOffset}px;";
 
     bool isTracking = false;
-    bool isTrackingLocked = false;
-    string cssTracking => isTracking ? "image-preview__option image-preview__option--first image-preview__option--active" : "image-preview__option image-preview__option--first";
-    string cssTrackingLocked => isTrackingLocked ? "image-preview__option image-preview__option--last image-preview__option--active" : "image-preview__option image-preview__option--last";
+    string cssTracking => isTracking ? "image-preview__option image-preview__option--active" : "image-preview__option";
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await JS.InvokeVoidAsync("colorPreview.initPreview", _previewCanvasId, _previewScale);
+            await JS.InvokeVoidAsync("colorPreview.initPreview", _detailsCanvasId, _detailsScale);
     }
 
     void OnMouseOver(MouseEventArgs e) => isMouseOver = true;
@@ -76,15 +76,38 @@
         if (!isImageLoaded)
             return;
 
-        await JS.InvokeVoidAsync("colorPreview.setPreview", _imageId, _previewCanvasId, e.OffsetX, e.OffsetY, _previewScale);
+        await JS.InvokeVoidAsync("colorPreview.setPreview", _imageId, _detailsCanvasId, e.OffsetX, e.OffsetY, _detailsScale);
 
-        if (isTracking || isTrackingLocked)
+        if (isTracking)
             await SetColor();
+    }
+
+    void OnTouchStart(TouchEventArgs e) => isMouseOver = true;
+
+    async Task OnTouchEnd(TouchEventArgs e)
+    {
+        isMouseOver = false;
+        if (isTracking)
+        {
+            await SetColor();
+            isTracking = false;
+        }
+    }
+
+    async Task OnTouchMove(TouchEventArgs e)
+    {
+        var imageXY = await JS.InvokeAsync<int[]>("colorPreview.getElementXY", _imageId);
+        var args = new MouseEventArgs
+        {
+            OffsetX = e.Touches[0].PageX - imageXY[0],
+            OffsetY = e.Touches[0].PageY - imageXY[1],
+        };
+        await OnMouseMove(args);
     }
 
     async Task SetColor()
     {
-        var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", _previewCanvasId);
+        var rgba = await JS.InvokeAsync<int[]>("colorPreview.getRGBA", _detailsCanvasId);
         var hex = await JS.InvokeAsync<string>("colorPreview.rgbToHex", rgba[0], rgba[1], rgba[2]);
 
         ColorHex = hex;
@@ -122,18 +145,6 @@
         StateHasChanged();
     }
 
-    void ChangeTracking()
-    {
-        isTracking = !isTracking;
-        if (isTracking)
-            isTrackingLocked = false;
-    }
-
-    void ChangeTrackingLocked()
-    {
-        isTrackingLocked = !isTrackingLocked;
-        if (isTrackingLocked)
-            isTracking = false;
-    }
+    void ChangeTracking() => isTracking = !isTracking;
 
 }
