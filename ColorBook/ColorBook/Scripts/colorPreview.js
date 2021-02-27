@@ -6,7 +6,9 @@
 
     getElementXY: (elementId) => {
         var rect = document.getElementById(elementId).getBoundingClientRect();
-        return [rect.left, rect.top];
+        var top = Math.round(rect.top + window.scrollY);
+        var left = Math.round(rect.left + window.scrollX);
+        return [left, top];
     },
 
     drawImg: (canvasId, data) => {
