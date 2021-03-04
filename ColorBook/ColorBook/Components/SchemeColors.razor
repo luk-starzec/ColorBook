@@ -1,7 +1,7 @@
 ﻿
 <div class="scheme-colors__wrapper">
 
-    <ul class="scheme-colors__list">
+    <ul class="@cssList">
 
         <li class="scheme-colors__list-item">
             <div class="@GetCssSpacer(-1)" ondragover="event.preventDefault();" @ondrop="()=>DropInsert(-1)" @ondragenter="()=>DragEnterSpacer(-1)" @ondragleave="()=>DragLeaveSpacer(-1)" @ondragend="()=>DragEnd(-1)">
@@ -76,6 +76,8 @@
     int? dragOverItem = null;
     int? dragOverSpacer = null;
     bool isDragOverRemove = false;
+
+    string cssList => isDragMode ? "scheme-colors__list scheme-colors__list--drag" : "scheme-colors__list";
 
     string GetCssColorView(int index)
     {

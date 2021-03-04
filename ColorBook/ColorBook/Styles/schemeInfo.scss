@@ -1,13 +1,13 @@
 ﻿@import 'shared';
 
+$color-width: 4em;
+$spacer-width: 1em;
 
 .scheme-info__wrapper {
     margin-top: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
-    --color-width: 4em;
-    --spacer-width: 1em;
 }
 
 .scheme-header__wrapper {
@@ -147,6 +147,12 @@
     padding: 0;
     margin: 1em 0 .5em 0;
     max-width: 90vw;
+
+    @media (max-width: $breakpoint-width) {
+        &--drag {
+            justify-content: flex-start;
+        }
+    }
 }
 
 .scheme-colors__list-item {
@@ -157,8 +163,8 @@
 
 
 .scheme-colors__color-view {
-    width: var(--color-width);
-    height: var(--color-width);
+    width: $color-width;
+    height: $color-width;
     border-radius: .3em;
     border: none;
     transition: transform ease .1s;
@@ -187,19 +193,19 @@
     transition: width ease .2s;
 
     &--wide {
-        width: var(--spacer-width);
+        width: $spacer-width;
     }
 
     &--drag-over {
         background: repeating-linear-gradient(45deg, #dddddd, #dddddd .5em, #ffffff .5em, #ffffff 1em );
-        width: var(--color-width);
+        width: $color-width;
     }
 }
 
 .scheme-colors__add-button {
     @include std-button;
-    width: var(--color-width);
-    height: var(--color-width);
+    width: $color-width;
+    height: $color-width;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -222,7 +228,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(var(--items-count+1)*var(--color-width) + (var(--items-count))*var(--spacer-width));
+    width: calc(var(--items-count+1)*$color-width + (var(--items-count))*$spacer-width);
     max-width: 90vw;
     height: 3em;
     border-radius: .3em;

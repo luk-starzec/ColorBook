@@ -91,7 +91,7 @@
         {
             <div class="side-bar__library-wrapper">
 
-                <h4 class="side-bar__library-header">
+                <h4 class="side-bar__sub-header">
                     Schemes library
                 </h4>
 
@@ -112,8 +112,29 @@
 
         @if (!isSettingsCollapsed)
         {
+            <div class="side-bar__sync-wrapper">
+
+                <h4 class="side-bar__sub-header">
+                    Data sync
+                </h4>
+
+                <label class="side-bar__sync-label">
+                    Login:
+                    <input type="text" />
+                </label>
+                <label class="side-bar__sync-label">
+                    Password:
+                    <input type="password" />
+                </label>
+
+                <button class="side-bar__sync-button">
+                    synchonize
+                </button>
+
+            </div>
+
             <div class="side-bar__settings-wrapper">
-                <h4 class="side-bar__settings-header">
+                <h4 class="side-bar__sub-header">
                     Background sample
                 </h4>
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.LightBackground"
@@ -121,7 +142,7 @@
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkBackground"
                                Label="dark:" ColorHex="@currentSettings.DarkBackgroundColor" ColorPickerOpened="OpenColorPicker" />
 
-                <h4 class="side-bar__settings-header">
+                <h4 class="side-bar__sub-header">
                     Text sample
                 </h4>
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.LightText"
