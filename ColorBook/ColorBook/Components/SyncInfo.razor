@@ -1,4 +1,6 @@
-﻿<div class="sync-info__wrapper">
+﻿@using System.ComponentModel.DataAnnotations
+
+<div class="sync-info__wrapper">
 
     <h4 class="sync-info__header">
         Server
@@ -22,30 +24,35 @@
             @UserName
         </div>
 
-        <button class="sync-info__login-button" @onclick="LogOut">
+        <button class="sync-info__login-button" @onclick="()=>user.LogOut()">
             log out
         </button>
     }
     else
     {
-        <label class="sync-info__text-label">
-            Login:
-            <input type="text" @bind="UserName" />
-        </label>
+        <EditForm class="sync-info__user-wrapper" Model="@user" OnSubmit="OnUserSubmited">
+            <DataAnnotationsValidator />
 
-        <label class="sync-info__text-label">
-            Password:
-            <input type="password" @bind="password" />
-        </label>
+            <label class="sync-info__text-label">
+                Login:
+                <InputText @bind-Value="user.Login" />
+            </label>
+            <ValidationMessage  For="() => user.Login" />
 
-        <label class="sync-info__check-label">
-            <input type="checkbox" @bind="stayLoggedId" />
-            stay logged in
-        </label>
+            <label class="sync-info__text-label">
+                Password:
+                <InputPassword @bind-Password="user.Password" />
+            </label>
+            <ValidationMessage For="() => user.Password" />
 
-        <button class="sync-info__login-button" @onclick="LogIn">
-            log in
-        </button>
+            <label class="sync-info__check-label">
+                <InputCheckbox @bind-Value="user.StayLoggedId" />
+                stay logged in
+            </label>
+
+            <input type="submit" class="sync-info__login-button" value="log in" />
+
+        </EditForm>
     }
 
 </div>
@@ -57,17 +64,30 @@
     public EventCallback<bool> IsServerAvailableChanged { get; set; }
 
     [Parameter]
-    public bool IsLogedIn { get; set; }
+    public bool IsLogedIn
+    {
+        get => user.IsLoggedId;
+        set
+        {
+            if (user.IsLoggedId == value)
+                return;
+            user.IsLoggedId = value;
+            IsLogedInChanged.InvokeAsync(value);
+        }
+    }
     [Parameter]
     public EventCallback<bool> IsLogedInChanged { get; set; }
 
     [Parameter]
-    public string UserName { get; set; }
+    public string UserName
+    {
+        get => user.Login;
+        set => user.Login = value;
+    }
     [Parameter]
     public EventCallback<string> UserNameChanged { get; set; }
 
-    string password;
-    bool stayLoggedId;
+    SyncUser user = new SyncUser();
 
     bool isSyncActive => IsServerAvailable && IsLogedIn;
     string serverStatus => IsServerAvailable ? "online" : "offline";
@@ -75,29 +95,47 @@
     string cssServerIcon => IsServerAvailable ? "sync-info__server-icon sync-info__server-icon--online" : "sync-info__server-icon";
     string cssServerStatus => IsServerAvailable ? "sync-info__server-status sync-info__server-status--online" : "sync-info__server-status";
 
-    async Task LogIn()
+    protected override async Task OnInitializedAsync()
     {
-        IsLogedIn = true;
-        await IsLogedInChanged.InvokeAsync(IsLogedIn);
-
-        IsServerAvailable = true;
-        await IsServerAvailableChanged.InvokeAsync(IsServerAvailable);
-        UserName = "Test";
-
-        //var x = await JS.InvokeAsync<string>("cryptoTools.encryptData", "test data", userName);
-        //Console.WriteLine(x);
-        //var xx = await JS.InvokeAsync<string>("cryptoTools.decryptData", x, userName);
-        //Console.WriteLine(xx);
+        Console.WriteLine("init");
+        await CheckServerAvailability();
     }
 
-    async Task LogOut()
-    {
-        IsLogedIn = false;
-        await IsLogedInChanged.InvokeAsync(IsLogedIn);
 
-        IsServerAvailable = false;
+    async Task CheckServerAvailability()
+    {
+        var isAvailable = new Random().Next(0, 2) != 0;
+
+        IsServerAvailable = isAvailable;
         await IsServerAvailableChanged.InvokeAsync(IsServerAvailable);
-        UserName = "";
+
+        Console.WriteLine($"server: {serverStatus}");
     }
 
+    public class SyncUser
+    {
+        [Required]
+        public string Login { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public bool StayLoggedId { get; set; }
+
+        public bool IsLoggedId { get; set; }
+
+        public void LogOut()
+        {
+            IsLoggedId = false;
+            Password = null;
+        }
+    }
+
+    void OnUserSubmited(EditContext editContext)
+    {
+        bool isValid = editContext.Validate();
+        var model = editContext.Model as SyncUser;
+
+        model.IsLoggedId = isValid;
+
+        Console.WriteLine(model);
+    }
 }

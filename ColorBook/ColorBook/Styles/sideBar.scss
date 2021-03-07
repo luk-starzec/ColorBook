@@ -314,6 +314,14 @@
     }
 }
 
+.sync-info__user-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .sync-info__text-label {
     display: inline-block;
     width: 12em;
@@ -343,6 +351,12 @@
     input {
         margin-right: .5em;
     }
+}
+
+.sync-info__user-wrapper .validation-message {
+    color: red;
+    font-size: .7em;
+    margin-bottom: .5em;
 }
 
 .sync-info__login-button {
