@@ -1,0 +1,103 @@
+﻿<div class="sync-info__wrapper">
+
+    <h4 class="sync-info__header">
+        Server
+    </h4>
+
+    <div class="sync-info__server-wrapper">
+
+        <div class="@cssServerIcon"></div>
+
+        <div class="@cssServerStatus">@serverStatus</div>
+
+    </div>
+
+    <h4 class="sync-info__header">
+        User
+    </h4>
+
+    @if (IsLogedIn)
+    {
+        <div class="sync-info__user-name">
+            @UserName
+        </div>
+
+        <button class="sync-info__login-button" @onclick="LogOut">
+            log out
+        </button>
+    }
+    else
+    {
+        <label class="sync-info__text-label">
+            Login:
+            <input type="text" @bind="UserName" />
+        </label>
+
+        <label class="sync-info__text-label">
+            Password:
+            <input type="password" @bind="password" />
+        </label>
+
+        <label class="sync-info__check-label">
+            <input type="checkbox" @bind="stayLoggedId" />
+            stay logged in
+        </label>
+
+        <button class="sync-info__login-button" @onclick="LogIn">
+            log in
+        </button>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public bool IsServerAvailable { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsServerAvailableChanged { get; set; }
+
+    [Parameter]
+    public bool IsLogedIn { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsLogedInChanged { get; set; }
+
+    [Parameter]
+    public string UserName { get; set; }
+    [Parameter]
+    public EventCallback<string> UserNameChanged { get; set; }
+
+    string password;
+    bool stayLoggedId;
+
+    bool isSyncActive => IsServerAvailable && IsLogedIn;
+    string serverStatus => IsServerAvailable ? "online" : "offline";
+
+    string cssServerIcon => IsServerAvailable ? "sync-info__server-icon sync-info__server-icon--online" : "sync-info__server-icon";
+    string cssServerStatus => IsServerAvailable ? "sync-info__server-status sync-info__server-status--online" : "sync-info__server-status";
+
+    async Task LogIn()
+    {
+        IsLogedIn = true;
+        await IsLogedInChanged.InvokeAsync(IsLogedIn);
+
+        IsServerAvailable = true;
+        await IsServerAvailableChanged.InvokeAsync(IsServerAvailable);
+        UserName = "Test";
+
+        //var x = await JS.InvokeAsync<string>("cryptoTools.encryptData", "test data", userName);
+        //Console.WriteLine(x);
+        //var xx = await JS.InvokeAsync<string>("cryptoTools.decryptData", x, userName);
+        //Console.WriteLine(xx);
+    }
+
+    async Task LogOut()
+    {
+        IsLogedIn = false;
+        await IsLogedInChanged.InvokeAsync(IsLogedIn);
+
+        IsServerAvailable = false;
+        await IsServerAvailableChanged.InvokeAsync(IsServerAvailable);
+        UserName = "";
+    }
+
+}

@@ -1,6 +1,8 @@
 ﻿@using BlazorColorPicker
 @inject ISettingsService settingsService;
 @inject ISchemeService schemeService;
+@inject ILocalStorageService localStorageService;
+@inject IJSRuntime JS
 
 <div class="@cssWrapper">
 
@@ -71,6 +73,16 @@
 
             <li class="side-bar__list-item side-bar__list-item--blank"></li>
 
+            <li class="@cssListItem side-bar__list-item--action" @onclick="ChangeSyncVisibility">
+                <img class="@cssSyncState" src="/assets/sync-icon.svg" />
+                <span>
+                    Data sync
+                </span>
+                <div class="@cssSyncIcon">
+                    <SvgIcon SvgUrl="/assets/dropdown-icon.svg" />
+                </div>
+            </li>
+
             <li class="@cssListItem side-bar__list-item--action" @onclick="ChangeSettingsVisibility">
                 <img src="/assets/settings-icon.svg" />
                 <span>
@@ -110,33 +122,19 @@
             </div>
         }
 
+        @if (!isSyncCollapsed)
+        {
+            <SyncInfo @bind-IsLogedIn="isLogedIn" @bind-IsServerAvailable="isServerAvailable" />
+        }
+
         @if (!isSettingsCollapsed)
         {
-            <div class="side-bar__sync-wrapper">
-
-                <h4 class="side-bar__sub-header">
-                    Data sync
-                </h4>
-
-                <label class="side-bar__sync-label">
-                    Login:
-                    <input type="text" />
-                </label>
-                <label class="side-bar__sync-label">
-                    Password:
-                    <input type="password" />
-                </label>
-
-                <button class="side-bar__sync-button">
-                    synchonize
-                </button>
-
-            </div>
-
             <div class="side-bar__settings-wrapper">
+
                 <h4 class="side-bar__sub-header">
                     Background sample
                 </h4>
+
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.LightBackground"
                                Label="light:" ColorHex="@currentSettings.LightBackgroundColor" ColorPickerOpened="OpenColorPicker" />
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkBackground"
@@ -145,6 +143,7 @@
                 <h4 class="side-bar__sub-header">
                     Text sample
                 </h4>
+
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.LightText"
                                Label="light:" ColorHex="@currentSettings.LightTextColor" ColorPickerOpened="OpenColorPicker" />
                 <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkText"
@@ -175,11 +174,16 @@
     ColorScheme[] library = null;
     bool isLibraryLoaded => library != null;
 
+    bool isServerAvailable;
+    bool isLogedIn;
+    bool isSyncActive => isServerAvailable && isLogedIn;
+    string userName = "";
 
     bool isCollapsed = true;
     bool isLibraryCollapsed = true;
+    bool isSyncCollapsed = true;
     bool isSettingsCollapsed = true;
-    bool isSecondLevelCollapsed => isLibraryCollapsed && isSettingsCollapsed;
+    bool isSecondLevelCollapsed => isLibraryCollapsed && isSyncCollapsed && isSettingsCollapsed;
 
     string cssWrapper => isCollapsed ? "side-bar__wrapper side-bar__wrapper--collapsed" :
         isSecondLevelCollapsed ? "side-bar__wrapper" : "side-bar__wrapper side-bar__wrapper--small";
@@ -196,6 +200,9 @@
     string cssListItem => isSecondLevelCollapsed ? "side-bar__list-item" : "side-bar__list-item side-bar__list-item--small";
 
     string cssLibraryIcon => isLibraryCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
+
+    string cssSyncState => isSyncActive ? "side-bar__sync-state side-bar__sync-state--active" : "side-bar__sync-state";
+    string cssSyncIcon => isSyncCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
     string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
@@ -252,13 +259,6 @@
         library = null;
     }
 
-    void ChangeSettingsVisibility()
-    {
-        isSettingsCollapsed = !isSettingsCollapsed;
-        if (!isSettingsCollapsed)
-            isLibraryCollapsed = true;
-    }
-
     async Task ChangeLibraryVisibility()
     {
         isLibraryCollapsed = !isLibraryCollapsed;
@@ -266,7 +266,28 @@
         {
             if (!isLibraryLoaded)
                 await LoadLibrary();
+            isSyncCollapsed = true;
             isSettingsCollapsed = true;
+        }
+    }
+
+    void ChangeSyncVisibility()
+    {
+        isSyncCollapsed = !isSyncCollapsed;
+        if (!isSyncCollapsed)
+        {
+            isLibraryCollapsed = true;
+            isSettingsCollapsed = true;
+        }
+
+    }
+    void ChangeSettingsVisibility()
+    {
+        isSettingsCollapsed = !isSettingsCollapsed;
+        if (!isSettingsCollapsed)
+        {
+            isLibraryCollapsed = true;
+            isSyncCollapsed = true;
         }
     }
 
