@@ -124,7 +124,7 @@
 
         @if (!isSyncCollapsed)
         {
-            <SyncInfo @bind-IsLogedIn="isLogedIn" @bind-IsServerAvailable="isServerAvailable" />
+            <SyncInfo @bind-IsLoggedIn="isLoggedIn" @bind-IsServerAvailable="isServerAvailable" />
         }
 
         @if (!isSettingsCollapsed)
@@ -175,8 +175,8 @@
     bool isLibraryLoaded => library != null;
 
     bool isServerAvailable;
-    bool isLogedIn;
-    bool isSyncActive => isServerAvailable && isLogedIn;
+    bool isLoggedIn;
+    bool isSyncActive => isServerAvailable && isLoggedIn;
     string userName = "";
 
     bool isCollapsed = true;

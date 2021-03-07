@@ -18,26 +18,29 @@
         User
     </h4>
 
-    @if (IsLogedIn)
+    @if (IsLoggedIn)
     {
         <div class="sync-info__user-name">
             @UserName
         </div>
 
-        <button class="sync-info__login-button" @onclick="()=>user.LogOut()">
+        <button class="sync-info__login-button" @onclick="LogOut">
             log out
         </button>
     }
     else
     {
-        <EditForm class="sync-info__user-wrapper" Model="@user" OnSubmit="OnUserSubmited">
+        <EditForm class="sync-info__user-wrapper" Model="@user" OnSubmit="OnUserSubmit">
             <DataAnnotationsValidator />
+
+            <div class="@cssDisabledMask">
+            </div>
 
             <label class="sync-info__text-label">
                 Login:
                 <InputText @bind-Value="user.Login" />
             </label>
-            <ValidationMessage  For="() => user.Login" />
+            <ValidationMessage For="() => user.Login" />
 
             <label class="sync-info__text-label">
                 Password:
@@ -64,19 +67,19 @@
     public EventCallback<bool> IsServerAvailableChanged { get; set; }
 
     [Parameter]
-    public bool IsLogedIn
+    public bool IsLoggedIn
     {
-        get => user.IsLoggedId;
+        get => user.IsLoggedIn;
         set
         {
-            if (user.IsLoggedId == value)
+            if (user.IsLoggedIn == value)
                 return;
-            user.IsLoggedId = value;
-            IsLogedInChanged.InvokeAsync(value);
+            user.IsLoggedIn = value;
+            IsLoggedInChanged.InvokeAsync(value);
         }
     }
     [Parameter]
-    public EventCallback<bool> IsLogedInChanged { get; set; }
+    public EventCallback<bool> IsLoggedInChanged { get; set; }
 
     [Parameter]
     public string UserName
@@ -89,28 +92,52 @@
 
     SyncUser user = new SyncUser();
 
-    bool isSyncActive => IsServerAvailable && IsLogedIn;
-    string serverStatus => IsServerAvailable ? "online" : "offline";
+    bool isSyncActive => IsServerAvailable && IsLoggedIn;
 
+    string serverStatus => IsServerAvailable ? "online" : "offline";
     string cssServerIcon => IsServerAvailable ? "sync-info__server-icon sync-info__server-icon--online" : "sync-info__server-icon";
     string cssServerStatus => IsServerAvailable ? "sync-info__server-status sync-info__server-status--online" : "sync-info__server-status";
 
+    string cssDisabledMask => IsServerAvailable ? "sync-info__disabled-mask" : "sync-info__disabled-mask sync-info__disabled-mask--visible";
+
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("init");
         await CheckServerAvailability();
     }
 
 
     async Task CheckServerAvailability()
     {
-        var isAvailable = new Random().Next(0, 2) != 0;
+        var isAvailable = false;//new Random().Next(0, 2) != 0;
 
         IsServerAvailable = isAvailable;
         await IsServerAvailableChanged.InvokeAsync(IsServerAvailable);
 
         Console.WriteLine($"server: {serverStatus}");
     }
+
+    void OnUserSubmit(EditContext editContext)
+    {
+        bool isValid = editContext.Validate();
+        var model = editContext.Model as SyncUser;
+
+        if (isValid)
+            LogIn();
+        else
+            model.IsLoggedIn = false;
+    }
+
+    public void LogIn()
+    {
+        IsLoggedIn = true;
+    }
+
+    public void LogOut()
+    {
+        IsLoggedIn = false;
+        user.Password = null;
+    }
+
 
     public class SyncUser
     {
@@ -120,22 +147,6 @@
         public string Password { get; set; }
         public bool StayLoggedId { get; set; }
 
-        public bool IsLoggedId { get; set; }
-
-        public void LogOut()
-        {
-            IsLoggedId = false;
-            Password = null;
-        }
-    }
-
-    void OnUserSubmited(EditContext editContext)
-    {
-        bool isValid = editContext.Validate();
-        var model = editContext.Model as SyncUser;
-
-        model.IsLoggedId = isValid;
-
-        Console.WriteLine(model);
+        public bool IsLoggedIn { get; set; }
     }
 }

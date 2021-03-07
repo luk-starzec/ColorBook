@@ -315,11 +315,26 @@
 }
 
 .sync-info__user-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     width: 100%;
+}
+
+.sync-info__disabled-mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    opacity: .7;
+    display: none;
+
+    &--visible {
+        display: block;
+    }
 }
 
 .sync-info__text-label {
@@ -355,6 +370,7 @@
 
 .sync-info__user-wrapper .validation-message {
     color: red;
+    text-align: center;
     font-size: .7em;
     margin-bottom: .5em;
 }
@@ -370,6 +386,10 @@
 
     &:hover {
         background-color: #f0f0f0;
+    }
+
+    &:active {
+        transform: scale(.8);
     }
 }
 
