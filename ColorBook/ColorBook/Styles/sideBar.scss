@@ -375,6 +375,11 @@
     margin-bottom: .5em;
 }
 
+.sync-info__user-name{
+    margin: 1em 0 .5em 0;
+    color: #333333;
+}
+
 .sync-info__login-button {
     @include std-button;
     height: 2em;

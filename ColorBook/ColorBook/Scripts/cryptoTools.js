@@ -3,7 +3,7 @@
     /*
      Returns "[iv]:[data]"
      [iv] is hexadecimal
-     [data] is based64
+     [data] is base64
     */
     encryptData: async (value, key) => {
         const iv = cryptoTools.getRandomIv(12);
@@ -24,7 +24,7 @@
     /*
       Value format "[iv]:[data]"
       [iv] is hexadecimal
-      [data] is based64
+      [data] is base64
      */
     decryptData: async (value, key) => {
         const data = value.split(':');

@@ -1,0 +1,48 @@
+
+POST http://localhost:3000/settings/load
+Content-Type: application/json
+
+{
+    "login": "testowy1",
+    "pass": "111"
+}
+
+###
+
+POST http://localhost:3000/settings/load
+Content-Type: application/json
+
+{
+    "login": "testowy2",
+    "pass": "123"
+}
+
+###
+
+POST http://localhost:3000/settings/save
+Content-Type: application/json
+
+{
+    "login": "testowy1",
+    "pass": "111",
+    "lightBackgroundColor":"#ffffff",
+    "lightTextColor":"#ffffff",
+    "darkTextColor":"#333333",
+    "darkBackgroundColor":"#333333"
+    
+}
+
+###
+
+POST http://localhost:3000/settings/save
+Content-Type: application/json
+
+{
+    "login": "testowy2",
+    "pass": "123",
+    "lightBackgroundColor":"#ffffff",
+    "lightTextColor":"#ffffff",
+    "darkTextColor":"#666666",
+    "darkBackgroundColor":"#666666"
+    
+}

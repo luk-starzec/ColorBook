@@ -1,4 +1,5 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@inject ISyncService syncService
 
 <div class="sync-info__wrapper">
 
@@ -21,7 +22,7 @@
     @if (IsLoggedIn)
     {
         <div class="sync-info__user-name">
-            @UserName
+            @userModel.Login
         </div>
 
         <button class="sync-info__login-button" @onclick="LogOut">
@@ -30,7 +31,7 @@
     }
     else
     {
-        <EditForm class="sync-info__user-wrapper" Model="@user" OnSubmit="OnUserSubmit">
+        <EditForm class="sync-info__user-wrapper" Model="@userModel" OnSubmit="OnUserSubmit">
             <DataAnnotationsValidator />
 
             <div class="@cssDisabledMask">
@@ -38,20 +39,27 @@
 
             <label class="sync-info__text-label">
                 Login:
-                <InputText @bind-Value="user.Login" />
+                <InputText @bind-Value="userModel.Login" />
             </label>
-            <ValidationMessage For="() => user.Login" />
+            <ValidationMessage For="() => userModel.Login" />
 
             <label class="sync-info__text-label">
                 Password:
-                <InputPassword @bind-Password="user.Password" />
+                <InputPassword @bind-Password="userModel.Password" />
             </label>
-            <ValidationMessage For="() => user.Password" />
+            <ValidationMessage For="() => userModel.Password" />
 
             <label class="sync-info__check-label">
-                <InputCheckbox @bind-Value="user.StayLoggedId" />
+                <InputCheckbox @bind-Value="userModel.StayLoggedId" />
                 stay logged in
             </label>
+
+            @if (loginError)
+            {
+                <div class="validation-message">
+                    invalid login or password
+                </div>
+            }
 
             <input type="submit" class="sync-info__login-button" value="log in" />
 
@@ -67,32 +75,13 @@
     public EventCallback<bool> IsServerAvailableChanged { get; set; }
 
     [Parameter]
-    public bool IsLoggedIn
-    {
-        get => user.IsLoggedIn;
-        set
-        {
-            if (user.IsLoggedIn == value)
-                return;
-            user.IsLoggedIn = value;
-            IsLoggedInChanged.InvokeAsync(value);
-        }
-    }
+    public bool IsLoggedIn { get; set; }
     [Parameter]
     public EventCallback<bool> IsLoggedInChanged { get; set; }
 
-    [Parameter]
-    public string UserName
-    {
-        get => user.Login;
-        set => user.Login = value;
-    }
-    [Parameter]
-    public EventCallback<string> UserNameChanged { get; set; }
+    UserModel userModel = new UserModel();
 
-    SyncUser user = new SyncUser();
-
-    bool isSyncActive => IsServerAvailable && IsLoggedIn;
+    bool loginError = false;
 
     string serverStatus => IsServerAvailable ? "online" : "offline";
     string cssServerIcon => IsServerAvailable ? "sync-info__server-icon sync-info__server-icon--online" : "sync-info__server-icon";
@@ -103,50 +92,54 @@
     protected override async Task OnInitializedAsync()
     {
         await CheckServerAvailability();
+        userModel.Login = await syncService.GetLastUserNameAsync();
     }
 
 
     async Task CheckServerAvailability()
     {
-        var isAvailable = false;//new Random().Next(0, 2) != 0;
-
-        IsServerAvailable = isAvailable;
+        IsServerAvailable = await syncService.CheckServerAvailabilityAsync();
         await IsServerAvailableChanged.InvokeAsync(IsServerAvailable);
 
         Console.WriteLine($"server: {serverStatus}");
     }
 
-    void OnUserSubmit(EditContext editContext)
+    async Task OnUserSubmit(EditContext editContext)
     {
         bool isValid = editContext.Validate();
-        var model = editContext.Model as SyncUser;
+        var model = editContext.Model as UserModel;
 
         if (isValid)
-            LogIn();
+            await LogIn(model.StayLoggedId);
         else
-            model.IsLoggedIn = false;
+            IsLoggedIn = false;
+        await IsLoggedInChanged.InvokeAsync(IsLoggedIn);
     }
 
-    public void LogIn()
+    async Task LogIn(bool stayLoggedId)
     {
-        IsLoggedIn = true;
+        var user = new User(userModel.Login, userModel.Password);
+        IsLoggedIn = await syncService.LogInAsync(user, stayLoggedId);
+        loginError = !IsLoggedIn;
     }
 
-    public void LogOut()
+    async Task LogOut()
     {
+        syncService.LogOut();
+
         IsLoggedIn = false;
-        user.Password = null;
+        await IsLoggedInChanged.InvokeAsync(IsLoggedIn);
+
+        userModel.Password = null;
     }
 
 
-    public class SyncUser
+    public class UserModel
     {
         [Required]
         public string Login { get; set; }
         [Required]
         public string Password { get; set; }
         public bool StayLoggedId { get; set; }
-
-        public bool IsLoggedIn { get; set; }
     }
 }

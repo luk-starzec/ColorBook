@@ -1,0 +1,40 @@
+
+POST http://localhost:3000/users/validate
+Content-Type: application/json
+
+{
+    "login": "testowy1",
+    "pass": "111"
+}
+
+###
+
+POST http://localhost:3000/users/validate
+Content-Type: application/json
+
+{
+    "login": "testowy2",
+    "pass": "222"
+}
+
+###
+
+POST http://localhost:3000/users/new
+Content-Type: application/json
+
+{
+    "token": "test-token-01",
+    "login": "testowy1",
+    "pass": "111"
+}
+
+###
+
+POST http://localhost:3000/users/new
+Content-Type: application/json
+
+{
+    "token": "test-token-01",
+    "login": "testowy2",
+    "pass": "123"
+}

@@ -24,8 +24,8 @@ module.exports = {
             },
             {
                 test: /\.(scss|css)$/,
-                use: ['style-loader', 'css-loader?url=false', 'sass-loader']
-                //use: [MiniCssExtractPlugin.loader, 'css-loader?url=false', 'sass-loader']
+                //use: ['style-loader', 'css-loader?url=false', 'sass-loader']
+                use: [MiniCssExtractPlugin.loader, 'css-loader?url=false', 'sass-loader']
             }
         ]
     },

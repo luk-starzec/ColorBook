@@ -11,12 +11,15 @@ namespace ColorBook.Services
     public class SettingsService : ISettingsService
     {
         private readonly IJSRuntime js;
+        private readonly ISyncService syncService;
         private readonly Settings defaultSettings;
         private Settings currentSettings = null;
 
-        public SettingsService(IJSRuntime js)
+        public SettingsService(IJSRuntime js, ISyncService syncService)
         {
             this.js = js;
+            this.syncService = syncService;
+            syncService.SyncAvailable += async () => await SyncSettings();
 
             defaultSettings = new Settings
             {
@@ -27,11 +30,25 @@ namespace ColorBook.Services
             };
         }
 
+        private async Task SyncSettings()
+        {
+            var serverSettings = await syncService.LoadSettingsAsync();
+            if (serverSettings is not null)
+                currentSettings = serverSettings;
+        }
+
         public async Task<Settings> GetCurrentSettingsAsync()
         {
             if (currentSettings == null)
             {
-                currentSettings = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
+                var serverSettings = await syncService.LoadSettingsAsync();
+                var localSettings = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
+
+                // TODO decyzja wg daty modyfikacji
+                if (serverSettings is not null)
+                    currentSettings = serverSettings;
+                else
+                    currentSettings = localSettings;
 
                 if (currentSettings == null)
                     currentSettings = new Settings
@@ -59,6 +76,7 @@ namespace ColorBook.Services
             currentSettings.DarkTextColor = settings.DarkTextColor;
 
             await js.InvokeVoidAsync($"localDataStore.put", "settings", "current", settings);
+            await syncService.SaveSettingsAsync(settings);
         }
 
     }

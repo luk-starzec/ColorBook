@@ -228,7 +228,7 @@ $spacer-width: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(var(--items-count+1)*$color-width + (var(--items-count))*$spacer-width);
+    width: calc(var(--items-count+1) * 4em + (var(--items-count)) * 1em);
     max-width: 90vw;
     height: 3em;
     border-radius: .3em;

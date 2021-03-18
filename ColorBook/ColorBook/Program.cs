@@ -19,10 +19,14 @@ namespace ColorBook
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddSingleton<ISettingsService, SettingsService>();
-            builder.Services.AddSingleton<ISchemeService, SchemeService>();
-            builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
-            builder.Services.AddSingleton<ISyncService, SyncService>();
+            builder.Services.AddHttpClient<ApiHttpClient>(client => client.BaseAddress = new Uri("http://localhost:3000"));
+
+            builder.Services.AddScoped<ISettingsService, SettingsService>();
+            builder.Services.AddScoped<ISchemeService, SchemeService>();
+            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+            builder.Services.AddScoped<ISyncService, SyncService>();
+
+            builder.Logging.SetMinimumLevel(LogLevel.Warning);
 
             await builder.Build().RunAsync();
         }
