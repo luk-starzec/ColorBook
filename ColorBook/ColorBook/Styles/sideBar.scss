@@ -236,7 +236,8 @@
 }
 
 .side-bar__sub-header,
-.sync-info__header {
+.sync-menu__header,
+.settings-menu__sub-header {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -277,7 +278,7 @@
     }
 }
 
-.sync-info__wrapper {
+.sync-menu__wrapper {
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -285,7 +286,7 @@
     justify-content: flex-end;
 }
 
-.sync-info__server-wrapper {
+.sync-menu__server-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -293,7 +294,7 @@
     width: 100%;
 }
 
-.sync-info__server-icon {
+.sync-menu__server-icon {
     width: 1em;
     height: 1em;
     border-radius: 50%;
@@ -306,7 +307,7 @@
     }
 }
 
-.sync-info__server-status {
+.sync-menu__server-status {
     color: #999999;
 
     &--online {
@@ -314,7 +315,7 @@
     }
 }
 
-.sync-info__user-wrapper {
+.sync-menu__user-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -322,7 +323,7 @@
     width: 100%;
 }
 
-.sync-info__disabled-mask {
+.sync-menu__disabled-mask {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -337,7 +338,7 @@
     }
 }
 
-.sync-info__text-label {
+.sync-menu__text-label {
     display: inline-block;
     width: 12em;
     margin: .5em auto;
@@ -355,7 +356,7 @@
     }
 }
 
-.sync-info__check-label {
+.sync-menu__check-label {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -368,19 +369,19 @@
     }
 }
 
-.sync-info__user-wrapper .validation-message {
+.sync-menu__user-wrapper .validation-message {
     color: red;
     text-align: center;
     font-size: .7em;
     margin-bottom: .5em;
 }
 
-.sync-info__user-name{
+.sync-menu__user-name {
     margin: 1em 0 .5em 0;
     color: #333333;
 }
 
-.sync-info__login-button {
+.sync-menu__login-button {
     @include std-button;
     height: 2em;
     margin: 1em;
@@ -398,13 +399,34 @@
     }
 }
 
-.side-bar__settings-wrapper {
+.settings-menu__settings-wrapper {
     background-color: #ffffff;
     align-self: end;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1em;
+}
+
+.settings-menu__restore-button {
+    @include std-button;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2em;
+    margin: 1.5em 1em;
+    padding: 0 1em;
+    background-color: #fafafa;
+    color: #666666;
+    border-radius: 2em;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    &:active {
+        transform: scale(.9);
+    }
 }
 
 .settings-color__wrapper {
@@ -438,25 +460,4 @@
     background-color: #ffffff;
     color: #666666;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, .05);
-}
-
-.side-bar__restore-button {
-    @include std-button;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2em;
-    margin: 1.5em 1em;
-    padding: 0 1em;
-    background-color: #fafafa;
-    color: #666666;
-    border-radius: 2em;
-
-    &:hover {
-        background-color: #f0f0f0;
-    }
-
-    &:active {
-        transform: scale(.9);
-    }
 }

@@ -1,5 +1,4 @@
 ﻿@using BlazorColorPicker
-@inject ISettingsService settingsService;
 @inject ISchemeService schemeService;
 @inject IJSRuntime JS
 @inject ISyncService syncService;
@@ -124,43 +123,19 @@
 
         @if (!isSyncCollapsed)
         {
-            <SyncInfo />
+            <SyncMenu />
         }
 
         @if (!isSettingsCollapsed)
         {
-            <div class="side-bar__settings-wrapper">
-
-                <h4 class="side-bar__sub-header">
-                    Background sample
-                </h4>
-
-                <SettingsColor SettingsColorType="@EnumSettingsColorType.LightBackground"
-                               Label="light:" ColorHex="@currentSettings.LightBackgroundColor" ColorPickerOpened="OpenColorPicker" />
-                <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkBackground"
-                               Label="dark:" ColorHex="@currentSettings.DarkBackgroundColor" ColorPickerOpened="OpenColorPicker" />
-
-                <h4 class="side-bar__sub-header">
-                    Text sample
-                </h4>
-
-                <SettingsColor SettingsColorType="@EnumSettingsColorType.LightText"
-                               Label="light:" ColorHex="@currentSettings.LightTextColor" ColorPickerOpened="OpenColorPicker" />
-                <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkText"
-                               Label="dark:" ColorHex="@currentSettings.DarkTextColor" ColorPickerOpened="OpenColorPicker" />
-
-                <button class="side-bar__restore-button" @onclick="RestoreDefaults">
-                    <img src="/assets/restore-icon.svg" />
-                    Restore defaults
-                </button>
-            </div>
+            <SettingsMenu @ref="settingsMenuRef" ColorPickerOpen="ColorPickerOpen" />
         }
 
     </div>
 
 </div>
 
-<ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ClosedColorPicker" MyColor="@colorPickerColor" />
+<ColorPicker Title="Choose color" IsOpened="isColorPickerOpened" Closed="ColorPickerClosed" MyColor="@colorPickerColor" />
 
 <div class="@cssMask" @onclick="HideMenu"></div>
 
@@ -170,7 +145,6 @@
     [Parameter]
     public EventCallback<ColorScheme> OnSchemeLoad { get; set; }
 
-    Settings currentSettings;
     ColorScheme[] library = null;
     bool isLibraryLoaded => library != null;
 
@@ -203,11 +177,8 @@
 
     string cssSettingsIcon => isSettingsCollapsed ? "side-bar__right-icon" : "side-bar__right-icon side-bar__right-icon--opened";
 
-
     protected override async Task OnInitializedAsync()
     {
-        currentSettings = await settingsService.GetCurrentSettingsAsync();
-        settingsService.CurrentSettingsChanged += SetCurrentSettings;
         isSyncActive = await syncService.GetSyncAvailabilityAsync();
         syncService.SyncAvailabilityChanged += SetIsSyncActive;
     }
@@ -215,12 +186,6 @@
     void SetIsSyncActive(bool isActive)
     {
         isSyncActive = isActive;
-        StateHasChanged();
-    }
-
-    void SetCurrentSettings(Settings newSettings)
-    {
-        currentSettings = newSettings;
         StateHasChanged();
     }
 
@@ -310,60 +275,20 @@
             .ToArray();
     }
 
-    async Task RestoreDefaults()
-    {
-        await settingsService.RestoreDefaultSettings();
-        currentSettings = await settingsService.GetCurrentSettingsAsync();
-    }
-
-
+    SettingsMenu settingsMenuRef;
     bool isColorPickerOpened = false;
     string colorPickerColor;
-    EnumSettingsColorType settingsColorType;
 
-    void OpenColorPicker(EnumSettingsColorType colorType)
+    void ColorPickerOpen(string color)
     {
-        settingsColorType = colorType;
-        colorPickerColor = GetSettingsColor(colorType);
+        colorPickerColor = color;
         isColorPickerOpened = true;
     }
 
-    async Task ClosedColorPicker(string value)
+    async Task ColorPickerClosed(string color)
     {
-        SetSettingsColor(settingsColorType, value);
+        await settingsMenuRef.ColorPickerClosed(color);
         isColorPickerOpened = false;
-        await settingsService.SaveSettingsAsync(currentSettings);
     }
 
-    string GetSettingsColor(EnumSettingsColorType settingsColorType)
-    {
-        return settingsColorType switch
-        {
-            EnumSettingsColorType.LightBackground => currentSettings.LightBackgroundColor,
-            EnumSettingsColorType.DarkBackground => currentSettings.DarkBackgroundColor,
-            EnumSettingsColorType.LightText => currentSettings.LightTextColor,
-            EnumSettingsColorType.DarkText => currentSettings.DarkTextColor,
-            _ => string.Empty,
-        };
-    }
-    void SetSettingsColor(EnumSettingsColorType settingsColorType, string color)
-    {
-        switch (settingsColorType)
-        {
-            case EnumSettingsColorType.LightBackground:
-                currentSettings.LightBackgroundColor = color;
-                break;
-            case EnumSettingsColorType.DarkBackground:
-                currentSettings.DarkBackgroundColor = color;
-                break;
-            case EnumSettingsColorType.LightText:
-                currentSettings.LightTextColor = color;
-                break;
-            case EnumSettingsColorType.DarkText:
-                currentSettings.DarkTextColor = color;
-                break;
-            default:
-                break;
-        }
-    }
 }

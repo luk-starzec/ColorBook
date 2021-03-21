@@ -8,14 +8,9 @@
 
     MarkupString svg;
 
-    protected override async Task OnInitializedAsync()
-    {
-        svg = await GetSvg(SvgUrl);
-    }
-    protected override async Task OnParametersSetAsync()
-    {
-        svg = await GetSvg(SvgUrl);
-    }
+    protected override async Task OnInitializedAsync() => svg = await GetSvg(SvgUrl);
+
+    protected override async Task OnParametersSetAsync() => svg = await GetSvg(SvgUrl);
 
     private async Task<MarkupString> GetSvg(string url)
     {
@@ -28,5 +23,4 @@
             return new MarkupString();
         }
     }
-
 }

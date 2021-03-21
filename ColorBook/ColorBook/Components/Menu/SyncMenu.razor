@@ -1,13 +1,13 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @inject ISyncService syncService
 
-<div class="sync-info__wrapper">
+<div class="sync-menu__wrapper">
 
-    <h4 class="sync-info__header">
+    <h4 class="sync-menu__header">
         Server
     </h4>
 
-    <div class="sync-info__server-wrapper">
+    <div class="sync-menu__server-wrapper">
 
         <div class="@cssServerIcon"></div>
 
@@ -15,41 +15,41 @@
 
     </div>
 
-    <h4 class="sync-info__header">
+    <h4 class="sync-menu__header">
         User
     </h4>
 
     @if (isLoggedIn)
     {
-        <div class="sync-info__user-name">
+        <div class="sync-menu__user-name">
             @user.Login
         </div>
 
-        <button class="sync-info__login-button" @onclick="LogOut">
+        <button class="sync-menu__login-button" @onclick="LogOut">
             log out
         </button>
     }
     else
     {
-        <EditForm class="sync-info__user-wrapper" Model="@user" OnValidSubmit="OnUserSubmit">
+        <EditForm class="sync-menu__user-wrapper" Model="@user" OnValidSubmit="OnUserSubmit">
             <DataAnnotationsValidator />
 
             <div class="@cssDisabledMask">
             </div>
 
-            <label class="sync-info__text-label">
+            <label class="sync-menu__text-label">
                 Login:
                 <InputText @bind-Value="user.Login" />
             </label>
             <ValidationMessage For="() => user.Login" />
 
-            <label class="sync-info__text-label">
+            <label class="sync-menu__text-label">
                 Password:
                 <InputPassword @bind-Password="user.Password" />
             </label>
             <ValidationMessage For="() => user.Password" />
 
-            <label class="sync-info__check-label">
+            <label class="sync-menu__check-label">
                 <InputCheckbox @bind-Value="user.StayLoggedId" />
                 stay logged in
             </label>
@@ -61,7 +61,7 @@
                 </div>
             }
 
-            <input type="submit" class="sync-info__login-button" value="log in" />
+            <input type="submit" class="sync-menu__login-button" value="log in" />
 
         </EditForm>
     }
@@ -76,10 +76,10 @@
     bool invalidUser = false;
 
     string serverStatus => isServerAvailable ? "online" : "offline";
-    string cssServerIcon => isServerAvailable ? "sync-info__server-icon sync-info__server-icon--online" : "sync-info__server-icon";
-    string cssServerStatus => isServerAvailable ? "sync-info__server-status sync-info__server-status--online" : "sync-info__server-status";
+    string cssServerIcon => isServerAvailable ? "sync-menu__server-icon sync-menu__server-icon--online" : "sync-menu__server-icon";
+    string cssServerStatus => isServerAvailable ? "sync-menu__server-status sync-menu__server-status--online" : "sync-menu__server-status";
 
-    string cssDisabledMask => isServerAvailable ? "sync-info__disabled-mask" : "sync-info__disabled-mask sync-info__disabled-mask--visible";
+    string cssDisabledMask => isServerAvailable ? "sync-menu__disabled-mask" : "sync-menu__disabled-mask sync-menu__disabled-mask--visible";
 
     protected override async Task OnInitializedAsync()
     {
