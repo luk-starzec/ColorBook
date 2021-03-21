@@ -1,8 +1,8 @@
 ﻿@using BlazorColorPicker
 @inject ISettingsService settingsService;
 @inject ISchemeService schemeService;
-@inject ILocalStorageService localStorageService;
 @inject IJSRuntime JS
+@inject ISyncService syncService;
 
 <div class="@cssWrapper">
 
@@ -124,7 +124,7 @@
 
         @if (!isSyncCollapsed)
         {
-            <SyncInfo @bind-IsLoggedIn="isLoggedIn" @bind-IsServerAvailable="isServerAvailable" />
+            <SyncInfo />
         }
 
         @if (!isSettingsCollapsed)
@@ -174,10 +174,7 @@
     ColorScheme[] library = null;
     bool isLibraryLoaded => library != null;
 
-    bool isServerAvailable;
-    bool isLoggedIn;
-    bool isSyncActive => isServerAvailable && isLoggedIn;
-    string userName = "";
+    bool isSyncActive;
 
     bool isCollapsed = true;
     bool isLibraryCollapsed = true;
@@ -210,6 +207,21 @@
     protected override async Task OnInitializedAsync()
     {
         currentSettings = await settingsService.GetCurrentSettingsAsync();
+        settingsService.CurrentSettingsChanged += SetCurrentSettings;
+        isSyncActive = await syncService.GetSyncAvailabilityAsync();
+        syncService.SyncAvailabilityChanged += SetIsSyncActive;
+    }
+
+    void SetIsSyncActive(bool isActive)
+    {
+        isSyncActive = isActive;
+        StateHasChanged();
+    }
+
+    void SetCurrentSettings(Settings newSettings)
+    {
+        currentSettings = newSettings;
+        StateHasChanged();
     }
 
     async Task CreateScheme()

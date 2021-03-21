@@ -107,13 +107,11 @@
     [Parameter]
     public EventCallback<string> ColorHexChanged { get; set; }
 
-    ImagePreview imagePreviewRef;
-
     Settings settings;
 
     bool isDisabled => string.IsNullOrEmpty(ColorHex);
-
     bool isFullView = false;
+    bool isColorPickerOpened = false;
 
     string cssContent => isDisabled ? "color-info__content color-info__content--hidden" : "color-info__content";
     string cssView => isFullView ? "color-info__view color-info__view--full" : "color-info__view";
@@ -121,26 +119,27 @@
     string cssButtonDetalis => isFullView ? "color-info__switch-view color-info__switch-view--full" : "color-info__switch-view";
     string styleSampleColor => $"background-color: {ColorHex};";
 
+    ImagePreview imagePreviewRef;
     IBrowserFile previewFile = null;
     EnumColorSelectionType colorSelectionType = EnumColorSelectionType.Palette;
 
     bool isImagePreview => previewFile != null;
 
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadSettings();
+        settings = await settingsService.GetCurrentSettingsAsync();
+        settingsService.CurrentSettingsChanged += SetSettings;
     }
 
-    async Task LoadSettings() => settings = await settingsService.GetCurrentSettingsAsync();
 
-    async Task ChangeView()
+    void SetSettings(Settings newSettings)
     {
-        isFullView = !isFullView;
-        if (isFullView)
-            await LoadSettings();
+        settings = newSettings;
+        StateHasChanged();
     }
 
-    bool isColorPickerOpened = false;
+    void ChangeView() => isFullView = !isFullView;
 
     void ShowColorPicker()
     {

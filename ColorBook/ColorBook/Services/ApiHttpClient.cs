@@ -18,7 +18,7 @@ namespace ColorBook.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<bool> CheckAvailabilityAsync()
+        public async Task<bool> CheckServerAvailabilityAsync()
         {
             try
             {
@@ -58,6 +58,7 @@ namespace ColorBook.Services
                     settings.DarkBackgroundColor,
                     settings.LightTextColor,
                     settings.DarkTextColor,
+                    settings.LastUpdate,
                 };
                 var data = GetData(model);
 
@@ -78,9 +79,10 @@ namespace ColorBook.Services
             {
                 var data = GetData(user);
 
-                var result = await httpClient.PostAsync("/settings/save", data);
+                var result = await httpClient.PostAsync("/settings/load", data);
+                result.EnsureSuccessStatusCode();
                 var json = await result.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Settings>(json);
+                return JsonSerializer.Deserialize<Settings>(json, serializerOptions);
             }
             catch (Exception ex)
             {
@@ -90,15 +92,16 @@ namespace ColorBook.Services
 
         private StringContent GetData<T>(T model)
         {
-            var serializerOptions = new JsonSerializerOptions
+            var json = JsonSerializer.Serialize(model, serializerOptions);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            return data;
+        }
+
+        private JsonSerializerOptions serializerOptions
+            => new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
-            var json = JsonSerializer.Serialize(model, serializerOptions);
-            Console.WriteLine(json);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-            return data;
-        }
     }
 }

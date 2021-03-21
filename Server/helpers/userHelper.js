@@ -6,6 +6,8 @@ function getHash(pass) {
 
 async function getUser(req, res, next) {
   const login = req.body.login;
+  if (login == null) return res.sendStatus(404);
+
   let user;
   try {
     const hash = getHash(req.body.pass);

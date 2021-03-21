@@ -27,6 +27,7 @@ router.post("/save", userHelper.getUser, async (req, res) => {
     setting.darkBackgroundColor = req.body.darkBackgroundColor;
     setting.lightTextColor = req.body.lightTextColor;
     setting.darkTextColor = req.body.darkTextColor;
+    setting.lastUpdate = req.body.lastUpdate;
 
     const newSetting = await setting.save();
     res.json(newSetting);

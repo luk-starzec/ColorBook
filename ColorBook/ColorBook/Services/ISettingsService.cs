@@ -8,6 +8,8 @@ namespace ColorBook.Services
 {
     interface ISettingsService
     {
+        event Action<Settings> CurrentSettingsChanged;
+
         Task<Settings> GetCurrentSettingsAsync();
         Settings GetDefaultSettings();
         Task RestoreDefaultSettings();

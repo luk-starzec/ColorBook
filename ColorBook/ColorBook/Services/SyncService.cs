@@ -13,9 +13,10 @@ namespace ColorBook.Services
 
         private readonly string storageKeyLastUserName = "lastUserName";
 
-        public event Action SyncAvailable;
+        private User currentUser = null;
 
-        public User CurrentUser { get; set; }
+        public event Action<bool> SyncAvailabilityChanged;
+
 
         public SyncService(ILocalStorageService localStorageService, ApiHttpClient apiHttpClient)
         {
@@ -23,15 +24,35 @@ namespace ColorBook.Services
             this.apiHttpClient = apiHttpClient;
         }
 
-        public async Task<bool> CheckServerAvailabilityAsync()
+
+        private bool isServerAvailable = false;
+        private DateTime lastServerAvailabilityCheck = new DateTime();
+        private int serverAvailabilityCheckInterval = 10;
+        public async Task<bool> GetServerAvailabilityAsync()
         {
-            return await apiHttpClient.CheckAvailabilityAsync();
+            if (lastServerAvailabilityCheck.AddSeconds(serverAvailabilityCheckInterval) < DateTime.Now)
+            {
+                isServerAvailable = await apiHttpClient.CheckServerAvailabilityAsync();
+                lastServerAvailabilityCheck = DateTime.Now;
+
+                SyncAvailabilityChanged?.Invoke(await GetSyncAvailabilityAsync());
+            }
+            return isServerAvailable;
         }
 
-        public async Task<string> GetLastUserNameAsync()
+
+        public async Task<bool> GetSyncAvailabilityAsync()
         {
-            return await localStorageService.GetItem<string>(storageKeyLastUserName);
+            return await GetServerAvailabilityAsync()
+                && await GetIsLoggedInAsync();
         }
+
+        public Task<bool> GetIsLoggedInAsync() => Task.FromResult(currentUser is not null);
+
+        public async Task<string> GetLastUserNameAsync()
+            => await localStorageService.GetItem<string>(storageKeyLastUserName);
+
+        public User GetLoggedUser() => currentUser;
 
         public async Task<bool> LogInAsync(User user, bool stayLoggedId)
         {
@@ -40,7 +61,7 @@ namespace ColorBook.Services
             if (!isValid)
                 return false;
 
-            CurrentUser = user;
+            currentUser = user;
 
             await localStorageService.SetItem(storageKeyLastUserName, user.Login);
 
@@ -49,24 +70,28 @@ namespace ColorBook.Services
 
             }
 
-            SyncAvailable?.Invoke(null, null);
+            SyncAvailabilityChanged?.Invoke(true);
 
             return true;
         }
 
-        public void LogOut()
+        public Task LogOutAsync()
         {
-            CurrentUser = null;
+            currentUser = null;
+            SyncAvailabilityChanged?.Invoke(false);
+            return Task.CompletedTask;
         }
+
 
         public async Task SaveSettingsAsync(Settings settings)
         {
-            var isSuccess = await apiHttpClient.SaveSettingsAsync(CurrentUser, settings);
+            var isSuccess = await apiHttpClient.SaveSettingsAsync(currentUser, settings);
         }
 
         public async Task<Settings> LoadSettingsAsync()
         {
-            return await apiHttpClient.LoadSettingsAsync(CurrentUser);
+            return await apiHttpClient.LoadSettingsAsync(currentUser);
         }
+
     }
 }

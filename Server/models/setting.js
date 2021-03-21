@@ -21,6 +21,9 @@ const settingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lastUpdate: {
+    type: Date
+  }
 });
 
 module.exports = mongoose.model("Setting", settingSchema);

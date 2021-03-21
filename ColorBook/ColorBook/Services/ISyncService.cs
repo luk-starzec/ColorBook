@@ -8,13 +8,16 @@ namespace ColorBook.Services
 {
     public interface ISyncService
     {
-        event Action SyncAvailable;
-        User CurrentUser { get; set; }
+        event Action<bool> SyncAvailabilityChanged;
+        Task<bool> GetSyncAvailabilityAsync();
 
-        Task<bool> CheckServerAvailabilityAsync();
+        Task<bool> GetServerAvailabilityAsync();
+        Task<bool> GetIsLoggedInAsync();
+
+        User GetLoggedUser();
 
         Task<bool> LogInAsync(User user, bool stayLoggedId);
-        void LogOut();
+        Task LogOutAsync();
         Task<string> GetLastUserNameAsync();
 
         Task SaveSettingsAsync(Settings settings);

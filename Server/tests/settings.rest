@@ -28,7 +28,8 @@ Content-Type: application/json
     "lightBackgroundColor":"#ffffff",
     "lightTextColor":"#ffffff",
     "darkTextColor":"#333333",
-    "darkBackgroundColor":"#333333"
+    "darkBackgroundColor":"#333333",
+    "lastUpdate": "2021-03-21T11:50:45.463Z"
     
 }
 

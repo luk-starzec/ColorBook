@@ -1,4 +1,6 @@
-﻿namespace ColorBook.Models
+﻿using System;
+
+namespace ColorBook.Models
 {
     public class Settings
     {
@@ -6,5 +8,6 @@
         public string DarkBackgroundColor { get; set; }
         public string LightTextColor { get; set; }
         public string DarkTextColor { get; set; }
+        public DateTime? LastUpdate { get; set; }
     }
 }
