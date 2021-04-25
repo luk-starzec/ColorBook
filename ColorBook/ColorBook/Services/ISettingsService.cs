@@ -10,9 +10,11 @@ namespace ColorBook.Services
     {
         event Action<Settings> CurrentSettingsChanged;
 
+
         Task<Settings> GetCurrentSettingsAsync();
         Settings GetDefaultSettings();
         Task RestoreDefaultSettings();
+        Task PullSettingsFromServer();
         Task SaveSettingsAsync();
         Task SaveSettingsAsync(Settings settings);
 

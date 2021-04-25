@@ -73,20 +73,29 @@ namespace ColorBook.Services
             CurrentSettingsChanged?.Invoke(currentSettings);
         }
 
+        public async Task PullSettingsFromServer()
+        {
+            var serverSettings = await syncService.LoadSettingsAsync();
+            if (serverSettings == null)
+                return;
+
+            await SaveSettingsAsync(serverSettings);
+        }
+
 
         private async Task SyncSettings(bool isAvailable)
         {
-            if (!isAvailable)
-                return;
+            //if (!isAvailable)
+            //    return;
 
-            var serverSettings = await syncService.LoadSettingsAsync();
+            //var serverSettings = await syncService.LoadSettingsAsync();
 
-            currentSettings = GetNewerSettings(serverSettings, currentSettings);
+            //currentSettings = GetNewerSettings(serverSettings, currentSettings);
 
-            if (currentSettings != serverSettings)
-                await syncService.SaveSettingsAsync(currentSettings);
+            //if (currentSettings != serverSettings)
+            //    await syncService.SaveSettingsAsync(currentSettings);
 
-            CurrentSettingsChanged?.Invoke(currentSettings);
+            //CurrentSettingsChanged?.Invoke(currentSettings);
         }
 
         private Settings GetNewerSettings(Settings primary, Settings secondary)
@@ -99,6 +108,5 @@ namespace ColorBook.Services
 
             return primary?.LastUpdate > secondary?.LastUpdate ? primary : secondary;
         }
-
     }
 }

@@ -406,23 +406,27 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
+    padding-bottom: 1.5em;
 }
 
-.settings-menu__restore-button {
+.settings-menu__spacer {
+    height: 1em;
+    margin: 0;
+    background-color: #fcfcfc;
+    align-self: stretch;
+}
+
+.settings-menu__button {
     @include std-button;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 2em;
-    margin: 1.5em 1em;
+    margin: .2em 1em;
     padding: 0 1em;
     background-color: #fafafa;
     color: #666666;
     border-radius: 2em;
-
-    &:hover {
-        background-color: #f0f0f0;
-    }
 
     &:active {
         transform: scale(.9);
