@@ -1,6 +1,8 @@
 ﻿
 <div class="color-fit-text__wrapper" style="@style">
-    Abc
+    <svg viewBox="0 0 50 20">
+        <text x="10" y="15">Abc</text>
+    </svg>
 </div>
 
 @code {
@@ -9,6 +11,6 @@
     [Parameter]
     public string TextColor { get; set; }
 
-    string style => $"background-color: {BackgroundColor}; color: {TextColor};";
+    string style => $"background-color: {BackgroundColor}; fill: {TextColor};";
 
 }

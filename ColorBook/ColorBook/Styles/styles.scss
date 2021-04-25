@@ -6,6 +6,10 @@
     font-family: 'Poppins', sans-serif;
 }
 
+body {
+    background-color: #fafafa;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -29,4 +33,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 1200px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 1em;
+    background-color: #ffffff;
+
+
+    @media (max-device-width: $breakpoint-width) {
+        padding: 1em 0;
+    }
 }

@@ -11,10 +11,6 @@ input {
     border-radius: 0 .3em .3em 0;
     background-color: #fcfcfc;
 
-    &:hover {
-        background-color: #e5e5e5;
-    }
-
     &:active {
         .button-copy__icon {
             transform: scale(.8);

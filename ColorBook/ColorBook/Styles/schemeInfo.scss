@@ -8,13 +8,14 @@ $spacer-width: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .scheme-header__wrapper {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    @include width-wrapper;
+    width: 100%;
     height: 4em;
     background-color: #fafafa;
     padding: 0 1em;
@@ -211,6 +212,7 @@ $spacer-width: 1em;
     align-items: center;
     background-color: #fcfcfc;
     border-radius: .3em;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
 
     &:hover {
         background-color: #f0f0f0;
@@ -280,7 +282,7 @@ $spacer-width: 1em;
 }
 
 .scheme-footer__wrapper {
-    @include width-wrapper;
+    width: 100%;
     display: flex;
     justify-content: center;
     margin: .8em 0;
@@ -300,6 +302,7 @@ $spacer-width: 1em;
     background-color: #fcfcfc;
     border-radius: 999px;
     text-decoration: none;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
 
     & span {
         flex-grow: 1;

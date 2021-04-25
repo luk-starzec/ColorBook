@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 1em;
+    width: 100%;
 }
 
 .color-info__disabled-info {
@@ -18,7 +18,6 @@
     color: #999999;
     background-color: #fafafa;
     gap: 1em;
-    @include width-wrapper;
 
     img {
         opacity: .1;
@@ -29,6 +28,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 
     &--hidden {
         display: none;
@@ -44,11 +44,17 @@
 }
 
 .color-info__color-section {
-    @include width-wrapper;
+    width: 100%;
+}
+
+.color-info__view-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafafa;
 }
 
 .color-info__view {
-    background-color: #fafafa;
     display: grid;
     grid-template-columns: minmax(auto, 4em) minmax(auto, 11em) 12em;
     grid-template-rows: 3em;
@@ -158,7 +164,9 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0 1.5em;
+    gap: 0 1em;
+    padding: 0 1em;
+    background-color: #ffffff;
 }
 
 .color-info__color-fit-group {
@@ -171,16 +179,16 @@
 }
 
 .color-fit-text__wrapper {
-    @include color-fit-wrapper
+    @include color-fit-wrapper;
 }
 
 .color-fit-border__wrapper {
-    @include color-fit-wrapper
+    @include color-fit-wrapper;
 }
 
 .color-fit-border__border {
-    width: 1.5em;
-    height: 1.5em;
+    width: 50%;
+    height: 50%;
     border-width: 1px;
     border-style: solid;
 }
@@ -189,6 +197,8 @@
     grid-area: bars;
     justify-self: stretch;
     margin-top: 1em;
+    padding: 1em 1em 0 1em;
+    background-color: #ffffff;
 
     @media (max-device-width: $breakpoint-width) {
         display: flex;

@@ -1,5 +1,5 @@
 ﻿
-$breakpoint-width: 400px;
+$breakpoint-width: 420px;
 
 @mixin focus-outline {
     outline: none;
@@ -15,6 +15,10 @@ $breakpoint-width: 400px;
     background: none;
     cursor: pointer;
     @include focus-outline;
+
+    &:hover {
+        background-color: #e5e5e5;
+    }
 }
 
 @mixin color-input-wrapper {
@@ -62,6 +66,8 @@ $breakpoint-width: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
+    resize: both;
+    overflow: hidden;
 }
 
 @mixin page-mask {
@@ -111,7 +117,8 @@ $breakpoint-width: 400px;
         stroke-width: 1;
     }
 }
-
+/*
 @mixin width-wrapper {
     width: clamp(19em, 90vw, 31em);
 }
+*/
