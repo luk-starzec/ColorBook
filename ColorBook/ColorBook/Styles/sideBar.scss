@@ -352,7 +352,7 @@
         border: solid 1px #f5f5f5;
         border-radius: .3em;
         background-color: #ffffff;
-        box-shadow: 2px 2px 4px rgba(0, 0, 0, .05);
+        @include shadow-light;
     }
 }
 
@@ -389,6 +389,7 @@
     background-color: #fafafa;
     color: #666666;
     border-radius: 2em;
+    @include shadow-light;
 
     &:hover {
         background-color: #f0f0f0;
@@ -418,18 +419,39 @@
 
 .settings-menu__button {
     @include std-button;
+    width: 12em;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 2em;
-    margin: .2em 1em;
-    padding: 0 1em;
     background-color: #fafafa;
     color: #666666;
     border-radius: 2em;
+    @include shadow-light;
+
+    &--push {
+        margin: .5em 0 -.5em 0;
+    }
+
+    img {
+        margin: 0 .2em 0 .7em;
+    }
+
+    span {
+        flex-grow: 1;
+    }
 
     &:active {
         transform: scale(.9);
+    }
+}
+
+.settings-menu__checkbox {
+    color: #666666;
+    font-size: .9em;
+
+    input {
+        vertical-align: middle;
     }
 }
 
@@ -451,7 +473,7 @@
     border: solid 1px #f0f0f0;
     border-radius: .3em;
     cursor: pointer;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, .05);
+    @include shadow-light;
 }
 
 .settings-color__input {
@@ -463,5 +485,5 @@
     font-size: 1em;
     background-color: #ffffff;
     color: #666666;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, .05);
+    @include shadow-light;
 }

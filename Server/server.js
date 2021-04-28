@@ -29,4 +29,7 @@ app.use("/users", usersRouter);
 const settingsRouter = require("./routers/settings");
 app.use("/settings", settingsRouter);
 
+const schemesRouter = require("./routers/schemes");
+app.use("/schemes", schemesRouter);
+
 app.listen(process.env.APP_PORT, () => console.log("Server started"));

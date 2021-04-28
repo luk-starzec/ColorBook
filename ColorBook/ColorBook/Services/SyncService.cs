@@ -93,5 +93,14 @@ namespace ColorBook.Services
             return await apiHttpClient.LoadSettingsAsync(currentUser);
         }
 
+        public async Task SaveSchemesAsync(ColorScheme[] colorSchemes)
+        {
+            var isSuccess = await apiHttpClient.SaveLibraryAsync(currentUser, colorSchemes);
+        }
+
+        public async Task<ColorScheme[]> LoadSchemesAsync()
+        {
+            return await apiHttpClient.LoadLibraryAsync(currentUser);
+        }
     }
 }

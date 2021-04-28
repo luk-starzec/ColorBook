@@ -50,7 +50,7 @@
             <ValidationMessage For="() => user.Password" />
 
             <label class="sync-menu__check-label">
-                <InputCheckbox @bind-Value="user.StayLoggedId" />
+                <InputCheckbox @bind-Value="user.StayLoggedId" disabled="true" />
                 stay logged in
             </label>
 
@@ -61,7 +61,9 @@
                 </div>
             }
 
-            <input type="submit" class="sync-menu__login-button" value="log in" />
+            <button type="submit" class="sync-menu__login-button">
+                log in
+            </button>
 
         </EditForm>
     }

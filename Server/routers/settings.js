@@ -6,7 +6,7 @@ const Setting = require("../models/setting");
 router.post("/load", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   try {
-    var setting = await Setting.findOne({ userId: userId });
+    const setting = await Setting.findOne({ userId: userId });
 
     if (setting == null) return res.sendStatus(404);
 
@@ -27,6 +27,7 @@ router.post("/save", userHelper.getUser, async (req, res) => {
     setting.darkBackgroundColor = req.body.darkBackgroundColor;
     setting.lightTextColor = req.body.lightTextColor;
     setting.darkTextColor = req.body.darkTextColor;
+    setting.autoSync = req.body.autoSync;
     setting.lastUpdate = req.body.lastUpdate;
 
     const newSetting = await setting.save();

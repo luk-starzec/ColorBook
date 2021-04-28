@@ -11,10 +11,12 @@ namespace ColorBook.Services
     public class SchemeService : ISchemeService
     {
         private readonly IJSRuntime js;
+        private readonly ISyncService syncService;
 
-        public SchemeService(IJSRuntime js)
+        public SchemeService(IJSRuntime js, ISyncService syncService)
         {
             this.js = js;
+            this.syncService = syncService;
         }
 
         public ColorScheme GetEmptyScheme()
@@ -38,7 +40,25 @@ namespace ColorBook.Services
 
         public async Task<ColorScheme[]> LibraryList()
         {
-            return await js.InvokeAsync<ColorScheme[]>($"localDataStore.getAll", "library");
+            var isSyncAvaliable = await syncService.GetSyncAvailabilityAsync();
+
+            var serverLibrary = isSyncAvaliable ? await syncService.LoadSchemesAsync() : new ColorScheme[0];
+            var localLibrary = await js.InvokeAsync<ColorScheme[]>($"localDataStore.getAll", "library");
+
+            var result = new List<ColorScheme>();
+            foreach (var fromLocal in localLibrary)
+            {
+                var fromServer = serverLibrary.FirstOrDefault(r => r.Id == fromLocal.Id);
+                if (fromServer?.LastUpdate > fromLocal.LastUpdate)
+                    result.Add(fromServer);
+                else
+                    result.Add(fromLocal);
+            }
+
+            var onlyServer = serverLibrary.Where(r => !localLibrary.Where(rr => rr.Id == r.Id).Any());
+            result.AddRange(onlyServer);
+
+            return result.ToArray();
         }
 
         public async Task LibraryRemove(Guid id)
@@ -79,6 +99,8 @@ namespace ColorBook.Services
         {
             scheme.LastUpdate = DateTime.Now;
             await js.InvokeVoidAsync($"localDataStore.put", "library", scheme.Id.ToString(), scheme);
+
+            await syncService.SaveSchemesAsync(new ColorScheme[] { scheme });
         }
 
         ValueTask PutAsync<T>(string storeName, object key, T value)

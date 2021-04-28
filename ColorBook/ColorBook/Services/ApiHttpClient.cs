@@ -1,15 +1,13 @@
 ﻿using ColorBook.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ColorBook.Services
 {
-    public class ApiHttpClient
+    public partial class ApiHttpClient
     {
         private readonly HttpClient httpClient;
 
@@ -25,7 +23,7 @@ namespace ColorBook.Services
                 var result = await httpClient.GetAsync("/hc");
                 return result.IsSuccessStatusCode;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -40,53 +38,9 @@ namespace ColorBook.Services
                 var result = await httpClient.PostAsync("/users/validate", data);
                 return result.IsSuccessStatusCode;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
-            }
-        }
-
-        public async Task<bool> SaveSettingsAsync(User user, Settings settings)
-        {
-            try
-            {
-                var model = new
-                {
-                    user.Login,
-                    user.Pass,
-                    settings.LightBackgroundColor,
-                    settings.DarkBackgroundColor,
-                    settings.LightTextColor,
-                    settings.DarkTextColor,
-                    settings.LastUpdate,
-                };
-                var data = GetData(model);
-
-                var result = await httpClient.PostAsync("/settings/save", data);
-                return result.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public async Task<Settings> LoadSettingsAsync(User user)
-        {
-            if (user is null)
-                return null;
-            try
-            {
-                var data = GetData(user);
-
-                var result = await httpClient.PostAsync("/settings/load", data);
-                result.EnsureSuccessStatusCode();
-                var json = await result.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Settings>(json, serializerOptions);
-            }
-            catch (Exception ex)
-            {
-                return null;
             }
         }
 
@@ -98,7 +52,7 @@ namespace ColorBook.Services
         }
 
         private JsonSerializerOptions serializerOptions
-            => new JsonSerializerOptions
+            => new()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true

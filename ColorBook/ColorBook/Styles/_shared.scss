@@ -29,7 +29,7 @@ $breakpoint-width: 420px;
     width: 18em;
     border: none;
     border-radius: .3em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
 }
 
 @mixin color-input-label {
@@ -95,7 +95,7 @@ $breakpoint-width: 420px;
     max-width: 90vw;
     border: solid 2px transparent;
     border-radius: .3em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
 
     span {
         width: 3em;
@@ -117,8 +117,11 @@ $breakpoint-width: 420px;
         stroke-width: 1;
     }
 }
-/*
-@mixin width-wrapper {
-    width: clamp(19em, 90vw, 31em);
+
+@mixin shadow-std {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
 }
-*/
+
+@mixin shadow-light {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .05);
+}

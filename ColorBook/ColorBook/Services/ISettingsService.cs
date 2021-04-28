@@ -15,6 +15,7 @@ namespace ColorBook.Services
         Settings GetDefaultSettings();
         Task RestoreDefaultSettings();
         Task PullSettingsFromServer();
+        Task PushSettingsToServer();
         Task SaveSettingsAsync();
         Task SaveSettingsAsync(Settings settings);
 

@@ -21,6 +21,9 @@ const settingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  autoSync:{
+    type: Boolean
+  },
   lastUpdate: {
     type: Date
   }

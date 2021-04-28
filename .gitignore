@@ -8,4 +8,4 @@ node_modules
 /ColorBook/ColorBook/wwwroot/js
 css
 publish
-/ColorBook/ColorBook/Properties/PublishProfiles/FolderProfile.pubxml.user
+*.user

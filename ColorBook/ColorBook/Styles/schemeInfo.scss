@@ -40,7 +40,7 @@ $spacer-width: 1em;
     text-align: center;
     border: solid 2px transparent;
     border-radius: .3em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
 
     @media (max-width: $breakpoint-width) {
         margin: 0 .5em;
@@ -65,7 +65,7 @@ $spacer-width: 1em;
     height: 2em;
     width: 2em;
     margin: 0 .25em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,7 +98,7 @@ $spacer-width: 1em;
     list-style: none;
     padding: 0;
     color: #666666;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
 }
 
 .scheme-header__list-item {
@@ -212,7 +212,7 @@ $spacer-width: 1em;
     align-items: center;
     background-color: #fcfcfc;
     border-radius: .3em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
 
     &:hover {
         background-color: #f0f0f0;
@@ -302,7 +302,7 @@ $spacer-width: 1em;
     background-color: #fcfcfc;
     border-radius: 999px;
     text-decoration: none;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .05);
+    @include shadow-std;
 
     & span {
         flex-grow: 1;

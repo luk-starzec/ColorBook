@@ -44,6 +44,6 @@ Content-Type: application/json
     "lightBackgroundColor":"#ffffff",
     "lightTextColor":"#ffffff",
     "darkTextColor":"#666666",
-    "darkBackgroundColor":"#666666"
+    "darkBackgroundColor":"#333333"
     
 }

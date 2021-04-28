@@ -22,20 +22,33 @@
     <SettingsColor SettingsColorType="@EnumSettingsColorType.DarkText"
                    Label="dark:" ColorHex="@currentSettings.DarkTextColor" ColorPickerOpened="OpenColorPicker" />
 
-    <div class="settings-menu__spacer">
-    </div>
+    <h4 class="settings-menu__sub-header">
+        Server copy
+    </h4>
+
+    <label class="settings-menu__checkbox">
+        <input type="checkbox" @bind="currentSettings.AutoSync" @onclick="AutoSyncClick" />
+        auto synchronize
+    </label>
 
     @if (isSyncAvailable)
     {
+        <button class="settings-menu__button settings-menu__button--push" @onclick="PushToServer">
+            <img src="/assets/push-icon.svg" />
+            <span>Push to server</span>
+        </button>
+
         <button class="settings-menu__button" @onclick="PullFromServer">
-            <img src="/assets/download-icon.svg" />
-            Pull from server
+            <img src="/assets/pull-icon.svg" />
+            <span>Pull from server</span>
         </button>
     }
 
+    <div class="settings-menu__spacer"></div>
+
     <button class="settings-menu__button" @onclick="RestoreDefaults">
         <img src="/assets/restore-icon.svg" />
-        Restore defaults
+        <span>Restore defaults</span>
     </button>
 
 </div>
@@ -46,7 +59,9 @@
     public async Task ColorPickerClosed(string color) => await ClosedColorPicker(color);
 
     bool isSyncAvailable;
+
     Settings currentSettings;
+
     EnumSettingsColorType settingsColorType;
 
     protected override async Task OnInitializedAsync()
@@ -54,7 +69,6 @@
         currentSettings = await settingsService.GetCurrentSettingsAsync();
         settingsService.CurrentSettingsChanged += SetCurrentSettings;
         isSyncAvailable = await syncService.GetSyncAvailabilityAsync();
-        syncService.SyncAvailabilityChanged += SetSyncAvailability;
     }
 
     void SetCurrentSettings(Settings newSettings)
@@ -63,16 +77,21 @@
         StateHasChanged();
     }
 
-    void SetSyncAvailability(bool isAvailable)
+    async Task AutoSyncClick()
     {
-        isSyncAvailable = isAvailable;
-        StateHasChanged();
+        currentSettings.AutoSync = !currentSettings.AutoSync;
+        await settingsService.SaveSettingsAsync(currentSettings);
     }
 
     async Task PullFromServer()
     {
         await settingsService.PullSettingsFromServer();
         currentSettings = await settingsService.GetCurrentSettingsAsync();
+    }
+
+    async Task PushToServer()
+    {
+        await settingsService.PushSettingsToServer();
     }
 
     async Task RestoreDefaults()
@@ -130,6 +149,5 @@
     void IDisposable.Dispose()
     {
         settingsService.CurrentSettingsChanged -= SetCurrentSettings;
-        syncService.SyncAvailabilityChanged -= SetSyncAvailability;
     }
 }

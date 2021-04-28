@@ -22,5 +22,8 @@ namespace ColorBook.Services
 
         Task SaveSettingsAsync(Settings settings);
         Task<Settings> LoadSettingsAsync();
+
+        Task SaveSchemesAsync(ColorScheme[] colorSchemes);
+        Task<ColorScheme[]> LoadSchemesAsync();
     }
 }

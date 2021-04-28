@@ -12,6 +12,7 @@ namespace ColorBook.Services
     {
         private readonly IJSRuntime js;
         private readonly ISyncService syncService;
+
         private readonly Settings defaultSettings;
         private Settings currentSettings = null;
 
@@ -65,10 +66,13 @@ namespace ColorBook.Services
             currentSettings.DarkBackgroundColor = settings.DarkBackgroundColor;
             currentSettings.LightTextColor = settings.LightTextColor;
             currentSettings.DarkTextColor = settings.DarkTextColor;
+            currentSettings.AutoSync = settings.AutoSync;
             currentSettings.LastUpdate = DateTime.Now;
 
             await js.InvokeVoidAsync($"localDataStore.put", "settings", "current", currentSettings);
-            await syncService.SaveSettingsAsync(currentSettings);
+
+            if (currentSettings.AutoSync)
+                await syncService.SaveSettingsAsync(currentSettings);
 
             CurrentSettingsChanged?.Invoke(currentSettings);
         }
@@ -82,20 +86,26 @@ namespace ColorBook.Services
             await SaveSettingsAsync(serverSettings);
         }
 
+        public async Task PushSettingsToServer()
+        {
+            await syncService.SaveSettingsAsync(currentSettings);
+        }
 
         private async Task SyncSettings(bool isAvailable)
         {
-            //if (!isAvailable)
-            //    return;
+            if (!isAvailable)
+                return;
+            if (currentSettings?.AutoSync != true)
+                return;
 
-            //var serverSettings = await syncService.LoadSettingsAsync();
+            var serverSettings = await syncService.LoadSettingsAsync();
 
-            //currentSettings = GetNewerSettings(serverSettings, currentSettings);
+            currentSettings = GetNewerSettings(serverSettings, currentSettings);
 
-            //if (currentSettings != serverSettings)
-            //    await syncService.SaveSettingsAsync(currentSettings);
+            if (currentSettings != serverSettings)
+                await syncService.SaveSettingsAsync(currentSettings);
 
-            //CurrentSettingsChanged?.Invoke(currentSettings);
+            CurrentSettingsChanged?.Invoke(currentSettings);
         }
 
         private Settings GetNewerSettings(Settings primary, Settings secondary)
