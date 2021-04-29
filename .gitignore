@@ -2,10 +2,10 @@
 .env
 bin
 obj
-/ColorBook/ColorBook/JsLib/node_modules
 node_modules
-/ColorBook/ColorBook/package-lock.json
-/ColorBook/ColorBook/wwwroot/js
+/BlazorApp/ColorBook/JsLib/node_modules
+/BlazorApp/ColorBook/package-lock.json
+/BlazorApp/ColorBook/wwwroot/js
 css
 publish
 *.user
