@@ -102,5 +102,15 @@ namespace ColorBook.Services
         {
             return await apiHttpClient.LoadLibraryAsync(currentUser);
         }
+
+        public async Task DeleteScheme(Guid id)
+        {
+            var isSuccess = await apiHttpClient.DeleteSchemeAsync(currentUser, id);
+        }
+
+        public async Task UpdateScheme(ColorScheme colorScheme)
+        {
+            var isSuccess = await apiHttpClient.UpdateSchemeAsync(currentUser, colorScheme);
+        }
     }
 }

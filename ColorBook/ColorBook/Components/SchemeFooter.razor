@@ -43,18 +43,18 @@
 
     async Task AddToLibrary()
     {
-        Scheme = await schemeService.LibraryAdd(Scheme);
+        Scheme = await schemeService.AddScheme(Scheme);
         isSchemeInLibrary = true;
     }
 
     async Task SaveInLibrary()
     {
-        await schemeService.LibrarySave(Scheme);
+        await schemeService.UpdateScheme(Scheme);
     }
 
     async Task RemoveFromLibrary()
     {
-        await schemeService.LibraryRemove(Scheme.Id);
+        await schemeService.RemoveScheme(Scheme.Id);
         isSchemeInLibrary = false;
     }
 

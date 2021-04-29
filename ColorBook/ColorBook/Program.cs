@@ -18,8 +18,11 @@ namespace ColorBook
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            var configuration = builder.Configuration.Build();
+
+            var apiUrl = configuration.GetValue<string>("ServerApiUrl");
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddHttpClient<ApiHttpClient>(client => client.BaseAddress = new Uri("http://localhost:3000"));
+            builder.Services.AddHttpClient<ApiHttpClient>(client => client.BaseAddress = new Uri(apiUrl));
 
             builder.Services.AddScoped<ISettingsService, SettingsService>();
             builder.Services.AddScoped<ISchemeService, SchemeService>();

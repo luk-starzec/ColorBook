@@ -25,5 +25,7 @@ namespace ColorBook.Services
 
         Task SaveSchemesAsync(ColorScheme[] colorSchemes);
         Task<ColorScheme[]> LoadSchemesAsync();
+        Task DeleteScheme(Guid id);
+        Task UpdateScheme(ColorScheme colorScheme);
     }
 }

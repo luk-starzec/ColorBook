@@ -10,11 +10,11 @@ namespace ColorBook.Services
     {
         ColorScheme GetEmptyScheme();
         ColorScheme DuplicateScheme(ColorScheme scheme);
-        Task<ColorScheme[]> LibraryList();
+        Task<ColorScheme[]> GetShemes();
         Task<bool> ExistsInLibrary(Guid id);
-        Task<ColorScheme> LibraryAdd(ColorScheme scheme);
-        Task LibrarySave(ColorScheme scheme);
-        Task LibraryRemove(Guid id);
+        Task<ColorScheme> AddScheme(ColorScheme scheme);
+        Task UpdateScheme(ColorScheme scheme);
+        Task RemoveScheme(Guid id);
 
         string SchemeToJson(ColorScheme scheme);
         ColorScheme JsonToScheme(string json);

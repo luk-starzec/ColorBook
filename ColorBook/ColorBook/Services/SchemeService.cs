@@ -13,6 +13,11 @@ namespace ColorBook.Services
         private readonly IJSRuntime js;
         private readonly ISyncService syncService;
 
+        private readonly string schemesDataStoreName = "schemes";
+        private readonly string deletedSchemesDataStoreName = "deletedSchemes";
+
+        private record DeletedScheme(Guid id, DateTime date);
+
         public SchemeService(IJSRuntime js, ISyncService syncService)
         {
             this.js = js;
@@ -35,38 +40,79 @@ namespace ColorBook.Services
 
         public async Task<bool> ExistsInLibrary(Guid id)
         {
-            return await js.InvokeAsync<bool>($"localDataStore.exists", "library", id.ToString());
+            return await js.InvokeAsync<bool>($"localDataStore.exists", schemesDataStoreName, id.ToString());
         }
 
-        public async Task<ColorScheme[]> LibraryList()
+        public async Task<ColorScheme[]> GetShemes()
         {
             var isSyncAvaliable = await syncService.GetSyncAvailabilityAsync();
 
             var serverLibrary = isSyncAvaliable ? await syncService.LoadSchemesAsync() : new ColorScheme[0];
-            var localLibrary = await js.InvokeAsync<ColorScheme[]>($"localDataStore.getAll", "library");
+            serverLibrary = await FilterPreviouslyDeletedSchemes(serverLibrary);
+            var localLibrary = await js.InvokeAsync<ColorScheme[]>($"localDataStore.getAll", schemesDataStoreName);
 
-            var result = new List<ColorScheme>();
+            var schemes = new List<ColorScheme>();
             foreach (var fromLocal in localLibrary)
             {
                 var fromServer = serverLibrary.FirstOrDefault(r => r.Id == fromLocal.Id);
                 if (fromServer?.LastUpdate > fromLocal.LastUpdate)
-                    result.Add(fromServer);
+                    schemes.Add(fromServer);
                 else
-                    result.Add(fromLocal);
+                    schemes.Add(fromLocal);
             }
 
             var onlyServer = serverLibrary.Where(r => !localLibrary.Where(rr => rr.Id == r.Id).Any());
-            result.AddRange(onlyServer);
+            schemes.AddRange(onlyServer);
 
-            return result.ToArray();
+            var result = schemes
+                .Where(r => r is not null)
+                .OrderBy(r => r.Name)
+                .ToArray();
+
+            if (isSyncAvaliable)
+            {
+                foreach (var scheme in result)
+                    await UpdateScheme(scheme);
+
+                await syncService.SaveSchemesAsync(result);
+            }
+
+            return result;
         }
 
-        public async Task LibraryRemove(Guid id)
+        private async Task<ColorScheme[]> FilterPreviouslyDeletedSchemes(ColorScheme[] serverLibrary)
         {
-            await js.InvokeAsync<ColorScheme[]>($"localDataStore.delete", "library", id);
+            if (!serverLibrary.Any())
+                return serverLibrary;
+
+            var deletedSchemes = await js.InvokeAsync<DeletedScheme[]>($"localDataStore.getAll", deletedSchemesDataStoreName);
+
+            foreach (var deleted in deletedSchemes)
+                await js.InvokeVoidAsync($"localDataStore.delete", deletedSchemesDataStoreName, deleted.id);
+
+            return serverLibrary
+                .Where(r => !deletedSchemes.Where(rr => rr.id == r.Id && rr.date > r.LastUpdate).Any())
+                .ToArray();
         }
 
-        public async Task<ColorScheme> LibraryAdd(ColorScheme scheme)
+        public async Task RemoveScheme(Guid id)
+        {
+            await js.InvokeVoidAsync($"localDataStore.delete", schemesDataStoreName, id);
+
+            await DeleteSchemeOnServer(id);
+        }
+
+        private async Task DeleteSchemeOnServer(Guid id)
+        {
+            var isSyncAvaliable = await syncService.GetSyncAvailabilityAsync();
+
+            if (isSyncAvaliable)
+                await syncService.DeleteScheme(id);
+            else
+                await js.InvokeVoidAsync($"localDataStore.put", deletedSchemesDataStoreName, id.ToString(), new DeletedScheme(id, DateTime.Now));
+        }
+
+        public async Task<ColorScheme> AddScheme(ColorScheme scheme)
         {
             if (string.IsNullOrWhiteSpace(scheme.Name))
                 scheme.Name = "My Colors";
@@ -74,7 +120,7 @@ namespace ColorBook.Services
             scheme.Id = Guid.NewGuid();
             scheme.Name = await DeduplicateName(scheme.Name);
 
-            await LibrarySave(scheme);
+            await UpdateScheme(scheme);
 
             return scheme;
         }
@@ -83,7 +129,7 @@ namespace ColorBook.Services
         {
             var result = schemeName;
 
-            var schemesNames = (await LibraryList()).Select(r => r.Name);
+            var schemesNames = (await GetShemes()).Select(r => r.Name);
 
             var marker = schemeName.IndexOf("(");
             var baseName = marker < 0 ? schemeName : schemeName.Substring(0, marker);
@@ -95,16 +141,24 @@ namespace ColorBook.Services
             return result;
         }
 
-        public async Task LibrarySave(ColorScheme scheme)
+        public async Task UpdateScheme(ColorScheme scheme)
         {
-            scheme.LastUpdate = DateTime.Now;
-            await js.InvokeVoidAsync($"localDataStore.put", "library", scheme.Id.ToString(), scheme);
+            scheme.LastUpdate = DateTime.UtcNow;
+            await js.InvokeVoidAsync($"localDataStore.put", schemesDataStoreName, scheme.Id.ToString(), scheme);
 
-            await syncService.SaveSchemesAsync(new ColorScheme[] { scheme });
+            await UpdateSchemeOnServer(scheme);
         }
 
-        ValueTask PutAsync<T>(string storeName, object key, T value)
-            => js.InvokeVoidAsync($"localDataStore.put", storeName, key, value);
+        private async Task UpdateSchemeOnServer(ColorScheme scheme)
+        {
+            var isSyncAvaliable = await syncService.GetSyncAvailabilityAsync();
+
+            if (isSyncAvaliable)
+                await syncService.UpdateScheme(scheme);
+        }
+
+        //ValueTask PutAsync<T>(string storeName, object key, T value)
+        //    => js.InvokeVoidAsync($"localDataStore.put", storeName, key, value);
 
         public string SchemeToJson(ColorScheme scheme)
         {

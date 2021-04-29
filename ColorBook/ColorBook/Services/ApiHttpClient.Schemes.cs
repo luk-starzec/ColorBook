@@ -35,7 +35,7 @@ namespace ColorBook.Services
             }
         }
 
-        public async Task<bool> SaveSchemeAsync(User user, ColorScheme colorScheme)
+        public async Task<bool> UpdateSchemeAsync(User user, ColorScheme colorScheme)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace ColorBook.Services
                 {
                     user.Login,
                     user.Pass,
-                    colorScheme
+                    Scheme = colorScheme
                 };
                 var data = GetData(model);
 

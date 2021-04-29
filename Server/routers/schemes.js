@@ -59,7 +59,7 @@ router.post("/save", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   const scheme = req.body.scheme;
   try {
-    let dbScheme = await Scheme.findOne({ userId: userId });
+    let dbScheme = await Scheme.findOne({ userId: userId, id: scheme.id });
 
     dbScheme = dbScheme || new Scheme({ userId: userId, id: scheme.id });
 
@@ -76,10 +76,10 @@ router.post("/save", userHelper.getUser, async (req, res) => {
 
 router.post("/delete", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
-  const schemeId = req.body.scheme;
+  const schemeId = req.body.schemeId;
   try {
     await Scheme.deleteOne({ userId: userId, id: schemeId });
-    res.status(204);
+    res.sendStatus(204);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

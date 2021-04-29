@@ -17,7 +17,7 @@ namespace ColorBook.Models
             set => colors = value.ToList();
         }
 
-        public DateTime LastUpdate { get; set; }
+        public DateTimeOffset LastUpdate { get; set; }
 
 
         public NamedColor GetColor(int index) => colors[index];

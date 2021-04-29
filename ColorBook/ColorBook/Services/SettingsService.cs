@@ -13,6 +13,7 @@ namespace ColorBook.Services
         private readonly IJSRuntime js;
         private readonly ISyncService syncService;
 
+        private readonly string settingsDataStoreName = "settings";
         private readonly Settings defaultSettings;
         private Settings currentSettings = null;
 
@@ -39,7 +40,7 @@ namespace ColorBook.Services
                 return currentSettings;
 
             var serverSettings = await syncService.LoadSettingsAsync();
-            var localSettings = await js.InvokeAsync<Settings>($"localDataStore.get", "settings", "current");
+            var localSettings = await js.InvokeAsync<Settings>($"localDataStore.get", settingsDataStoreName, "current");
 
             currentSettings = GetNewerSettings(serverSettings, localSettings);
 
@@ -69,7 +70,7 @@ namespace ColorBook.Services
             currentSettings.AutoSync = settings.AutoSync;
             currentSettings.LastUpdate = DateTime.Now;
 
-            await js.InvokeVoidAsync($"localDataStore.put", "settings", "current", currentSettings);
+            await js.InvokeVoidAsync($"localDataStore.put", settingsDataStoreName, "current", currentSettings);
 
             if (currentSettings.AutoSync)
                 await syncService.SaveSettingsAsync(currentSettings);

@@ -4,11 +4,12 @@
 
     const db = openDB('ColorBook', 1, {
         upgrade(db) {
-            db.createObjectStore('metadata');
+            //db.createObjectStore('metadata');
             db.createObjectStore('settings');
             //db.createObjectStore('library', { keyPath: 'id' });
-            db.createObjectStore('library');
-            db.createObjectStore('test');
+            db.createObjectStore('schemes');
+            db.createObjectStore('deletedSchemes');
+            //db.createObjectStore('test');
         },
     });
 
