@@ -1,7 +1,10 @@
 ﻿using ColorBook.Models;
+using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Threading.Tasks;
 
 namespace ColorBook.Services
@@ -9,33 +12,37 @@ namespace ColorBook.Services
     public class SyncService : ISyncService
     {
         private readonly ILocalStorageService localStorageService;
-        private readonly ApiHttpClient apiHttpClient;
-
-        private readonly string storageKeyLastUserName = "lastUserName";
+        private readonly IApiClient apiHttpClient;
+        private readonly IJSRuntime js;
+        private readonly LocalStorageSettings localStorageSettings;
 
         private User currentUser = null;
-
         public event Action<bool> SyncAvailabilityChanged;
 
 
-        public SyncService(ILocalStorageService localStorageService, ApiHttpClient apiHttpClient)
+        public SyncService(ILocalStorageService localStorageService, IApiClient apiHttpClient, IJSRuntime js, IOptions<LocalStorageSettings> settings)
         {
             this.localStorageService = localStorageService;
             this.apiHttpClient = apiHttpClient;
+            this.js = js;
+            localStorageSettings = settings.Value;
         }
 
 
         private bool isServerAvailable = false;
-        private DateTime lastServerAvailabilityCheck = new DateTime();
-        private int serverAvailabilityCheckInterval = 10;
+        private DateTime lastServerAvailabilityCheck = new();
+        private readonly int serverAvailabilityCheckInterval = 60;
         public async Task<bool> GetServerAvailabilityAsync()
         {
             if (lastServerAvailabilityCheck.AddSeconds(serverAvailabilityCheckInterval) < DateTime.Now)
             {
+                bool previousServerAvailability = isServerAvailable;
+
                 isServerAvailable = await apiHttpClient.CheckServerAvailabilityAsync();
                 lastServerAvailabilityCheck = DateTime.Now;
 
-                SyncAvailabilityChanged?.Invoke(await GetSyncAvailabilityAsync());
+                if (previousServerAvailability != isServerAvailable)
+                    SyncAvailabilityChanged?.Invoke(await GetSyncAvailabilityAsync());
             }
             return isServerAvailable;
         }
@@ -47,12 +54,38 @@ namespace ColorBook.Services
                 && await GetIsLoggedInAsync();
         }
 
-        public Task<bool> GetIsLoggedInAsync() => Task.FromResult(currentUser is not null);
+        public Task<bool> GetIsLoggedInAsync()
+        {
+            return Task.FromResult(currentUser is not null);
+        }
 
         public async Task<string> GetLastUserNameAsync()
-            => await localStorageService.GetItem<string>(storageKeyLastUserName);
+        {
+            return await localStorageService.GetItem<string>(localStorageSettings.LastUserLoginKey);
+        }
 
         public User GetLoggedUser() => currentUser;
+
+        public async Task CheckAutoLogIn()
+        {
+            var passHash = await localStorageService.GetItem<string>(localStorageSettings.LastUserPassKey);
+            if (string.IsNullOrEmpty(passHash))
+                return;
+
+            var login = await GetLastUserNameAsync();
+            if (string.IsNullOrEmpty(login))
+                return;
+
+            var password = await js.InvokeAsync<string>("cryptoTools.decryptData", passHash, localStorageSettings.Secret);
+
+            var user = new User(login, password);
+            var isValid = await apiHttpClient.ValidateUserAsync(user);
+            if (isValid)
+            {
+                currentUser = user;
+                SyncAvailabilityChanged?.Invoke(true);
+            }
+        }
 
         public async Task<bool> LogInAsync(User user, bool stayLoggedId)
         {
@@ -63,23 +96,24 @@ namespace ColorBook.Services
 
             currentUser = user;
 
-            await localStorageService.SetItem(storageKeyLastUserName, user.Login);
+            await localStorageService.SetItem(localStorageSettings.LastUserLoginKey, user.Login);
 
-            if (stayLoggedId)
-            {
-
-            }
+            var passHash = stayLoggedId
+                ? await js.InvokeAsync<string>("cryptoTools.encryptData", user.Password, localStorageSettings.Secret)
+                : null;
+            await localStorageService.SetItem(localStorageSettings.LastUserPassKey, passHash);
 
             SyncAvailabilityChanged?.Invoke(true);
 
             return true;
         }
 
-        public Task LogOutAsync()
+        public async Task LogOutAsync()
         {
             currentUser = null;
+            await localStorageService.SetItem(localStorageSettings.LastUserPassKey, string.Empty);
+
             SyncAvailabilityChanged?.Invoke(false);
-            return Task.CompletedTask;
         }
 
 

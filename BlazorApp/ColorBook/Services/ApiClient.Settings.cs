@@ -1,30 +1,22 @@
 ﻿using ColorBook.Models;
 using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ColorBook.Services
 {
-    public partial class ApiHttpClient
+    public partial class ApiClient
     {
         public async Task<bool> SaveSettingsAsync(User user, Settings settings)
         {
             try
             {
-                var model = new
-                {
-                    user.Login,
-                    user.Pass,
-                    settings.LightBackgroundColor,
-                    settings.DarkBackgroundColor,
-                    settings.LightTextColor,
-                    settings.DarkTextColor,
-                    settings.AutoSync,
-                    settings.LastUpdate,
-                };
-                var data = GetData(model);
+                var request = new HttpRequestMessage(HttpMethod.Post, "/settings")
+                    .AddAuthHeaders(user, apiSecret)
+                    .AddContent(settings);
 
-                var result = await httpClient.PostAsync("/settings/save", data);
+                var result = await httpClient.SendAsync(request);
                 return result.IsSuccessStatusCode;
             }
             catch (Exception)
@@ -39,12 +31,14 @@ namespace ColorBook.Services
                 return null;
             try
             {
-                var data = GetData(user);
+                var request = new HttpRequestMessage(HttpMethod.Get, "/settings")
+                    .AddAuthHeaders(user, apiSecret);
 
-                var result = await httpClient.PostAsync("/settings/load", data);
+                var result = await httpClient.SendAsync(request);
                 result.EnsureSuccessStatusCode();
+
                 var json = await result.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Settings>(json, serializerOptions);
+                return JsonSerializer.Deserialize<Settings>(json, DefaultJsonSerializerOptions.SerializerOptions);
             }
             catch (Exception)
             {

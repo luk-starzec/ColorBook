@@ -17,9 +17,6 @@ db.once("open", () => console.log("Connected to DB"));
 app.use(express.json());
 app.use(cors());
 
-const testRouter = require("./routers/test");
-app.use("/test", testRouter);
-
 const hcRouter = require("./routers/hc");
 app.use("/hc", hcRouter);
 

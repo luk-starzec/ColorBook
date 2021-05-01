@@ -3,7 +3,7 @@ const router = express.Router();
 const userHelper = require("../helpers/userHelper");
 const Scheme = require("../models/scheme");
 
-router.post("/loadLibrary", userHelper.getUser, async (req, res) => {
+router.get("/library", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   try {
     const schemes = await Scheme.find({ userId: userId });
@@ -16,7 +16,7 @@ router.post("/loadLibrary", userHelper.getUser, async (req, res) => {
   }
 });
 
-router.post("/saveLibrary", userHelper.getUser, async (req, res) => {
+router.post("/library", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   const schemes = req.body.schemes;
   const dbSchemes = await Scheme.find({ userId: userId });
@@ -55,7 +55,7 @@ router.post("/saveLibrary", userHelper.getUser, async (req, res) => {
   res.json(saved);
 });
 
-router.post("/save", userHelper.getUser, async (req, res) => {
+router.post("/", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   const scheme = req.body.scheme;
   try {
@@ -74,7 +74,7 @@ router.post("/save", userHelper.getUser, async (req, res) => {
   }
 });
 
-router.post("/delete", userHelper.getUser, async (req, res) => {
+router.delete("/", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   const schemeId = req.body.schemeId;
   try {

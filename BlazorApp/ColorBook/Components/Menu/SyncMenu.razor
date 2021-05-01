@@ -50,8 +50,9 @@
             <ValidationMessage For="() => user.Password" />
 
             <label class="sync-menu__check-label">
-                <InputCheckbox @bind-Value="user.StayLoggedId" disabled="true" />
+                <InputCheckbox @bind-Value="user.StayLoggedId" />
                 stay logged in
+                <img src="/assets/info-icon.svg" title="Not recommended if other users has access to this device" />
             </label>
 
             @if (invalidUser)
@@ -88,10 +89,9 @@
         isServerAvailable = await syncService.GetServerAvailabilityAsync();
         isLoggedIn = await syncService.GetIsLoggedInAsync();
 
-        if (isLoggedIn)
-            user.Login = syncService.GetLoggedUser().Login;
-        else
-            user.Login = await syncService.GetLastUserNameAsync();
+        user.Login = isLoggedIn
+            ? syncService.GetLoggedUser().Login
+            : await syncService.GetLastUserNameAsync();
     }
 
     async Task OnUserSubmit(EditContext editContext)

@@ -16,6 +16,7 @@ namespace ColorBook.Services
 
         User GetLoggedUser();
 
+        Task CheckAutoLogIn();
         Task<bool> LogInAsync(User user, bool stayLoggedId);
         Task LogOutAsync();
         Task<string> GetLastUserNameAsync();

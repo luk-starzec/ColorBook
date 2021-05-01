@@ -5,16 +5,19 @@ function getHash(pass) {
 }
 
 async function getUser(req, res, next) {
-  const login = req.body.login;
+  const login = req.get("x-user");
   if (login == null) return res.sendStatus(404);
 
   let user;
   try {
-    const hash = getHash(req.body.pass);
-
-    user = await User.findOne({ login, hash });
-
+    user = await User.findOne({ login });
     if (user == null) return res.sendStatus(404);
+
+    const hash = req.get("x-access");
+    const validHash = getHash(`${process.env.API_SECRET}${user.hash}`);
+    // console.log(hash);
+    // console.log(validHash);
+    if (hash != validHash) return res.sendStatus(403);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

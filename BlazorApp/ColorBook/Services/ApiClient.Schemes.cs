@@ -1,12 +1,13 @@
 ﻿using ColorBook.Models;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ColorBook.Services
 {
-    public partial class ApiHttpClient
+    public partial class ApiClient : IApiClient
     {
         public async Task<bool> SaveLibraryAsync(User user, ColorScheme[] colorSchemes)
         {
@@ -14,8 +15,6 @@ namespace ColorBook.Services
             {
                 var model = new
                 {
-                    user.Login,
-                    user.Pass,
                     Schemes = colorSchemes.Select(r => new
                     {
                         r.Id,
@@ -24,9 +23,12 @@ namespace ColorBook.Services
                         r.LastUpdate,
                     }).ToArray(),
                 };
-                var data = GetData(model);
 
-                var result = await httpClient.PostAsync("/schemes/saveLibrary", data);
+                var request = new HttpRequestMessage(HttpMethod.Post, "/schemes/library")
+                    .AddAuthHeaders(user, apiSecret)
+                    .AddContent(model);
+
+                var result = await httpClient.SendAsync(request);
                 return result.IsSuccessStatusCode;
             }
             catch (Exception)
@@ -41,13 +43,14 @@ namespace ColorBook.Services
             {
                 var model = new
                 {
-                    user.Login,
-                    user.Pass,
                     Scheme = colorScheme
                 };
-                var data = GetData(model);
 
-                var result = await httpClient.PostAsync("/schemes/save", data);
+                var request = new HttpRequestMessage(HttpMethod.Post, "/schemes")
+                    .AddAuthHeaders(user, apiSecret)
+                    .AddContent(model);
+
+                var result = await httpClient.SendAsync(request);
                 return result.IsSuccessStatusCode;
             }
             catch (Exception)
@@ -62,13 +65,14 @@ namespace ColorBook.Services
             {
                 var model = new
                 {
-                    user.Login,
-                    user.Pass,
                     SchemeId = colorSchemeId
                 };
-                var data = GetData(model);
 
-                var result = await httpClient.PostAsync("/schemes/delete", data);
+                var request = new HttpRequestMessage(HttpMethod.Delete, "schemes")
+                    .AddAuthHeaders(user, apiSecret)
+                    .AddContent(model);
+
+                var result = await httpClient.SendAsync(request);
                 return result.IsSuccessStatusCode;
             }
             catch (Exception)
@@ -83,12 +87,14 @@ namespace ColorBook.Services
                 return null;
             try
             {
-                var data = GetData(user);
+                var request = new HttpRequestMessage(HttpMethod.Get, "/schemes/library")
+                    .AddAuthHeaders(user, apiSecret);
 
-                var result = await httpClient.PostAsync("/schemes/loadLibrary", data);
+                var result = await httpClient.SendAsync(request);
                 result.EnsureSuccessStatusCode();
+
                 var json = await result.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<ColorScheme[]>(json, serializerOptions);
+                return JsonSerializer.Deserialize<ColorScheme[]>(json, DefaultJsonSerializerOptions.SerializerOptions);
             }
             catch (Exception)
             {

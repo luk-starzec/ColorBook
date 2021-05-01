@@ -3,7 +3,7 @@ const router = express.Router();
 const userHelper = require("../helpers/userHelper");
 const Setting = require("../models/setting");
 
-router.post("/load", userHelper.getUser, async (req, res) => {
+router.get("/", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   try {
     const setting = await Setting.findOne({ userId: userId });
@@ -16,7 +16,7 @@ router.post("/load", userHelper.getUser, async (req, res) => {
   }
 });
 
-router.post("/save", userHelper.getUser, async (req, res) => {
+router.post("/", userHelper.getUser, async (req, res) => {
   const userId = res.user._id;
   try {
     let setting = await Setting.findOne({ userId: userId });

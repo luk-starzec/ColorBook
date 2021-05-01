@@ -1,20 +1,16 @@
 
-POST http://localhost:3000/schemes/loadLibrary
-Content-Type: application/json
-
-{
-    "login": "testowy1",
-    "pass": "111"
-}
+GET http://localhost:3000/schemes/library
+x-user: testowy1
+x-access: txlHm5R1yNb26+CwcNuoazZevUrxTLfQBbc+1SRsakM=
 
 ###
 
-POST http://localhost:3000/schemes/saveLibrary
+POST http://localhost:3000/schemes/library
+x-user: testowy1
+x-access: txlHm5R1yNb26+CwcNuoazZevUrxTLfQBbc+1SRsakM=
 Content-Type: application/json
 
 {
-    "login": "testowy1",
-    "pass": "111",
     "schemes":[
         {
             "name": "test",
@@ -47,12 +43,12 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/schemes/saveLibrary
+POST http://localhost:3000/schemes/library
+x-user: testowy1
+x-access: txlHm5R1yNb26+CwcNuoazZevUrxTLfQBbc+1SRsakM=
 Content-Type: application/json
 
 {
-    "login": "testowy1",
-    "pass": "111",
     "schemes":[
         {
             "name": "testowy 1",
@@ -70,24 +66,24 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/schemes/saveLibrary
+POST http://localhost:3000/schemes/library
+x-user: testowy1
+x-access: txlHm5R1yNb26+CwcNuoazZevUrxTLfQBbc+1SRsakM=
 Content-Type: application/json
 
 {
-    "login": "testowy1",
-    "pass": "111",
     "schemes":[
     ]
 }
 
 ###
 
-POST http://localhost:3000/schemes/save
+POST http://localhost:3000/schemes/
+x-user: testowy1
+x-access: txlHm5R1yNb26+CwcNuoazZevUrxTLfQBbc+1SRsakM=
 Content-Type: application/json
 
 {
-    "login": "testowy1",
-    "pass": "111",
     "scheme":{
             "name": "xxx",
             "id": "D7E46E35-4FC1-4D62-82AB-A405959EB000",

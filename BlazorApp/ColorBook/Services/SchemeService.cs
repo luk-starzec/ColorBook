@@ -16,12 +16,20 @@ namespace ColorBook.Services
         private readonly string schemesDataStoreName = "schemes";
         private readonly string deletedSchemesDataStoreName = "deletedSchemes";
 
-        private record DeletedScheme(Guid id, DateTime date);
+        private record DeletedScheme(Guid Id, DateTime Date);
 
         public SchemeService(IJSRuntime js, ISyncService syncService)
         {
             this.js = js;
             this.syncService = syncService;
+
+            syncService.SyncAvailabilityChanged += async (isAvailable) => await SyncLibrary(isAvailable);
+        }
+
+        private async Task SyncLibrary(bool isAvailable)
+        {
+            if (isAvailable)
+                await GetShemes();
         }
 
         public ColorScheme GetEmptyScheme()
@@ -47,7 +55,7 @@ namespace ColorBook.Services
         {
             var isSyncAvaliable = await syncService.GetSyncAvailabilityAsync();
 
-            var serverLibrary = isSyncAvaliable ? await syncService.LoadSchemesAsync() : new ColorScheme[0];
+            var serverLibrary = isSyncAvaliable ? await syncService.LoadSchemesAsync() : Array.Empty<ColorScheme>();
             serverLibrary = await FilterPreviouslyDeletedSchemes(serverLibrary);
             var localLibrary = await js.InvokeAsync<ColorScheme[]>($"localDataStore.getAll", schemesDataStoreName);
 
@@ -88,10 +96,10 @@ namespace ColorBook.Services
             var deletedSchemes = await js.InvokeAsync<DeletedScheme[]>($"localDataStore.getAll", deletedSchemesDataStoreName);
 
             foreach (var deleted in deletedSchemes)
-                await js.InvokeVoidAsync($"localDataStore.delete", deletedSchemesDataStoreName, deleted.id);
+                await js.InvokeVoidAsync($"localDataStore.delete", deletedSchemesDataStoreName, deleted.Id);
 
             return serverLibrary
-                .Where(r => !deletedSchemes.Where(rr => rr.id == r.Id && rr.date > r.LastUpdate).Any())
+                .Where(r => !deletedSchemes.Where(rr => rr.Id == r.Id && rr.Date > r.LastUpdate).Any())
                 .ToArray();
         }
 

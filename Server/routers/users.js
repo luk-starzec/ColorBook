@@ -3,7 +3,7 @@ const router = express.Router();
 const userHelper = require("../helpers/userHelper");
 const User = require("../models/user");
 
-router.post("/validate", userHelper.getUser, async (req, res) => {
+router.get("/validate", userHelper.getUser, async (req, res) => {
   res.json({ dbId: res.user._id });
 });
 

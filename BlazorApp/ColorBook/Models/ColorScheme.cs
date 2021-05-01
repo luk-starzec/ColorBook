@@ -10,7 +10,7 @@ namespace ColorBook.Models
 
         public string Name { get; set; }
 
-        private List<NamedColor> colors = new List<NamedColor>();
+        private List<NamedColor> colors = new();
         public IEnumerable<NamedColor> Colors
         {
             get => colors;

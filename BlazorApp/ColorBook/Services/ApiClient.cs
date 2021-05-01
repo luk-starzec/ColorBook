@@ -1,19 +1,19 @@
 ﻿using ColorBook.Models;
 using System;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ColorBook.Services
 {
-    public partial class ApiHttpClient
+    public partial class ApiClient
     {
         private readonly HttpClient httpClient;
+        private readonly string apiSecret;
 
-        public ApiHttpClient(HttpClient httpClient)
+        public ApiClient(HttpClient httpClient, string apiSecret)
         {
             this.httpClient = httpClient;
+            this.apiSecret = apiSecret;
         }
 
         public async Task<bool> CheckServerAvailabilityAsync()
@@ -33,9 +33,10 @@ namespace ColorBook.Services
         {
             try
             {
-                var data = GetData(user);
+                var request = new HttpRequestMessage(HttpMethod.Get, "/users/validate")
+                    .AddAuthHeaders(user, apiSecret);
 
-                var result = await httpClient.PostAsync("/users/validate", data);
+                var result = await httpClient.SendAsync(request);
                 return result.IsSuccessStatusCode;
             }
             catch (Exception)
@@ -43,19 +44,5 @@ namespace ColorBook.Services
                 return false;
             }
         }
-
-        private StringContent GetData<T>(T model)
-        {
-            var json = JsonSerializer.Serialize(model, serializerOptions);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-            return data;
-        }
-
-        private JsonSerializerOptions serializerOptions
-            => new()
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
     }
 }

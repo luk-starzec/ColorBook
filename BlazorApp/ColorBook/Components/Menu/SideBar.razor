@@ -1,4 +1,5 @@
-﻿@using BlazorColorPicker
+﻿@implements IDisposable
+@using BlazorColorPicker
 @inject ISchemeService schemeService;
 @inject IJSRuntime JS
 @inject ISyncService syncService;
@@ -179,8 +180,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        isSyncActive = await syncService.GetSyncAvailabilityAsync();
+        await syncService.CheckAutoLogIn();
+
+        await CheckSyncAvailability();
         syncService.SyncAvailabilityChanged += SetIsSyncActive;
+    }
+
+    async Task CheckSyncAvailability()
+    {
+        isSyncActive = await syncService.GetSyncAvailabilityAsync();
     }
 
     void SetIsSyncActive(bool isActive)
@@ -223,9 +231,10 @@
         HideMenu();
     }
 
-    void ShowMenu()
+    async Task ShowMenu()
     {
         isCollapsed = false;
+        await CheckSyncAvailability();
     }
 
     void HideMenu()
@@ -289,6 +298,11 @@
     {
         await settingsMenuRef.ColorPickerClosed(color);
         isColorPickerOpened = false;
+    }
+
+    void IDisposable.Dispose()
+    {
+        syncService.SyncAvailabilityChanged += SetIsSyncActive;
     }
 
 }
