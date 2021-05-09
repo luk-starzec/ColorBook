@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ColorBook.Services
+namespace ColorBook.Services.Interfaces
 {
     public interface IApiClient
     {

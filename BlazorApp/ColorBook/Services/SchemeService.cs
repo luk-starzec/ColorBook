@@ -1,4 +1,5 @@
 ﻿using ColorBook.Models;
+using ColorBook.Services.Interfaces;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace ColorBook.Services
         private async Task SyncLibrary(bool isAvailable)
         {
             if (isAvailable)
-                await GetShemes();
+                await GetSchemes();
         }
 
         public ColorScheme GetEmptyScheme()
@@ -51,7 +52,7 @@ namespace ColorBook.Services
             return await js.InvokeAsync<bool>($"localDataStore.exists", schemesDataStoreName, id.ToString());
         }
 
-        public async Task<ColorScheme[]> GetShemes()
+        public async Task<ColorScheme[]> GetSchemes()
         {
             var isSyncAvaliable = await syncService.GetSyncAvailabilityAsync();
 
@@ -137,7 +138,7 @@ namespace ColorBook.Services
         {
             var result = schemeName;
 
-            var schemesNames = (await GetShemes()).Select(r => r.Name);
+            var schemesNames = (await GetSchemes()).Select(r => r.Name);
 
             var marker = schemeName.IndexOf("(");
             var baseName = marker < 0 ? schemeName : schemeName.Substring(0, marker);
@@ -164,9 +165,6 @@ namespace ColorBook.Services
             if (isSyncAvaliable)
                 await syncService.UpdateScheme(scheme);
         }
-
-        //ValueTask PutAsync<T>(string storeName, object key, T value)
-        //    => js.InvokeVoidAsync($"localDataStore.put", storeName, key, value);
 
         public string SchemeToJson(ColorScheme scheme)
         {

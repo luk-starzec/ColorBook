@@ -1,16 +1,14 @@
 ﻿using ColorBook.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace ColorBook.Services
+namespace ColorBook.Services.Interfaces
 {
     interface ISchemeService
     {
         ColorScheme GetEmptyScheme();
         ColorScheme DuplicateScheme(ColorScheme scheme);
-        Task<ColorScheme[]> GetShemes();
+        Task<ColorScheme[]> GetSchemes();
         Task<bool> ExistsInLibrary(Guid id);
         Task<ColorScheme> AddScheme(ColorScheme scheme);
         Task UpdateScheme(ColorScheme scheme);

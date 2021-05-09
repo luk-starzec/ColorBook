@@ -279,7 +279,7 @@
 
     async Task LoadLibrary()
     {
-        library = (await schemeService.GetShemes())
+        library = (await schemeService.GetSchemes())
             .OrderByDescending(r => r.LastUpdate)
             .ToArray();
     }

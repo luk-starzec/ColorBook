@@ -30,6 +30,8 @@
 @code {
     [Parameter]
     public ColorScheme Scheme { get; set; }
+    [Parameter]
+    public EventCallback<ColorScheme> SchemeChanged { get; set; }
 
     string downloadName => $"{(string.IsNullOrWhiteSpace(Scheme.Name) ? "scheme" : Scheme.Name)}.json";
     string downloadData => $"data:application/json;charset=utf-8,{schemeService.SchemeToJson(Scheme)}";
@@ -45,6 +47,7 @@
     {
         Scheme = await schemeService.AddScheme(Scheme);
         isSchemeInLibrary = true;
+        await SchemeChanged.InvokeAsync(Scheme);
     }
 
     async Task SaveInLibrary()

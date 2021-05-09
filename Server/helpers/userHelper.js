@@ -15,9 +15,7 @@ async function getUser(req, res, next) {
 
     const hash = req.get("x-access");
     const validHash = getHash(`${process.env.API_SECRET}${user.hash}`);
-    // console.log(hash);
-    // console.log(validHash);
-    if (hash != validHash) return res.sendStatus(403);
+    if (hash != validHash) return res.sendStatus(401);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

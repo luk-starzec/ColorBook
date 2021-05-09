@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ColorBook.Services
 {
-    public partial class ApiClient : IApiClient
+    public partial class ApiClient
     {
         public async Task<bool> SaveLibraryAsync(User user, ColorScheme[] colorSchemes)
         {

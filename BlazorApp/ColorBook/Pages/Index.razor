@@ -1,7 +1,4 @@
 ﻿@page "/"
-@inject IJSRuntime JS
-@using System
-@inject ISettingsService settingsService
 @inject ISchemeService schemeService;
 
 <SideBar CurrentScheme="colorScheme" OnSchemeLoad="SetScheme" />
@@ -20,9 +17,10 @@
 
     string ColorHex { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         colorScheme = GetColorScheme();
+        //colorScheme = schemeService.GetEmptyScheme();
     }
 
 

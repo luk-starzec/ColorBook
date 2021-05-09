@@ -1,11 +1,12 @@
 ﻿using ColorBook.Models;
+using ColorBook.Services.Interfaces;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ColorBook.Services
 {
-    public partial class ApiClient
+    public partial class ApiClient : IApiClient
     {
         private readonly HttpClient httpClient;
         private readonly string apiSecret;
