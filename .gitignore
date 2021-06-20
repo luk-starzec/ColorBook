@@ -3,9 +3,9 @@
 bin
 obj
 node_modules
-/BlazorApp/ColorBook/JsLib/node_modules
-/BlazorApp/ColorBook/package-lock.json
-/BlazorApp/ColorBook/wwwroot/js
+/Client/ColorBook/JsLib/node_modules
+/Client/ColorBook/package-lock.json
+/Client/ColorBook/wwwroot/js
 css
 publish
 *.user

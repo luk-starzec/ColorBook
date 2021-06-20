@@ -41,6 +41,7 @@ namespace ColorBook
             builder.Services.AddScoped<ISettingsService, SettingsService>();
             builder.Services.AddScoped<ISchemeService, SchemeService>();
             builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+            builder.Services.AddScoped<ILocalDataStorageService, LocalDataStorageService>();
             builder.Services.AddScoped<ISyncService, SyncService>();
 
             builder.Logging.SetMinimumLevel(LogLevel.Warning);
