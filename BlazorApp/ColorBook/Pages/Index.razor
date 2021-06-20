@@ -41,14 +41,16 @@
         return new ColorScheme
         {
             Id = Guid.NewGuid(),
-            Name = string.Empty,
+            Name = "Example",
             Colors = new List<NamedColor>
 {
-                new NamedColor("#123456"),
-                new NamedColor("#4DEA26"),
-                new NamedColor("#AABBCC"),
-                new NamedColor("#DDEEFF"),
-                new NamedColor("#998877")
+                new NamedColor("blue-2","#263540"),
+                new NamedColor("blue-5","#60879F"),
+                new NamedColor("blue-7","#9FB6C6"),
+                new NamedColor("blue-9","#DCE4EA"),
+                new NamedColor("green-2","#335214"),
+                new NamedColor("green-5","#80CC33"),
+                new NamedColor("green-9","#E5F5D6"),
             }
         };
     }

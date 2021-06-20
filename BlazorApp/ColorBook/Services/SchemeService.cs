@@ -11,17 +11,13 @@ namespace ColorBook.Services
 {
     public class SchemeService : ISchemeService
     {
-        private readonly IJSRuntime js;
+        private readonly ILocalDataStorageService localDataStorageService;
         private readonly ISyncService syncService;
 
-        private readonly string schemesDataStoreName = "schemes";
-        private readonly string deletedSchemesDataStoreName = "deletedSchemes";
 
-        private record DeletedScheme(Guid Id, DateTime Date);
-
-        public SchemeService(IJSRuntime js, ISyncService syncService)
+        public SchemeService(ILocalDataStorageService localDataStorageService, ISyncService syncService)
         {
-            this.js = js;
+            this.localDataStorageService = localDataStorageService;
             this.syncService = syncService;
 
             syncService.SyncAvailabilityChanged += async (isAvailable) => await SyncLibrary(isAvailable);
@@ -49,7 +45,7 @@ namespace ColorBook.Services
 
         public async Task<bool> ExistsInLibrary(Guid id)
         {
-            return await js.InvokeAsync<bool>($"localDataStore.exists", schemesDataStoreName, id.ToString());
+            return await localDataStorageService.ExistsColorSchemeAsync(id);
         }
 
         public async Task<ColorScheme[]> GetSchemes()
@@ -58,7 +54,7 @@ namespace ColorBook.Services
 
             var serverLibrary = isSyncAvaliable ? await syncService.LoadSchemesAsync() : Array.Empty<ColorScheme>();
             serverLibrary = await FilterPreviouslyDeletedSchemes(serverLibrary);
-            var localLibrary = await js.InvokeAsync<ColorScheme[]>($"localDataStore.getAll", schemesDataStoreName);
+            var localLibrary = await localDataStorageService.GetColorSchemesAsync();
 
             var schemes = new List<ColorScheme>();
             foreach (var fromLocal in localLibrary)
@@ -94,10 +90,10 @@ namespace ColorBook.Services
             if (!serverLibrary.Any())
                 return serverLibrary;
 
-            var deletedSchemes = await js.InvokeAsync<DeletedScheme[]>($"localDataStore.getAll", deletedSchemesDataStoreName);
+            var deletedSchemes = await localDataStorageService.GetDeletedColorSchemesAsync();
 
             foreach (var deleted in deletedSchemes)
-                await js.InvokeVoidAsync($"localDataStore.delete", deletedSchemesDataStoreName, deleted.Id);
+                await localDataStorageService.RemoveDeletedColorScheme(deleted.Id);
 
             return serverLibrary
                 .Where(r => !deletedSchemes.Where(rr => rr.Id == r.Id && rr.Date > r.LastUpdate).Any())
@@ -106,8 +102,7 @@ namespace ColorBook.Services
 
         public async Task RemoveScheme(Guid id)
         {
-            await js.InvokeVoidAsync($"localDataStore.delete", schemesDataStoreName, id);
-
+            await localDataStorageService.RemoveDeletedColorScheme(id);
             await DeleteSchemeOnServer(id);
         }
 
@@ -118,7 +113,7 @@ namespace ColorBook.Services
             if (isSyncAvaliable)
                 await syncService.DeleteScheme(id);
             else
-                await js.InvokeVoidAsync($"localDataStore.put", deletedSchemesDataStoreName, id.ToString(), new DeletedScheme(id, DateTime.Now));
+                await localDataStorageService.PutDeletedColorSchemeAsync(id);
         }
 
         public async Task<ColorScheme> AddScheme(ColorScheme scheme)
@@ -153,8 +148,8 @@ namespace ColorBook.Services
         public async Task UpdateScheme(ColorScheme scheme)
         {
             scheme.LastUpdate = DateTime.UtcNow;
-            await js.InvokeVoidAsync($"localDataStore.put", schemesDataStoreName, scheme.Id.ToString(), scheme);
 
+            await localDataStorageService.PutColorSchemeAsync(scheme);
             await UpdateSchemeOnServer(scheme);
         }
 

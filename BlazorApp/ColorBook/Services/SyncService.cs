@@ -88,7 +88,7 @@ namespace ColorBook.Services
             }
         }
 
-        public async Task<bool> LogInAsync(User user, bool stayLoggedId)
+        public async Task<bool> LogInAsync(User user, bool stayLoggedIn)
         {
             var isValid = await apiHttpClient.ValidateUserAsync(user);
 
@@ -99,7 +99,7 @@ namespace ColorBook.Services
 
             await localStorageService.SetItem(localStorageSettings.LastUserLoginKey, user.Login);
 
-            var passHash = stayLoggedId
+            var passHash = stayLoggedIn
                 ? await js.InvokeAsync<string>("cryptoTools.encryptData", user.Password, localStorageSettings.Secret)
                 : null;
             await localStorageService.SetItem(localStorageSettings.LastUserPassKey, passHash);

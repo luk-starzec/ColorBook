@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ColorBook.Services.Interfaces
 {
-    interface ISchemeService
+    public interface ISchemeService
     {
         ColorScheme GetEmptyScheme();
         ColorScheme DuplicateScheme(ColorScheme scheme);

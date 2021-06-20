@@ -11,16 +11,15 @@ namespace ColorBook.Services
 {
     public class SettingsService : ISettingsService
     {
-        private readonly IJSRuntime js;
+        private readonly ILocalDataStorageService localDataStorageService;
         private readonly ISyncService syncService;
 
-        private readonly string settingsDataStoreName = "settings";
         private readonly Settings defaultSettings;
         private Settings currentSettings = null;
 
-        public SettingsService(IJSRuntime js, ISyncService syncService)
+        public SettingsService(ILocalDataStorageService localDataStorageService, ISyncService syncService)
         {
-            this.js = js;
+            this.localDataStorageService = localDataStorageService;
             this.syncService = syncService;
             syncService.SyncAvailabilityChanged += async (isAvailable) => await SyncSettings(isAvailable);
 
@@ -40,8 +39,15 @@ namespace ColorBook.Services
             if (currentSettings is not null)
                 return currentSettings;
 
+            await InitCurrentSettings();
+
+            return currentSettings;
+        }
+
+        private async Task InitCurrentSettings()
+        {
             var serverSettings = await syncService.LoadSettingsAsync();
-            var localSettings = await js.InvokeAsync<Settings>($"localDataStore.get", settingsDataStoreName, "current");
+            var localSettings = await localDataStorageService.GetSettingsAsync();
 
             currentSettings = GetNewerSettings(serverSettings, localSettings);
 
@@ -53,7 +59,6 @@ namespace ColorBook.Services
                     LightTextColor = defaultSettings.LightTextColor,
                     DarkTextColor = defaultSettings.DarkTextColor,
                 };
-            return currentSettings;
         }
 
         public Settings GetDefaultSettings() => defaultSettings;
@@ -64,6 +69,9 @@ namespace ColorBook.Services
 
         public async Task SaveSettingsAsync(Settings settings)
         {
+            if (currentSettings is null)
+                await InitCurrentSettings();
+
             currentSettings.LightBackgroundColor = settings.LightBackgroundColor;
             currentSettings.DarkBackgroundColor = settings.DarkBackgroundColor;
             currentSettings.LightTextColor = settings.LightTextColor;
@@ -71,7 +79,7 @@ namespace ColorBook.Services
             currentSettings.AutoSync = settings.AutoSync;
             currentSettings.LastUpdate = DateTime.Now;
 
-            await js.InvokeVoidAsync($"localDataStore.put", settingsDataStoreName, "current", currentSettings);
+            await localDataStorageService.PutSettingsAsync(currentSettings);
 
             if (currentSettings.AutoSync)
                 await syncService.SaveSettingsAsync(currentSettings);
