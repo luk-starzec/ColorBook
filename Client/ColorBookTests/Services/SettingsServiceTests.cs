@@ -1,15 +1,12 @@
-﻿using ColorBook.Services.Interfaces;
+﻿using ColorBook.Models;
 using ColorBook.Services;
+using ColorBook.Services.Interfaces;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using ColorBook.Models;
 
-namespace ColorBookTests
+namespace ColorBookTests.Services
 {
     public class SettingsServiceTests
     {
@@ -188,7 +185,8 @@ namespace ColorBookTests
         }
 
         private SettingsService GetSettingsService(
-            Mock<ILocalDataStorageService> localDataStorageServiceStub = null, Mock<ISyncService> syncServiceStub = null)
+            Mock<ILocalDataStorageService> localDataStorageServiceStub = null,
+            Mock<ISyncService> syncServiceStub = null)
         {
             if (localDataStorageServiceStub is null)
                 localDataStorageServiceStub = new Mock<ILocalDataStorageService>();

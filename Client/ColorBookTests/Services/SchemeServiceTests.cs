@@ -1,7 +1,6 @@
 using ColorBook.Models;
 using ColorBook.Services;
 using ColorBook.Services.Interfaces;
-using Microsoft.JSInterop;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ColorBookTests
+namespace ColorBookTests.Services
 {
     public class SchemeServiceTests
     {
@@ -80,8 +79,7 @@ namespace ColorBookTests
         public async Task AddScheme_AddsSchemeToLocalDataStore()
         {
             var localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
-            var syncServiceStub = new Mock<ISyncService>();
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub);
 
             var colorScheme = new ColorScheme();
             var result = await sut.AddScheme(colorScheme);
@@ -92,11 +90,10 @@ namespace ColorBookTests
         [Fact]
         public async Task AddScheme_WhenSyncAvailable_AddsSchemeOnServer()
         {
-            var localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
             var syncServiceStub = new Mock<ISyncService>();
             syncServiceStub.Setup(r => r.GetSyncAvailabilityAsync())
                 .Returns(Task.FromResult(true));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(syncServiceStub: syncServiceStub);
 
             var colorScheme = new ColorScheme();
             var result = await sut.AddScheme(colorScheme);
@@ -108,8 +105,7 @@ namespace ColorBookTests
         public async Task RemoveScheme_RemovesSchemeFormLocalDataStore()
         {
             var localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
-            var syncServiceStub = new Mock<ISyncService>();
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub);
 
             var id = Guid.NewGuid();
             await sut.RemoveScheme(id);
@@ -120,11 +116,10 @@ namespace ColorBookTests
         [Fact]
         public async Task RemoveScheme_WhenSyncAvailable_RemovesSchemeFormServer()
         {
-            var localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
             var syncServiceStub = new Mock<ISyncService>();
             syncServiceStub.Setup(r => r.GetSyncAvailabilityAsync())
                 .Returns(Task.FromResult(true));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(syncServiceStub: syncServiceStub);
 
             var id = Guid.NewGuid();
             await sut.RemoveScheme(id);
@@ -139,7 +134,7 @@ namespace ColorBookTests
             var syncServiceStub = new Mock<ISyncService>();
             syncServiceStub.Setup(r => r.GetSyncAvailabilityAsync())
                 .Returns(Task.FromResult(false));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var id = Guid.NewGuid();
             await sut.RemoveScheme(id);
@@ -173,7 +168,7 @@ namespace ColorBookTests
             syncServiceStub.Setup(r => r.LoadSchemesAsync())
                 .Returns(Task.FromResult(fromServer));
 
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var actual = await sut.GetSchemes();
 
@@ -201,7 +196,7 @@ namespace ColorBookTests
             syncServiceStub.Setup(r => r.LoadSchemesAsync())
                 .Returns(Task.FromResult(fromServer));
 
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var result = await sut.GetSchemes();
 
@@ -221,7 +216,8 @@ namespace ColorBookTests
                 .Returns(Task.FromResult(true));
             syncServiceStub.Setup(r => r.LoadSchemesAsync())
                 .Returns(Task.FromResult(fromServer));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var actual = await sut.GetSchemes();
 
@@ -242,7 +238,7 @@ namespace ColorBookTests
             var syncServiceStub = new Mock<ISyncService>();
             syncServiceStub.Setup(r => r.GetSyncAvailabilityAsync())
                 .Returns(Task.FromResult(false));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var actual = await sut.GetSchemes();
 
@@ -281,7 +277,7 @@ namespace ColorBookTests
             syncServiceStub.Setup(r => r.LoadSchemesAsync())
                 .Returns(Task.FromResult(fromServer));
 
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var actual = await sut.GetSchemes();
 
@@ -319,7 +315,7 @@ namespace ColorBookTests
             syncServiceStub.Setup(r => r.LoadSchemesAsync())
                 .Returns(Task.FromResult(fromServer));
 
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var actual = await sut.GetSchemes();
 
@@ -340,7 +336,8 @@ namespace ColorBookTests
             var syncServiceStub = new Mock<ISyncService>();
             syncServiceStub.Setup(r => r.GetSyncAvailabilityAsync())
                 .Returns(Task.FromResult(true));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+
+            var sut = GetSchemeService(localDataStorageServiceStub, syncServiceStub);
 
             var result = await sut.GetSchemes();
 
@@ -350,21 +347,25 @@ namespace ColorBookTests
         [Fact]
         public async Task GetSchemes_WhenSyncAvailable_AddsSchemesOnServer()
         {
-            var localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
             var syncServiceStub = new Mock<ISyncService>();
             syncServiceStub.Setup(r => r.GetSyncAvailabilityAsync())
                 .Returns(Task.FromResult(true));
-            var sut = new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
+            var sut = GetSchemeService(syncServiceStub: syncServiceStub);
 
             var result = await sut.GetSchemes();
 
             syncServiceStub.Verify(r => r.SaveSchemesAsync(It.IsAny<ColorScheme[]>()), Times.Once);
         }
 
-        private SchemeService GetSchemeService()
+        private SchemeService GetSchemeService(
+            Mock<ILocalDataStorageService> localDataStorageServiceStub = null,
+            Mock<ISyncService> syncServiceStub = null)
         {
-            var localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
-            var syncServiceStub = new Mock<ISyncService>();
+            if (localDataStorageServiceStub is null)
+                localDataStorageServiceStub = new Mock<ILocalDataStorageService>();
+            if (syncServiceStub is null)
+                syncServiceStub = new Mock<ISyncService>();
+
             return new SchemeService(localDataStorageServiceStub.Object, syncServiceStub.Object);
         }
 

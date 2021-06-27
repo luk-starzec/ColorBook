@@ -4,14 +4,10 @@ using ColorBook.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ColorBookTests
+namespace ColorBookTests.Services
 {
     public class SyncServiceTests
     {
