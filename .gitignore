@@ -9,3 +9,4 @@ node_modules
 css
 publish
 *.user
+/Client/ColorBook/wwwroot/appsettings.Production.json
